@@ -107,14 +107,14 @@ const PayBookingIdRoute = PayBookingIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const PackagesIdRoute = PackagesIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => PackagesRoute,
+  id: '/packages/$id',
+  path: '/packages/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BookingsIdRoute = BookingsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => BookingsRoute,
+  id: '/bookings/$id',
+  path: '/bookings/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BookPackageIdRoute = BookPackageIdRouteImport.update({
   id: '/book/$packageId',
@@ -400,6 +400,8 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   RiderRoute: typeof RiderRouteWithChildren
   BookPackageIdRoute: typeof BookPackageIdRoute
+  BookingsIdRoute: typeof BookingsIdRoute
+  PackagesIdRoute: typeof PackagesIdRoute
   PayBookingIdRoute: typeof PayBookingIdRoute
   BookingsIndexRoute: typeof BookingsIndexRoute
   PackagesIndexRoute: typeof PackagesIndexRoute
@@ -500,17 +502,17 @@ declare module '@tanstack/react-router' {
     }
     '/packages/$id': {
       id: '/packages/$id'
-      path: '/$id'
+      path: '/packages/$id'
       fullPath: '/packages/$id'
       preLoaderRoute: typeof PackagesIdRouteImport
-      parentRoute: typeof PackagesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/bookings/$id': {
       id: '/bookings/$id'
-      path: '/$id'
+      path: '/bookings/$id'
       fullPath: '/bookings/$id'
       preLoaderRoute: typeof BookingsIdRouteImport
-      parentRoute: typeof BookingsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/book/$packageId': {
       id: '/book/$packageId'
@@ -708,6 +710,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   RiderRoute: RiderRouteWithChildren,
   BookPackageIdRoute: BookPackageIdRoute,
+  BookingsIdRoute: BookingsIdRoute,
+  PackagesIdRoute: PackagesIdRoute,
   PayBookingIdRoute: PayBookingIdRoute,
   BookingsIndexRoute: BookingsIndexRoute,
   PackagesIndexRoute: PackagesIndexRoute,
