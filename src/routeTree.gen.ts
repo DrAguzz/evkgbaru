@@ -29,6 +29,7 @@ import { Route as AppProfileRouteImport } from './routes/app.profile'
 import { Route as AppPackagesRouteImport } from './routes/app.packages'
 import { Route as AppBookingsRouteImport } from './routes/app.bookings'
 import { Route as AdminPackagesRouteImport } from './routes/admin.packages'
+import { Route as AdminHubsRouteImport } from './routes/admin.hubs'
 import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
 import { Route as RiderToursIdRouteImport } from './routes/rider.tours.$id'
 import { Route as AppPackagesIdRouteImport } from './routes/app.packages.$id'
@@ -134,6 +135,11 @@ const AdminPackagesRoute = AdminPackagesRouteImport.update({
   path: '/packages',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminHubsRoute = AdminHubsRouteImport.update({
+  id: '/hubs',
+  path: '/hubs',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBookingsRoute = AdminBookingsRouteImport.update({
   id: '/bookings',
   path: '/bookings',
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/packages': typeof PackagesRouteWithChildren
   '/rider': typeof RiderRouteWithChildren
   '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/hubs': typeof AdminHubsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/app/bookings': typeof AppBookingsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/bookings': typeof BookingsRouteWithChildren
   '/packages': typeof PackagesRouteWithChildren
   '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/hubs': typeof AdminHubsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/app/bookings': typeof AppBookingsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
@@ -214,6 +222,7 @@ export interface FileRoutesById {
   '/packages': typeof PackagesRouteWithChildren
   '/rider': typeof RiderRouteWithChildren
   '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/hubs': typeof AdminHubsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/app/bookings': typeof AppBookingsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/packages'
     | '/rider'
     | '/admin/bookings'
+    | '/admin/hubs'
     | '/admin/packages'
     | '/app/bookings'
     | '/app/packages'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/bookings'
     | '/packages'
     | '/admin/bookings'
+    | '/admin/hubs'
     | '/admin/packages'
     | '/app/bookings'
     | '/app/packages'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/packages'
     | '/rider'
     | '/admin/bookings'
+    | '/admin/hubs'
     | '/admin/packages'
     | '/app/bookings'
     | '/app/packages'
@@ -463,6 +475,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPackagesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/hubs': {
+      id: '/admin/hubs'
+      path: '/hubs'
+      fullPath: '/admin/hubs'
+      preLoaderRoute: typeof AdminHubsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/bookings': {
       id: '/admin/bookings'
       path: '/bookings'
@@ -496,12 +515,14 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminBookingsRoute: typeof AdminBookingsRoute
+  AdminHubsRoute: typeof AdminHubsRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBookingsRoute: AdminBookingsRoute,
+  AdminHubsRoute: AdminHubsRoute,
   AdminPackagesRoute: AdminPackagesRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -592,3 +613,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
