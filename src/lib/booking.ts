@@ -1,8 +1,12 @@
 import { supabase } from "@/integrations/supabase/client";
 
 /** Auto-assign first available rider at the booking's pickup hub.
- *  Returns the assigned rider id, or null if none found. */
-export async function autoAssignRider(bookingId: string): Promise<string | null> {
+ *  Optionally exclude rider IDs (e.g., riders who already rejected).
+ *  Returns assigned rider id, or null if none found. */
+export async function autoAssignRider(
+  bookingId: string,
+  excludeRiderIds: string[] = [],
+): Promise<string | null> {
   const { data: booking } = await supabase
     .from("bookings")
     .select("id, pickup_hub_id, tourist_id")
@@ -10,16 +14,26 @@ export async function autoAssignRider(bookingId: string): Promise<string | null>
     .single();
   if (!booking) return null;
 
-  let q = supabase.from("riders").select("id").eq("status", "available").limit(1);
-  if (booking.pickup_hub_id) q = q.eq("hub_id", booking.pickup_hub_id);
-  const { data: riders } = await q;
-  const rider = riders?.[0];
+  // Try same hub first
+  const tryQuery = async (sameHub: boolean) => {
+    let q = supabase.from("riders").select("id, name").eq("status", "available").limit(1);
+    if (sameHub && booking.pickup_hub_id) q = q.eq("hub_id", booking.pickup_hub_id);
+    if (excludeRiderIds.length) q = q.not("id", "in", `(${excludeRiderIds.join(",")})`);
+    const { data } = await q;
+    return data?.[0] ?? null;
+  };
+
+  const rider = (await tryQuery(true)) ?? (await tryQuery(false));
 
   if (!rider) {
+    await supabase
+      .from("bookings")
+      .update({ rider_id: null, booking_status: "paid" })
+      .eq("id", bookingId);
     await supabase.from("notifications").insert({
       user_id: booking.tourist_id,
-      title: "No rider available",
-      message: "Admin will manually assign a rider for your booking shortly.",
+      title: "Searching for a rider",
+      message: "All riders are busy. Admin will assign one shortly.",
       type: "warning",
     });
     return null;
@@ -33,10 +47,21 @@ export async function autoAssignRider(bookingId: string): Promise<string | null>
   await supabase.from("notifications").insert({
     user_id: booking.tourist_id,
     title: "Rider assigned",
-    message: "A rider has been assigned to your tour.",
+    message: `${rider.name} has been assigned to your tour.`,
     type: "success",
   });
   return rider.id;
+}
+
+/** Rider rejects an assignment; system finds another. */
+export async function rejectAssignment(bookingId: string, riderId: string) {
+  await supabase.from("riders").update({ status: "available" }).eq("id", riderId);
+  await supabase
+    .from("bookings")
+    .update({ rider_id: null, booking_status: "paid" })
+    .eq("id", bookingId);
+  // Track previously-rejected riders in special_request? Simpler: just exclude this one.
+  return autoAssignRider(bookingId, [riderId]);
 }
 
 export async function processMockPayment(bookingId: string, method: string, amount: number) {
