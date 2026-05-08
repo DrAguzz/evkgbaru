@@ -9,9 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PackagesRouteImport } from './routes/packages'
+import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PayBookingIdRouteImport } from './routes/pay.$bookingId'
+import { Route as PackagesIdRouteImport } from './routes/packages.$id'
+import { Route as BookPackageIdRouteImport } from './routes/book.$packageId'
 
+const PackagesRoute = PackagesRouteImport.update({
+  id: '/packages',
+  path: '/packages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsRoute = BookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -22,35 +37,105 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PayBookingIdRoute = PayBookingIdRouteImport.update({
+  id: '/pay/$bookingId',
+  path: '/pay/$bookingId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PackagesIdRoute = PackagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PackagesRoute,
+} as any)
+const BookPackageIdRoute = BookPackageIdRouteImport.update({
+  id: '/book/$packageId',
+  path: '/book/$packageId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bookings': typeof BookingsRoute
+  '/packages': typeof PackagesRouteWithChildren
+  '/book/$packageId': typeof BookPackageIdRoute
+  '/packages/$id': typeof PackagesIdRoute
+  '/pay/$bookingId': typeof PayBookingIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bookings': typeof BookingsRoute
+  '/packages': typeof PackagesRouteWithChildren
+  '/book/$packageId': typeof BookPackageIdRoute
+  '/packages/$id': typeof PackagesIdRoute
+  '/pay/$bookingId': typeof PayBookingIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bookings': typeof BookingsRoute
+  '/packages': typeof PackagesRouteWithChildren
+  '/book/$packageId': typeof BookPackageIdRoute
+  '/packages/$id': typeof PackagesIdRoute
+  '/pay/$bookingId': typeof PayBookingIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/bookings'
+    | '/packages'
+    | '/book/$packageId'
+    | '/packages/$id'
+    | '/pay/$bookingId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth'
-  id: '__root__' | '/' | '/auth'
+  to:
+    | '/'
+    | '/auth'
+    | '/bookings'
+    | '/packages'
+    | '/book/$packageId'
+    | '/packages/$id'
+    | '/pay/$bookingId'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/bookings'
+    | '/packages'
+    | '/book/$packageId'
+    | '/packages/$id'
+    | '/pay/$bookingId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  BookingsRoute: typeof BookingsRoute
+  PackagesRoute: typeof PackagesRouteWithChildren
+  BookPackageIdRoute: typeof BookPackageIdRoute
+  PayBookingIdRoute: typeof PayBookingIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/packages': {
+      id: '/packages'
+      path: '/packages'
+      fullPath: '/packages'
+      preLoaderRoute: typeof PackagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings': {
+      id: '/bookings'
+      path: '/bookings'
+      fullPath: '/bookings'
+      preLoaderRoute: typeof BookingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -65,12 +150,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pay/$bookingId': {
+      id: '/pay/$bookingId'
+      path: '/pay/$bookingId'
+      fullPath: '/pay/$bookingId'
+      preLoaderRoute: typeof PayBookingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/packages/$id': {
+      id: '/packages/$id'
+      path: '/$id'
+      fullPath: '/packages/$id'
+      preLoaderRoute: typeof PackagesIdRouteImport
+      parentRoute: typeof PackagesRoute
+    }
+    '/book/$packageId': {
+      id: '/book/$packageId'
+      path: '/book/$packageId'
+      fullPath: '/book/$packageId'
+      preLoaderRoute: typeof BookPackageIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface PackagesRouteChildren {
+  PackagesIdRoute: typeof PackagesIdRoute
+}
+
+const PackagesRouteChildren: PackagesRouteChildren = {
+  PackagesIdRoute: PackagesIdRoute,
+}
+
+const PackagesRouteWithChildren = PackagesRoute._addFileChildren(
+  PackagesRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  BookingsRoute: BookingsRoute,
+  PackagesRoute: PackagesRouteWithChildren,
+  BookPackageIdRoute: BookPackageIdRoute,
+  PayBookingIdRoute: PayBookingIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
