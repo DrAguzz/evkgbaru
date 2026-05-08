@@ -114,20 +114,74 @@ function BookingDetail() {
           />
 
           {/* Timeline */}
-          <Card className="rounded-2xl border-0 shadow-card">
+          <Card className="rounded-2xl border-0 shadow-card overflow-hidden">
             <CardContent className="p-5">
-              <div className="font-semibold mb-3">Tour progress</div>
-              <ol className="relative pl-6">
-                <span className="absolute left-2 top-2 bottom-2 w-px bg-border" />
-                {routes.map((r) => {
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <div className="font-semibold flex items-center gap-2"><Clock className="w-4 h-4 text-primary" /> Tour progress</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{progress.length} of {routes.length} checkpoints reached</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-primary">{routes.length ? Math.round((progress.length / routes.length) * 100) : 0}%</div>
+                </div>
+              </div>
+              {/* Progress bar */}
+              <div className="h-2 rounded-full bg-muted overflow-hidden mb-5">
+                <div
+                  className="h-full bg-gradient-to-r from-primary to-success transition-all duration-700 ease-out"
+                  style={{ width: `${routes.length ? (progress.length / routes.length) * 100 : 0}%` }}
+                />
+              </div>
+              <ol className="relative pl-8">
+                <span className="absolute left-3 top-3 bottom-3 w-0.5 bg-border" />
+                <span
+                  className="absolute left-3 top-3 w-0.5 bg-gradient-to-b from-success to-primary transition-all duration-700"
+                  style={{ height: `calc(${routes.length ? (Math.max(progress.length - 1, 0) / Math.max(routes.length - 1, 1)) * 100 : 0}% - 0px)` }}
+                />
+                {routes.map((r, idx) => {
                   const reached = progress.find((p) => p.location_id === r.locations?.id);
                   const isCurrent = !reached && r.sequence_no === currentSeq + 1;
+                  const isLast = idx === routes.length - 1;
                   return (
-                    <li key={r.sequence_no} className="relative pb-4">
-                      <span className={`absolute -left-[11px] top-0 w-4 h-4 rounded-full border-2 ${reached ? "bg-success border-success" : isCurrent ? "bg-primary border-primary animate-pulse" : "bg-background border-border"}`} />
-                      <div className="text-sm font-medium">{r.locations?.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {reached ? `Arrived ${reached.arrival_time ? new Date(reached.arrival_time).toLocaleTimeString() : ""} · ${labelStatus(reached.status)}` : isCurrent ? "Next checkpoint" : "Pending"}
+                    <li key={r.sequence_no} className={`relative ${isLast ? "" : "pb-5"}`}>
+                      <span
+                        className={`absolute -left-[22px] top-0 grid place-items-center w-7 h-7 rounded-full border-2 transition-all ${
+                          reached
+                            ? "bg-success border-success text-success-foreground shadow-[0_0_0_4px_color-mix(in_oklab,var(--success)_20%,transparent)]"
+                            : isCurrent
+                            ? "bg-primary border-primary text-primary-foreground shadow-[0_0_0_4px_color-mix(in_oklab,var(--primary)_25%,transparent)] animate-pulse"
+                            : "bg-background border-border text-muted-foreground"
+                        }`}
+                      >
+                        {reached ? <CheckCircle2 className="w-4 h-4" /> : isCurrent ? <Bike className="w-3.5 h-3.5" /> : <span className="text-[11px] font-semibold">{r.sequence_no}</span>}
+                      </span>
+                      <div
+                        className={`rounded-xl px-3 py-2.5 transition-all ${
+                          isCurrent
+                            ? "bg-primary/5 ring-1 ring-primary/20"
+                            : reached
+                            ? "bg-success/5"
+                            : "bg-transparent"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <div className={`text-sm font-semibold ${isCurrent ? "text-primary" : reached ? "text-foreground" : "text-foreground/80"}`}>
+                            {r.locations?.name}
+                          </div>
+                          {isCurrent && (
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">Now</span>
+                          )}
+                          {reached && (
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-success bg-success/10 px-2 py-0.5 rounded-full">Done</span>
+                          )}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-0.5">
+                          {reached
+                            ? `Arrived ${reached.arrival_time ? new Date(reached.arrival_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""} · ${labelStatus(reached.status)}`
+                            : isCurrent
+                            ? "Rider heading to this checkpoint"
+                            : "Awaiting arrival"}
+                        </div>
                       </div>
                     </li>
                   );
