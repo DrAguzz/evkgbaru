@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { CreditCard, Wallet, Building2, BanknoteIcon, CheckCircle2, ShieldCheck } from "lucide-react";
 import { money } from "@/lib/format";
 import { processMockPayment } from "@/lib/booking";
+import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/pay/$bookingId")({
