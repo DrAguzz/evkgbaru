@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/admin")({ component: AdminShell });
 
 function AdminShell() {
-  const { user, isAdmin, loading, signOut } = useAuth();
+  const { user, isAdmin, loading, signOut, refreshRoles } = useAuth();
   const navigate = useNavigate();
   const loc = useLocation();
   const [claiming, setClaiming] = useState(false);
@@ -33,9 +33,8 @@ function AdminShell() {
             const { error } = await supabase.rpc("claim_admin_role");
             setClaiming(false);
             if (error) return toast.error(error.message);
-            toast.success("Admin role granted. Re-login to apply.");
-            await signOut();
-            navigate({ to: "/auth", search: { redirect: "/admin" } });
+            toast.success("Admin role granted.");
+            await refreshRoles();
           }}>{claiming ? "Granting…" : "Become demo admin"}</Button>
           <Button variant="ghost" className="mt-2 w-full" onClick={() => navigate({ to: "/" })}>Back to home</Button>
         </div>

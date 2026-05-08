@@ -37,7 +37,8 @@ function RiderHome() {
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
-    const ch = supabase.channel("rider-bookings")
+    const channelName = `rider-bookings-${Math.random().toString(36).slice(2)}`;
+    const ch = supabase.channel(channelName)
       .on("postgres_changes", { event: "*", schema: "public", table: "bookings" }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(ch); };

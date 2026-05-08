@@ -56,7 +56,7 @@ function BookingDetail() {
 
   // realtime
   useEffect(() => {
-    const ch = supabase.channel(`booking-${id}`)
+    const ch = supabase.channel(`booking-${id}-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "bookings", filter: `id=eq.${id}` }, () => load())
       .on("postgres_changes", { event: "*", schema: "public", table: "tour_progress", filter: `booking_id=eq.${id}` }, () => load())
       .subscribe();
