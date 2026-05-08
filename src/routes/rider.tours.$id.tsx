@@ -157,9 +157,18 @@ function RiderTour() {
           {/* Action */}
           <div className="mt-4 space-y-2">
             {b.booking_status === "assigned" && (
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" className="rounded-full" disabled={busy} onClick={rejectTour}><X className="w-4 h-4 mr-1" /> Reject</Button>
+                <Button className="rounded-full" disabled={busy} onClick={acceptTour}><Check className="w-4 h-4 mr-1" /> Accept</Button>
+              </div>
+            )}
+            {b.booking_status === "accepted" && (
+              <Button className="w-full rounded-full" disabled={busy} onClick={pickup}><Truck className="w-4 h-4 mr-1" /> Confirm pickup</Button>
+            )}
+            {b.booking_status === "picked_up" && (
               <Button className="w-full rounded-full" disabled={busy} onClick={startTour}><PlayCircle className="w-4 h-4 mr-1" /> Start tour</Button>
             )}
-            {b.booking_status === "in_progress" && nextRoute && (
+            {b.booking_status === "in_progress" && !allDone && nextRoute && (
               <>
                 <Textarea placeholder="Remarks (optional)" value={remark} onChange={(e) => setRemark(e.target.value)} className="text-sm" rows={2} />
                 <Button className="w-full rounded-full" disabled={busy} onClick={checkIn}>
@@ -168,12 +177,16 @@ function RiderTour() {
               </>
             )}
             {b.booking_status === "in_progress" && allDone && (
+              <Button className="w-full rounded-full" disabled={busy} onClick={returnToHub}><Home className="w-4 h-4 mr-1" /> Return to hub</Button>
+            )}
+            {b.booking_status === "returning" && (
               <Button className="w-full rounded-full" disabled={busy} onClick={completeTour}><Flag className="w-4 h-4 mr-1" /> Complete tour</Button>
             )}
             {b.booking_status === "completed" && (
               <div className="text-center text-sm text-success font-medium py-2">✓ Tour completed</div>
             )}
           </div>
+
         </div>
       </div>
     </div>
