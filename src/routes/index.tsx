@@ -150,40 +150,68 @@ function Landing() {
 
 
       {/* How it works for all users */}
-      <section className="bg-accent/40 py-16">
+      <section className="relative py-20 overflow-hidden bg-gradient-to-b from-accent/30 via-background to-accent/20">
+        <div className="absolute inset-0 -z-10 opacity-60 [background-image:radial-gradient(ellipse_at_top,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_60%),radial-gradient(ellipse_at_bottom,color-mix(in_oklab,var(--secondary)_12%,transparent),transparent_60%)]" />
         <div className="container mx-auto px-4">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold">How it works — for all users</h2>
-            <p className="text-muted-foreground mt-2">One platform, two experiences.</p>
+          <div className="text-center mb-12">
+            <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-primary bg-primary/10 px-3 py-1 rounded-full">How it works</span>
+            <h2 className="text-3xl md:text-4xl font-bold mt-3">One platform, two experiences</h2>
+            <p className="text-muted-foreground mt-2 max-w-xl mx-auto">A simple, guided journey for every tourist — and a clear, structured workflow for every rider.</p>
           </div>
-          <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {[
               {
-                icon: Users, title: "For Tourist", color: "bg-primary/10 text-primary",
+                icon: Users, title: "For Tourist",
+                accent: "from-primary/15 via-primary/5 to-transparent",
+                ring: "ring-primary/20",
+                badge: "bg-primary/10 text-primary",
+                iconWrap: "bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/30",
                 items: ["Register & choose package", "Make payment", "Get auto-assigned rider", "Enjoy the tour", "Real-time tracking", "Safe return to hub"],
                 cta: { to: "/packages" as const, label: "Book a tour" },
+                ctaClass: "bg-primary text-primary-foreground hover:bg-primary/90",
               },
               {
-                icon: ShieldCheck, title: "For Tour Rider", color: "bg-secondary/10 text-secondary",
+                icon: ShieldCheck, title: "For Tour Rider",
+                accent: "from-secondary/15 via-secondary/5 to-transparent",
+                ring: "ring-secondary/20",
+                badge: "bg-secondary/10 text-secondary",
+                iconWrap: "bg-gradient-to-br from-secondary to-secondary/70 text-secondary-foreground shadow-lg shadow-secondary/30",
                 items: ["Receive auto assignment", "Pickup tourist", "Lead the tour route", "Ensure safety & experience", "Complete tour & return"],
                 cta: { to: "/rider" as const, label: "Open Rider App" },
+                ctaClass: "bg-secondary text-secondary-foreground hover:bg-secondary/90",
               },
             ].map((card) => (
-              <Card key={card.title} className="rounded-2xl border-0 shadow-card">
-                <CardContent className="p-6">
-                  <div className={`grid place-items-center w-12 h-12 rounded-xl ${card.color}`}>
-                    <card.icon className="w-5 h-5" />
+              <Card key={card.title} className={`group relative rounded-3xl border-0 shadow-card ring-1 ${card.ring} overflow-hidden transition-all hover:-translate-y-1 hover:shadow-elegant`}>
+                <div className={`absolute inset-0 -z-10 bg-gradient-to-br ${card.accent} opacity-80`} />
+                <CardContent className="p-7">
+                  <div className="flex items-center justify-between">
+                    <div className={`grid place-items-center w-14 h-14 rounded-2xl ${card.iconWrap}`}>
+                      <card.icon className="w-6 h-6" />
+                    </div>
+                    <span className={`text-[10px] font-bold tracking-[0.18em] uppercase px-2.5 py-1 rounded-full ${card.badge}`}>
+                      {card.items.length} steps
+                    </span>
                   </div>
-                  <div className="mt-4 font-bold text-lg uppercase tracking-wide">{card.title}</div>
-                  <ul className="mt-4 space-y-2 text-sm">
-                    {card.items.map((it) => (
-                      <li key={it} className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-success mt-0.5 shrink-0" /> <span>{it}</span>
+                  <div className="mt-5 font-bold text-xl">{card.title}</div>
+                  <p className="text-sm text-muted-foreground mt-1">A clear flow from start to finish.</p>
+
+                  <ol className="mt-6 space-y-3">
+                    {card.items.map((it, i) => (
+                      <li key={it} className="flex items-start gap-3 group/item">
+                        <span className={`shrink-0 grid place-items-center w-7 h-7 rounded-full text-xs font-bold ${card.badge} ring-1 ${card.ring} transition-transform group-hover/item:scale-110`}>
+                          {i + 1}
+                        </span>
+                        <span className="text-sm pt-0.5 text-foreground/90 leading-relaxed">{it}</span>
                       </li>
                     ))}
-                  </ul>
-                  <Link to={card.cta.to} className="mt-5 inline-flex items-center text-primary font-medium text-sm">
-                    {card.cta.label} <ArrowRight className="w-4 h-4 ml-1" />
+                  </ol>
+
+                  <Link
+                    to={card.cta.to}
+                    className={`mt-7 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${card.ctaClass} shadow-md hover:shadow-lg`}
+                  >
+                    {card.cta.label}
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </CardContent>
               </Card>
