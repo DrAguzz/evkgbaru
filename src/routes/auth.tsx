@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { COUNTRIES } from "@/lib/countries";
 import { toast } from "sonner";
 
 type Search = { mode?: "login" | "register"; redirect?: string };
@@ -74,7 +76,19 @@ function AuthPage() {
                 <div><Label>Full name</Label><Input value={rName} onChange={(e) => setRName(e.target.value)} /></div>
                 <div className="grid grid-cols-2 gap-3">
                   <div><Label>Phone</Label><Input value={rPhone} onChange={(e) => setRPhone(e.target.value)} /></div>
-                  <div><Label>Nationality</Label><Input value={rNat} onChange={(e) => setRNat(e.target.value)} /></div>
+                  <div>
+                    <Label>Nationality</Label>
+                    <Select value={rNat} onValueChange={setRNat}>
+                      <SelectTrigger><SelectValue placeholder="Select country" /></SelectTrigger>
+                      <SelectContent className="max-h-72">
+                        {COUNTRIES.map((c) => (
+                          <SelectItem key={c.code} value={c.name}>
+                            <span className="mr-2">{c.flag}</span>{c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
                 <div><Label>Email</Label><Input value={rEmail} onChange={(e) => setREmail(e.target.value)} type="email" /></div>
                 <div><Label>Password</Label><Input value={rPassword} onChange={(e) => setRPassword(e.target.value)} type="password" /></div>

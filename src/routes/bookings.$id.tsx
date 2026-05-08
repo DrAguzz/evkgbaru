@@ -9,6 +9,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { money, fmtDate, fmtTime, labelStatus } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { Calendar, Users, MapPin, Phone, MessageCircle, Star, CheckCircle2, Bike, Clock } from "lucide-react";
+import { RouteMap } from "@/components/RouteMap";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/bookings/$id")({
@@ -92,6 +93,21 @@ function BookingDetail() {
               {b.special_request && <div className="mt-3 text-sm"><span className="text-muted-foreground">Special request:</span> {b.special_request}</div>}
             </CardContent>
           </Card>
+
+          {/* Route map with live progress */}
+          <RouteMap
+            title={b.booking_status === "in_progress" ? "Live tracking" : `${routes.length} stops`}
+            stops={routes.map((r) => {
+              const reached = !!progress.find((p) => p.location_id === r.locations?.id);
+              const isCurrent = !reached && r.sequence_no === currentSeq + 1;
+              return {
+                id: r.locations?.id ?? String(r.sequence_no),
+                name: r.locations?.name ?? `Stop ${r.sequence_no}`,
+                reached,
+                current: isCurrent,
+              };
+            })}
+          />
 
           {/* Timeline */}
           <Card className="rounded-2xl border-0 shadow-card">
