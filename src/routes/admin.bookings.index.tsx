@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Search, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/bookings")({ component: AdminBookings });
+export const Route = createFileRoute("/admin/bookings/")({ component: AdminBookings });
 
 interface Row {
   id: string; booking_no: string; booking_date: string; booking_time: string;
