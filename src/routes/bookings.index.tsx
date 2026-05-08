@@ -9,7 +9,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { money, fmtDate, fmtTime } from "@/lib/format";
 import { Calendar, Users } from "lucide-react";
 
-export const Route = createFileRoute("/bookings")({
+export const Route = createFileRoute("/bookings/")({
   component: MyBookings,
 });
 
