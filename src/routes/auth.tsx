@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
   const search = Route.useSearch();
   const [tab, setTab] = useState<"login" | "register">(search.mode ?? "login");
@@ -44,6 +44,21 @@ function AuthPage() {
     const target = path && path.startsWith("/") ? path : "/";
     navigate({ to: target as "/", replace: true });
   };
+
+  useEffect(() => {
+    if (!loading && user) {
+      after(search.redirect);
+    }
+  }, [loading, user, search.redirect]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <SiteHeader />
+        <div className="flex-1 grid place-items-center px-4 py-12">Loading…</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
