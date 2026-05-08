@@ -101,6 +101,7 @@ function BookingDetail() {
           {/* Route map with live progress */}
           <RouteMap
             title={b.booking_status === "in_progress" ? "Live tracking" : `${routes.length} stops`}
+            live={b.booking_status === "in_progress"}
             stops={routes.map((r) => {
               const reached = !!progress.find((p) => p.location_id === r.locations?.id);
               const isCurrent = !reached && r.sequence_no === currentSeq + 1;
