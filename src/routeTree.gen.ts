@@ -29,8 +29,10 @@ import { Route as AppProfileRouteImport } from './routes/app.profile'
 import { Route as AppPackagesRouteImport } from './routes/app.packages'
 import { Route as AppBookingsRouteImport } from './routes/app.bookings'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminRoutesRouteImport } from './routes/admin.routes'
 import { Route as AdminRidersRouteImport } from './routes/admin.riders'
 import { Route as AdminPackagesRouteImport } from './routes/admin.packages'
+import { Route as AdminLocationsRouteImport } from './routes/admin.locations'
 import { Route as AdminHubsRouteImport } from './routes/admin.hubs'
 import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
 import { Route as RiderToursIdRouteImport } from './routes/rider.tours.$id'
@@ -137,6 +139,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRoutesRoute = AdminRoutesRouteImport.update({
+  id: '/routes',
+  path: '/routes',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminRidersRoute = AdminRidersRouteImport.update({
   id: '/riders',
   path: '/riders',
@@ -145,6 +152,11 @@ const AdminRidersRoute = AdminRidersRouteImport.update({
 const AdminPackagesRoute = AdminPackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLocationsRoute = AdminLocationsRouteImport.update({
+  id: '/locations',
+  path: '/locations',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminHubsRoute = AdminHubsRouteImport.update({
@@ -183,8 +195,10 @@ export interface FileRoutesByFullPath {
   '/rider': typeof RiderRouteWithChildren
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/hubs': typeof AdminHubsRoute
+  '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/riders': typeof AdminRidersRoute
+  '/admin/routes': typeof AdminRoutesRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/bookings': typeof AppBookingsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
@@ -209,8 +223,10 @@ export interface FileRoutesByTo {
   '/packages': typeof PackagesRouteWithChildren
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/hubs': typeof AdminHubsRoute
+  '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/riders': typeof AdminRidersRoute
+  '/admin/routes': typeof AdminRoutesRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/bookings': typeof AppBookingsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
@@ -239,8 +255,10 @@ export interface FileRoutesById {
   '/rider': typeof RiderRouteWithChildren
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/hubs': typeof AdminHubsRoute
+  '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/riders': typeof AdminRidersRoute
+  '/admin/routes': typeof AdminRoutesRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/bookings': typeof AppBookingsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
@@ -270,8 +288,10 @@ export interface FileRouteTypes {
     | '/rider'
     | '/admin/bookings'
     | '/admin/hubs'
+    | '/admin/locations'
     | '/admin/packages'
     | '/admin/riders'
+    | '/admin/routes'
     | '/admin/users'
     | '/app/bookings'
     | '/app/packages'
@@ -296,8 +316,10 @@ export interface FileRouteTypes {
     | '/packages'
     | '/admin/bookings'
     | '/admin/hubs'
+    | '/admin/locations'
     | '/admin/packages'
     | '/admin/riders'
+    | '/admin/routes'
     | '/admin/users'
     | '/app/bookings'
     | '/app/packages'
@@ -325,8 +347,10 @@ export interface FileRouteTypes {
     | '/rider'
     | '/admin/bookings'
     | '/admin/hubs'
+    | '/admin/locations'
     | '/admin/packages'
     | '/admin/riders'
+    | '/admin/routes'
     | '/admin/users'
     | '/app/bookings'
     | '/app/packages'
@@ -499,6 +523,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/routes': {
+      id: '/admin/routes'
+      path: '/routes'
+      fullPath: '/admin/routes'
+      preLoaderRoute: typeof AdminRoutesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/riders': {
       id: '/admin/riders'
       path: '/riders'
@@ -511,6 +542,13 @@ declare module '@tanstack/react-router' {
       path: '/packages'
       fullPath: '/admin/packages'
       preLoaderRoute: typeof AdminPackagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/locations': {
+      id: '/admin/locations'
+      path: '/locations'
+      fullPath: '/admin/locations'
+      preLoaderRoute: typeof AdminLocationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/hubs': {
@@ -554,8 +592,10 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminBookingsRoute: typeof AdminBookingsRoute
   AdminHubsRoute: typeof AdminHubsRoute
+  AdminLocationsRoute: typeof AdminLocationsRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
   AdminRidersRoute: typeof AdminRidersRoute
+  AdminRoutesRoute: typeof AdminRoutesRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -563,8 +603,10 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBookingsRoute: AdminBookingsRoute,
   AdminHubsRoute: AdminHubsRoute,
+  AdminLocationsRoute: AdminLocationsRoute,
   AdminPackagesRoute: AdminPackagesRoute,
   AdminRidersRoute: AdminRidersRoute,
+  AdminRoutesRoute: AdminRoutesRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -655,3 +697,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
