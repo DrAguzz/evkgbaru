@@ -59,42 +59,49 @@ function Landing() {
       <SiteHeader />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-hero">
-        <div className="container relative mx-auto px-4 py-16 md:py-24 text-primary-foreground">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
-            <div className="order-2 md:order-1">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/20">
-                <img
-                  src={heroRider}
-                  alt="EV bike rider in Kuala Lumpur with Petronas Towers in background"
-                  className="w-full h-auto object-cover"
-                  loading="eager"
-                />
-              </div>
-            </div>
-            <div className="order-1 md:order-2 max-w-xl">
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-3 py-1 text-xs font-medium">
-                <Bike className="w-3.5 h-3.5" /> Tourist Open Web · Tour Booking Journey
-              </span>
-              <h1 className="mt-4 text-4xl md:text-6xl font-extrabold leading-tight">
-                Explore Kuala Lumpur<br />on a guided EV bike.
-              </h1>
-              <p className="mt-4 text-lg text-white/90 max-w-lg">
-                Web-based open platform for tourists to book tour packages, make payments,
-                and enjoy a guided journey with our local tour riders.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link to="/packages">
-                  <Button size="lg" className="rounded-full bg-white text-primary hover:bg-white/90 font-semibold">
-                    Book Your EV Bike Tour <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-                <Link to="/app">
-                  <Button size="lg" variant="outline" className="rounded-full bg-white/10 border-white/30 text-white hover:bg-white/20">
-                    Try the mobile app
-                  </Button>
-                </Link>
-              </div>
+      <section
+        className="relative overflow-hidden bg-hero min-h-[600px] md:min-h-[680px] flex items-center"
+        style={{
+          backgroundImage: `url(${heroRider})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center right",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Gradient overlay: dark left → clear right */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.18) 60%, rgba(0,0,0,0.03) 100%)",
+          }}
+        />
+        {/* Bottom fade for mobile readability */}
+        <div className="absolute inset-0 md:hidden bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+
+        <div className="container relative mx-auto px-4 py-20 md:py-28 text-primary-foreground">
+          <div className="max-w-xl">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-3 py-1 text-xs font-medium">
+              <Bike className="w-3.5 h-3.5" /> Tourist Open Web · Tour Booking Journey
+            </span>
+            <h1 className="mt-5 text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-lg">
+              Explore Kuala Lumpur<br />on a guided EV bike.
+            </h1>
+            <p className="mt-5 text-lg text-white/90 max-w-lg drop-shadow">
+              Web-based open platform for tourists to book tour packages, make payments,
+              and enjoy a guided journey with our local tour riders.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/packages">
+                <Button size="lg" className="rounded-full bg-white text-primary hover:bg-white/90 font-semibold">
+                  Book Your EV Bike Tour <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              <Link to="/app">
+                <Button size="lg" variant="outline" className="rounded-full bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur">
+                  Try the mobile app
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
