@@ -31,6 +31,7 @@ import { Route as AppBookingsRouteImport } from './routes/app.bookings'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminRoutesRouteImport } from './routes/admin.routes'
 import { Route as AdminRidersRouteImport } from './routes/admin.riders'
+import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminPackagesRouteImport } from './routes/admin.packages'
 import { Route as AdminLocationsRouteImport } from './routes/admin.locations'
 import { Route as AdminHubsRouteImport } from './routes/admin.hubs'
@@ -149,6 +150,11 @@ const AdminRidersRoute = AdminRidersRouteImport.update({
   path: '/riders',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPackagesRoute = AdminPackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/riders': typeof AdminRidersRoute
   '/admin/routes': typeof AdminRoutesRoute
   '/admin/users': typeof AdminUsersRoute
@@ -225,6 +232,7 @@ export interface FileRoutesByTo {
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/riders': typeof AdminRidersRoute
   '/admin/routes': typeof AdminRoutesRoute
   '/admin/users': typeof AdminUsersRoute
@@ -257,6 +265,7 @@ export interface FileRoutesById {
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/riders': typeof AdminRidersRoute
   '/admin/routes': typeof AdminRoutesRoute
   '/admin/users': typeof AdminUsersRoute
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
     | '/admin/hubs'
     | '/admin/locations'
     | '/admin/packages'
+    | '/admin/reports'
     | '/admin/riders'
     | '/admin/routes'
     | '/admin/users'
@@ -318,6 +328,7 @@ export interface FileRouteTypes {
     | '/admin/hubs'
     | '/admin/locations'
     | '/admin/packages'
+    | '/admin/reports'
     | '/admin/riders'
     | '/admin/routes'
     | '/admin/users'
@@ -349,6 +360,7 @@ export interface FileRouteTypes {
     | '/admin/hubs'
     | '/admin/locations'
     | '/admin/packages'
+    | '/admin/reports'
     | '/admin/riders'
     | '/admin/routes'
     | '/admin/users'
@@ -537,6 +549,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRidersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/packages': {
       id: '/admin/packages'
       path: '/packages'
@@ -594,6 +613,7 @@ interface AdminRouteChildren {
   AdminHubsRoute: typeof AdminHubsRoute
   AdminLocationsRoute: typeof AdminLocationsRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
+  AdminReportsRoute: typeof AdminReportsRoute
   AdminRidersRoute: typeof AdminRidersRoute
   AdminRoutesRoute: typeof AdminRoutesRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -605,6 +625,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminHubsRoute: AdminHubsRoute,
   AdminLocationsRoute: AdminLocationsRoute,
   AdminPackagesRoute: AdminPackagesRoute,
+  AdminReportsRoute: AdminReportsRoute,
   AdminRidersRoute: AdminRidersRoute,
   AdminRoutesRoute: AdminRoutesRoute,
   AdminUsersRoute: AdminUsersRoute,
