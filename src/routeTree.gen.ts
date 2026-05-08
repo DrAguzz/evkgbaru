@@ -39,6 +39,7 @@ import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
 import { Route as RiderToursIdRouteImport } from './routes/rider.tours.$id'
 import { Route as AppPackagesIdRouteImport } from './routes/app.packages.$id'
 import { Route as AppBookPackageIdRouteImport } from './routes/app.book.$packageId'
+import { Route as AdminBookingsIdRouteImport } from './routes/admin.bookings.$id'
 
 const RiderRoute = RiderRouteImport.update({
   id: '/rider',
@@ -190,6 +191,11 @@ const AppBookPackageIdRoute = AppBookPackageIdRouteImport.update({
   path: '/book/$packageId',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminBookingsIdRoute = AdminBookingsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminBookingsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -199,7 +205,7 @@ export interface FileRoutesByFullPath {
   '/bookings': typeof BookingsRouteWithChildren
   '/packages': typeof PackagesRouteWithChildren
   '/rider': typeof RiderRouteWithChildren
-  '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/bookings': typeof AdminBookingsRouteWithChildren
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/rider/': typeof RiderIndexRoute
+  '/admin/bookings/$id': typeof AdminBookingsIdRoute
   '/app/book/$packageId': typeof AppBookPackageIdRoute
   '/app/packages/$id': typeof AppPackagesIdRoute
   '/rider/tours/$id': typeof RiderToursIdRoute
@@ -228,7 +235,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRouteWithChildren
   '/packages': typeof PackagesRouteWithChildren
-  '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/bookings': typeof AdminBookingsRouteWithChildren
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
@@ -248,6 +255,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/rider': typeof RiderIndexRoute
+  '/admin/bookings/$id': typeof AdminBookingsIdRoute
   '/app/book/$packageId': typeof AppBookPackageIdRoute
   '/app/packages/$id': typeof AppPackagesIdRoute
   '/rider/tours/$id': typeof RiderToursIdRoute
@@ -261,7 +269,7 @@ export interface FileRoutesById {
   '/bookings': typeof BookingsRouteWithChildren
   '/packages': typeof PackagesRouteWithChildren
   '/rider': typeof RiderRouteWithChildren
-  '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/bookings': typeof AdminBookingsRouteWithChildren
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
@@ -281,6 +289,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/rider/': typeof RiderIndexRoute
+  '/admin/bookings/$id': typeof AdminBookingsIdRoute
   '/app/book/$packageId': typeof AppBookPackageIdRoute
   '/app/packages/$id': typeof AppPackagesIdRoute
   '/rider/tours/$id': typeof RiderToursIdRoute
@@ -315,6 +324,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/app/'
     | '/rider/'
+    | '/admin/bookings/$id'
     | '/app/book/$packageId'
     | '/app/packages/$id'
     | '/rider/tours/$id'
@@ -344,6 +354,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/app'
     | '/rider'
+    | '/admin/bookings/$id'
     | '/app/book/$packageId'
     | '/app/packages/$id'
     | '/rider/tours/$id'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/app/'
     | '/rider/'
+    | '/admin/bookings/$id'
     | '/app/book/$packageId'
     | '/app/packages/$id'
     | '/rider/tours/$id'
@@ -605,11 +617,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBookPackageIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/bookings/$id': {
+      id: '/admin/bookings/$id'
+      path: '/$id'
+      fullPath: '/admin/bookings/$id'
+      preLoaderRoute: typeof AdminBookingsIdRouteImport
+      parentRoute: typeof AdminBookingsRoute
+    }
   }
 }
 
+interface AdminBookingsRouteChildren {
+  AdminBookingsIdRoute: typeof AdminBookingsIdRoute
+}
+
+const AdminBookingsRouteChildren: AdminBookingsRouteChildren = {
+  AdminBookingsIdRoute: AdminBookingsIdRoute,
+}
+
+const AdminBookingsRouteWithChildren = AdminBookingsRoute._addFileChildren(
+  AdminBookingsRouteChildren,
+)
+
 interface AdminRouteChildren {
-  AdminBookingsRoute: typeof AdminBookingsRoute
+  AdminBookingsRoute: typeof AdminBookingsRouteWithChildren
   AdminHubsRoute: typeof AdminHubsRoute
   AdminLocationsRoute: typeof AdminLocationsRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
@@ -621,7 +652,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminBookingsRoute: AdminBookingsRoute,
+  AdminBookingsRoute: AdminBookingsRouteWithChildren,
   AdminHubsRoute: AdminHubsRoute,
   AdminLocationsRoute: AdminLocationsRoute,
   AdminPackagesRoute: AdminPackagesRoute,
