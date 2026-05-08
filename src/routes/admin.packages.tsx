@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { money } from "@/lib/format";
-import { Plus, Pencil, Clock, Users } from "lucide-react";
+import { Plus, Pencil, Clock, Users, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/packages")({ component: AdminPackages });
@@ -51,6 +51,12 @@ function AdminPackages() {
     setOpen(false); setEditing(null); load();
   }
 
+  async function del(p: Pkg) {
+    if (!confirm(`Delete "${p.package_name}"?`)) return;
+    const { error } = await supabase.from("tour_packages").delete().eq("id", p.id);
+    if (error) return toast.error(error.message);
+    toast.success("Deleted"); load();
+  }
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -65,7 +71,10 @@ function AdminPackages() {
             <CardContent className="p-4">
               <div className="flex items-start justify-between gap-2">
                 <div className="font-semibold">{p.package_name}</div>
-                <Button variant="ghost" size="sm" onClick={() => { setEditing(p); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                <div className="flex">
+                  <Button variant="ghost" size="icon" onClick={() => { setEditing(p); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                  <Button variant="ghost" size="icon" onClick={() => del(p)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                </div>
               </div>
               <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{p.description}</p>
               <div className="mt-3 flex items-center justify-between">

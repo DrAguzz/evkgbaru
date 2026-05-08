@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
+import { Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { money, fmtDate, fmtTime } from "@/lib/format";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -102,9 +103,12 @@ function AdminBookings() {
                   <td className="p-3 font-semibold">{money(r.total_price)}</td>
                   <td className="p-3"><div className="flex flex-col gap-1"><StatusBadge status={r.booking_status} /><StatusBadge status={r.payment_status} /></div></td>
                   <td className="p-3">
-                    {!r.rider_id && r.payment_status === "paid" && (
-                      <Button size="sm" variant="outline" className="rounded-full" onClick={() => setAssigning(r)}><UserPlus className="w-3 h-3 mr-1" /> Assign</Button>
-                    )}
+                    <div className="flex gap-2">
+                      <Link to="/admin/bookings/$id" params={{ id: r.id }} className="text-xs text-primary hover:underline">View</Link>
+                      {!r.rider_id && r.payment_status === "paid" && (
+                        <Button size="sm" variant="outline" className="rounded-full" onClick={() => setAssigning(r)}><UserPlus className="w-3 h-3 mr-1" /> Assign</Button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Bike, Plus, Pencil, Star } from "lucide-react";
+import { Bike, Plus, Pencil, Star, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/riders")({ component: AdminRiders });
@@ -33,6 +33,7 @@ function AdminRiders() {
 
   async function save() {
     if (!editing) return;
+    if (!editing.name.trim()) return toast.error("Name is required");
     const { hubs: _h, id, ...payload } = editing;
     void _h;
     const op = id
@@ -41,6 +42,13 @@ function AdminRiders() {
     const { error } = await op;
     if (error) return toast.error(error.message);
     toast.success("Saved"); setOpen(false); setEditing(null); load();
+  }
+
+  async function del(r: Rider) {
+    if (!confirm(`Delete rider "${r.name}"?`)) return;
+    const { error } = await supabase.from("riders").delete().eq("id", r.id);
+    if (error) return toast.error(error.message);
+    toast.success("Deleted"); load();
   }
 
   return (
@@ -62,7 +70,8 @@ function AdminRiders() {
                   <div className="font-semibold">{r.name}</div>
                   <div className="text-xs text-muted-foreground inline-flex items-center gap-1"><Star className="w-3 h-3 fill-warning text-warning" /> {Number(r.rating).toFixed(1)}</div>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => { setEditing(r); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => { setEditing(r); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => del(r)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
               </div>
               <div className="mt-3 text-xs text-muted-foreground space-y-0.5">
                 <div>Hub: {r.hubs?.name ?? "—"}</div>

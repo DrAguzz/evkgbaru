@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Calendar, Package, Bike, MapPin, Users, LogOut, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, Calendar, Package, Bike, MapPin, Users, LogOut, ShieldCheck, Route as RouteIcon, BarChart3, Pin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -43,13 +43,16 @@ function AdminShell() {
     );
   }
 
-  const items: { to: "/admin" | "/admin/bookings" | "/admin/packages" | "/admin/hubs" | "/admin/riders" | "/admin/users"; icon: typeof LayoutDashboard; label: string; exact?: boolean }[] = [
+  const items: { to: "/admin" | "/admin/bookings" | "/admin/packages" | "/admin/routes" | "/admin/hubs" | "/admin/locations" | "/admin/riders" | "/admin/users" | "/admin/reports"; icon: typeof LayoutDashboard; label: string; exact?: boolean }[] = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard", exact: true },
     { to: "/admin/bookings", icon: Calendar, label: "Bookings" },
     { to: "/admin/packages", icon: Package, label: "Packages" },
+    { to: "/admin/routes", icon: RouteIcon, label: "Routes" },
     { to: "/admin/hubs", icon: MapPin, label: "Hubs" },
+    { to: "/admin/locations", icon: Pin, label: "Locations" },
     { to: "/admin/riders", icon: Bike, label: "Riders" },
     { to: "/admin/users", icon: Users, label: "Users" },
+    { to: "/admin/reports", icon: BarChart3, label: "Reports" },
   ];
 
   return (

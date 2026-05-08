@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/StatusBadge";
 import { fmtDate, fmtTime, money } from "@/lib/format";
-import { ArrowLeft, Phone, MessageCircle, Calendar, Users, MapPin, CheckCircle2, PlayCircle, Flag } from "lucide-react";
+import { ArrowLeft, Phone, MessageCircle, Calendar, Users, MapPin, CheckCircle2, PlayCircle, Flag, Check, X, Truck, Home } from "lucide-react";
 import { toast } from "sonner";
+import { rejectAssignment } from "@/lib/booking";
+import { useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/rider/tours/$id")({ component: RiderTour });
 
@@ -25,6 +27,7 @@ interface Progress { id: string; location_id: string | null; status: string; seq
 function RiderTour() {
   const { id } = Route.useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [b, setB] = useState<Booking | null>(null);
   const [routes, setRoutes] = useState<RouteRow[]>([]);
   const [progress, setProgress] = useState<Progress[]>([]);
@@ -52,10 +55,24 @@ function RiderTour() {
   const nextRoute = routes.find((r) => r.sequence_no === nextSeq);
   const allDone = progress.length >= routes.length && routes.length > 0;
 
-  async function startTour() {
+  async function setStatus(status: string) {
     setBusy(true);
-    await supabase.from("bookings").update({ booking_status: "in_progress" }).eq("id", id);
+    await supabase.from("bookings").update({ booking_status: status }).eq("id", id);
     setBusy(false); load();
+  }
+  async function acceptTour() { await setStatus("accepted"); toast.success("Tour accepted"); }
+  async function pickup() { await setStatus("picked_up"); toast.success("Customer picked up"); }
+  async function startTour() { await setStatus("in_progress"); toast.success("Tour started"); }
+  async function returnToHub() { await setStatus("returning"); toast.success("Returning to hub"); }
+
+  async function rejectTour() {
+    if (!b) return;
+    if (!confirm("Reject this tour? Another rider will be assigned.")) return;
+    setBusy(true);
+    await rejectAssignment(id, b.rider_id);
+    setBusy(false);
+    toast.success("Tour rejected — reassigning…");
+    navigate({ to: "/rider" });
   }
 
   async function checkIn() {
@@ -140,9 +157,18 @@ function RiderTour() {
           {/* Action */}
           <div className="mt-4 space-y-2">
             {b.booking_status === "assigned" && (
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" className="rounded-full" disabled={busy} onClick={rejectTour}><X className="w-4 h-4 mr-1" /> Reject</Button>
+                <Button className="rounded-full" disabled={busy} onClick={acceptTour}><Check className="w-4 h-4 mr-1" /> Accept</Button>
+              </div>
+            )}
+            {b.booking_status === "accepted" && (
+              <Button className="w-full rounded-full" disabled={busy} onClick={pickup}><Truck className="w-4 h-4 mr-1" /> Confirm pickup</Button>
+            )}
+            {b.booking_status === "picked_up" && (
               <Button className="w-full rounded-full" disabled={busy} onClick={startTour}><PlayCircle className="w-4 h-4 mr-1" /> Start tour</Button>
             )}
-            {b.booking_status === "in_progress" && nextRoute && (
+            {b.booking_status === "in_progress" && !allDone && nextRoute && (
               <>
                 <Textarea placeholder="Remarks (optional)" value={remark} onChange={(e) => setRemark(e.target.value)} className="text-sm" rows={2} />
                 <Button className="w-full rounded-full" disabled={busy} onClick={checkIn}>
@@ -151,12 +177,16 @@ function RiderTour() {
               </>
             )}
             {b.booking_status === "in_progress" && allDone && (
+              <Button className="w-full rounded-full" disabled={busy} onClick={returnToHub}><Home className="w-4 h-4 mr-1" /> Return to hub</Button>
+            )}
+            {b.booking_status === "returning" && (
               <Button className="w-full rounded-full" disabled={busy} onClick={completeTour}><Flag className="w-4 h-4 mr-1" /> Complete tour</Button>
             )}
             {b.booking_status === "completed" && (
               <div className="text-center text-sm text-success font-medium py-2">✓ Tour completed</div>
             )}
           </div>
+
         </div>
       </div>
     </div>

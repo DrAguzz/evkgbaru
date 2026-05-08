@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Pencil, MapPin } from "lucide-react";
+import { Plus, Pencil, MapPin, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/hubs")({ component: AdminHubs });
@@ -32,9 +32,14 @@ function AdminHubs() {
       : supabase.from("hubs").insert(payload);
     const { error } = await op;
     if (error) return toast.error(error.message);
-    toast.success("Saved"); setOpen(false); setEditing(null); load();
   }
 
+  async function del(h: Hub) {
+    if (!confirm(`Delete hub "${h.name}"?`)) return;
+    const { error } = await supabase.from("hubs").delete().eq("id", h.id);
+    if (error) return toast.error(error.message);
+    toast.success("Deleted"); load();
+  }
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -54,7 +59,8 @@ function AdminHubs() {
                   <div className="font-semibold truncate">{h.name}</div>
                   <div className="text-xs text-muted-foreground line-clamp-2">{h.address}</div>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => { setEditing(h); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => { setEditing(h); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => del(h)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
               </div>
               <div className="mt-3 text-xs text-muted-foreground space-y-0.5">
                 <div>Hours: {h.operating_hour ?? "—"}</div>
