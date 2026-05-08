@@ -141,28 +141,6 @@ function Landing() {
         </div>
       </section>
 
-      {/* Tour journey flow */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold">Tour Journey Flow & Rider Experience</h2>
-          <p className="text-muted-foreground mt-2">What happens after your booking is confirmed.</p>
-        </div>
-        <div className="relative grid grid-cols-2 md:grid-cols-5 gap-6">
-          <div className="hidden md:block absolute left-[10%] right-[10%] top-8 h-px bg-gradient-to-r from-secondary/20 via-secondary to-secondary/20" />
-          {tourJourney.map((s) => (
-            <div key={s.n} className="relative text-center">
-              <div className="mx-auto relative">
-                <div className="grid place-items-center w-16 h-16 rounded-2xl bg-secondary/10 mx-auto">
-                  <s.icon className="w-7 h-7 text-secondary" />
-                </div>
-                <span className="absolute -top-1 -right-1 grid place-items-center w-6 h-6 rounded-full bg-secondary text-secondary-foreground text-xs font-bold">{s.n}</span>
-              </div>
-              <div className="mt-4 font-semibold text-sm uppercase tracking-wide">{s.title}</div>
-              <p className="text-xs text-muted-foreground mt-1">{s.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* How it works for all users */}
       <section className="bg-accent/40 py-16">
