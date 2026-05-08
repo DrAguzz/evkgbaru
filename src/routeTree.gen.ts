@@ -10,13 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RiderRouteImport } from './routes/rider'
-import { Route as PackagesRouteImport } from './routes/packages'
-import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RiderIndexRouteImport } from './routes/rider.index'
+import { Route as PackagesIndexRouteImport } from './routes/packages.index'
+import { Route as BookingsIndexRouteImport } from './routes/bookings.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as RiderProfileRouteImport } from './routes/rider.profile'
@@ -35,7 +35,7 @@ import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminPackagesRouteImport } from './routes/admin.packages'
 import { Route as AdminLocationsRouteImport } from './routes/admin.locations'
 import { Route as AdminHubsRouteImport } from './routes/admin.hubs'
-import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
+import { Route as AdminBookingsIndexRouteImport } from './routes/admin.bookings.index'
 import { Route as RiderToursIdRouteImport } from './routes/rider.tours.$id'
 import { Route as AppPackagesIdRouteImport } from './routes/app.packages.$id'
 import { Route as AppBookPackageIdRouteImport } from './routes/app.book.$packageId'
@@ -44,16 +44,6 @@ import { Route as AdminBookingsIdRouteImport } from './routes/admin.bookings.$id
 const RiderRoute = RiderRouteImport.update({
   id: '/rider',
   path: '/rider',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PackagesRoute = PackagesRouteImport.update({
-  id: '/packages',
-  path: '/packages',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BookingsRoute = BookingsRouteImport.update({
-  id: '/bookings',
-  path: '/bookings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -81,6 +71,16 @@ const RiderIndexRoute = RiderIndexRouteImport.update({
   path: '/',
   getParentRoute: () => RiderRoute,
 } as any)
+const PackagesIndexRoute = PackagesIndexRouteImport.update({
+  id: '/packages/',
+  path: '/packages/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsIndexRoute = BookingsIndexRouteImport.update({
+  id: '/bookings/',
+  path: '/bookings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -107,14 +107,14 @@ const PayBookingIdRoute = PayBookingIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const PackagesIdRoute = PackagesIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => PackagesRoute,
+  id: '/packages/$id',
+  path: '/packages/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BookingsIdRoute = BookingsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => BookingsRoute,
+  id: '/bookings/$id',
+  path: '/bookings/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BookPackageIdRoute = BookPackageIdRouteImport.update({
   id: '/book/$packageId',
@@ -171,9 +171,9 @@ const AdminHubsRoute = AdminHubsRouteImport.update({
   path: '/hubs',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminBookingsRoute = AdminBookingsRouteImport.update({
-  id: '/bookings',
-  path: '/bookings',
+const AdminBookingsIndexRoute = AdminBookingsIndexRouteImport.update({
+  id: '/bookings/',
+  path: '/bookings/',
   getParentRoute: () => AdminRoute,
 } as any)
 const RiderToursIdRoute = RiderToursIdRouteImport.update({
@@ -192,9 +192,9 @@ const AppBookPackageIdRoute = AppBookPackageIdRouteImport.update({
   getParentRoute: () => AppRoute,
 } as any)
 const AdminBookingsIdRoute = AdminBookingsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AdminBookingsRoute,
+  id: '/bookings/$id',
+  path: '/bookings/$id',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -202,10 +202,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
-  '/bookings': typeof BookingsRouteWithChildren
-  '/packages': typeof PackagesRouteWithChildren
   '/rider': typeof RiderRouteWithChildren
-  '/admin/bookings': typeof AdminBookingsRouteWithChildren
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
@@ -224,18 +221,18 @@ export interface FileRoutesByFullPath {
   '/rider/profile': typeof RiderProfileRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/bookings/': typeof BookingsIndexRoute
+  '/packages/': typeof PackagesIndexRoute
   '/rider/': typeof RiderIndexRoute
   '/admin/bookings/$id': typeof AdminBookingsIdRoute
   '/app/book/$packageId': typeof AppBookPackageIdRoute
   '/app/packages/$id': typeof AppPackagesIdRoute
   '/rider/tours/$id': typeof RiderToursIdRoute
+  '/admin/bookings/': typeof AdminBookingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/bookings': typeof BookingsRouteWithChildren
-  '/packages': typeof PackagesRouteWithChildren
-  '/admin/bookings': typeof AdminBookingsRouteWithChildren
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
@@ -254,11 +251,14 @@ export interface FileRoutesByTo {
   '/rider/profile': typeof RiderProfileRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/bookings': typeof BookingsIndexRoute
+  '/packages': typeof PackagesIndexRoute
   '/rider': typeof RiderIndexRoute
   '/admin/bookings/$id': typeof AdminBookingsIdRoute
   '/app/book/$packageId': typeof AppBookPackageIdRoute
   '/app/packages/$id': typeof AppPackagesIdRoute
   '/rider/tours/$id': typeof RiderToursIdRoute
+  '/admin/bookings': typeof AdminBookingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -266,10 +266,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
-  '/bookings': typeof BookingsRouteWithChildren
-  '/packages': typeof PackagesRouteWithChildren
   '/rider': typeof RiderRouteWithChildren
-  '/admin/bookings': typeof AdminBookingsRouteWithChildren
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
@@ -288,11 +285,14 @@ export interface FileRoutesById {
   '/rider/profile': typeof RiderProfileRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/bookings/': typeof BookingsIndexRoute
+  '/packages/': typeof PackagesIndexRoute
   '/rider/': typeof RiderIndexRoute
   '/admin/bookings/$id': typeof AdminBookingsIdRoute
   '/app/book/$packageId': typeof AppBookPackageIdRoute
   '/app/packages/$id': typeof AppPackagesIdRoute
   '/rider/tours/$id': typeof RiderToursIdRoute
+  '/admin/bookings/': typeof AdminBookingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -301,10 +301,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/app'
     | '/auth'
-    | '/bookings'
-    | '/packages'
     | '/rider'
-    | '/admin/bookings'
     | '/admin/hubs'
     | '/admin/locations'
     | '/admin/packages'
@@ -323,18 +320,18 @@ export interface FileRouteTypes {
     | '/rider/profile'
     | '/admin/'
     | '/app/'
+    | '/bookings/'
+    | '/packages/'
     | '/rider/'
     | '/admin/bookings/$id'
     | '/app/book/$packageId'
     | '/app/packages/$id'
     | '/rider/tours/$id'
+    | '/admin/bookings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
-    | '/bookings'
-    | '/packages'
-    | '/admin/bookings'
     | '/admin/hubs'
     | '/admin/locations'
     | '/admin/packages'
@@ -353,21 +350,21 @@ export interface FileRouteTypes {
     | '/rider/profile'
     | '/admin'
     | '/app'
+    | '/bookings'
+    | '/packages'
     | '/rider'
     | '/admin/bookings/$id'
     | '/app/book/$packageId'
     | '/app/packages/$id'
     | '/rider/tours/$id'
+    | '/admin/bookings'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/app'
     | '/auth'
-    | '/bookings'
-    | '/packages'
     | '/rider'
-    | '/admin/bookings'
     | '/admin/hubs'
     | '/admin/locations'
     | '/admin/packages'
@@ -386,11 +383,14 @@ export interface FileRouteTypes {
     | '/rider/profile'
     | '/admin/'
     | '/app/'
+    | '/bookings/'
+    | '/packages/'
     | '/rider/'
     | '/admin/bookings/$id'
     | '/app/book/$packageId'
     | '/app/packages/$id'
     | '/rider/tours/$id'
+    | '/admin/bookings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -398,11 +398,13 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
-  BookingsRoute: typeof BookingsRouteWithChildren
-  PackagesRoute: typeof PackagesRouteWithChildren
   RiderRoute: typeof RiderRouteWithChildren
   BookPackageIdRoute: typeof BookPackageIdRoute
+  BookingsIdRoute: typeof BookingsIdRoute
+  PackagesIdRoute: typeof PackagesIdRoute
   PayBookingIdRoute: typeof PayBookingIdRoute
+  BookingsIndexRoute: typeof BookingsIndexRoute
+  PackagesIndexRoute: typeof PackagesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -412,20 +414,6 @@ declare module '@tanstack/react-router' {
       path: '/rider'
       fullPath: '/rider'
       preLoaderRoute: typeof RiderRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/packages': {
-      id: '/packages'
-      path: '/packages'
-      fullPath: '/packages'
-      preLoaderRoute: typeof PackagesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/bookings': {
-      id: '/bookings'
-      path: '/bookings'
-      fullPath: '/bookings'
-      preLoaderRoute: typeof BookingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -462,6 +450,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/rider/'
       preLoaderRoute: typeof RiderIndexRouteImport
       parentRoute: typeof RiderRoute
+    }
+    '/packages/': {
+      id: '/packages/'
+      path: '/packages'
+      fullPath: '/packages/'
+      preLoaderRoute: typeof PackagesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings/': {
+      id: '/bookings/'
+      path: '/bookings'
+      fullPath: '/bookings/'
+      preLoaderRoute: typeof BookingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/app/': {
       id: '/app/'
@@ -500,17 +502,17 @@ declare module '@tanstack/react-router' {
     }
     '/packages/$id': {
       id: '/packages/$id'
-      path: '/$id'
+      path: '/packages/$id'
       fullPath: '/packages/$id'
       preLoaderRoute: typeof PackagesIdRouteImport
-      parentRoute: typeof PackagesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/bookings/$id': {
       id: '/bookings/$id'
-      path: '/$id'
+      path: '/bookings/$id'
       fullPath: '/bookings/$id'
       preLoaderRoute: typeof BookingsIdRouteImport
-      parentRoute: typeof BookingsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/book/$packageId': {
       id: '/book/$packageId'
@@ -589,11 +591,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminHubsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/bookings': {
-      id: '/admin/bookings'
+    '/admin/bookings/': {
+      id: '/admin/bookings/'
       path: '/bookings'
-      fullPath: '/admin/bookings'
-      preLoaderRoute: typeof AdminBookingsRouteImport
+      fullPath: '/admin/bookings/'
+      preLoaderRoute: typeof AdminBookingsIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/rider/tours/$id': {
@@ -619,28 +621,15 @@ declare module '@tanstack/react-router' {
     }
     '/admin/bookings/$id': {
       id: '/admin/bookings/$id'
-      path: '/$id'
+      path: '/bookings/$id'
       fullPath: '/admin/bookings/$id'
       preLoaderRoute: typeof AdminBookingsIdRouteImport
-      parentRoute: typeof AdminBookingsRoute
+      parentRoute: typeof AdminRoute
     }
   }
 }
 
-interface AdminBookingsRouteChildren {
-  AdminBookingsIdRoute: typeof AdminBookingsIdRoute
-}
-
-const AdminBookingsRouteChildren: AdminBookingsRouteChildren = {
-  AdminBookingsIdRoute: AdminBookingsIdRoute,
-}
-
-const AdminBookingsRouteWithChildren = AdminBookingsRoute._addFileChildren(
-  AdminBookingsRouteChildren,
-)
-
 interface AdminRouteChildren {
-  AdminBookingsRoute: typeof AdminBookingsRouteWithChildren
   AdminHubsRoute: typeof AdminHubsRoute
   AdminLocationsRoute: typeof AdminLocationsRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
@@ -649,10 +638,11 @@ interface AdminRouteChildren {
   AdminRoutesRoute: typeof AdminRoutesRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminBookingsIdRoute: typeof AdminBookingsIdRoute
+  AdminBookingsIndexRoute: typeof AdminBookingsIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminBookingsRoute: AdminBookingsRouteWithChildren,
   AdminHubsRoute: AdminHubsRoute,
   AdminLocationsRoute: AdminLocationsRoute,
   AdminPackagesRoute: AdminPackagesRoute,
@@ -661,6 +651,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminRoutesRoute: AdminRoutesRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminBookingsIdRoute: AdminBookingsIdRoute,
+  AdminBookingsIndexRoute: AdminBookingsIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -695,30 +687,6 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
-interface BookingsRouteChildren {
-  BookingsIdRoute: typeof BookingsIdRoute
-}
-
-const BookingsRouteChildren: BookingsRouteChildren = {
-  BookingsIdRoute: BookingsIdRoute,
-}
-
-const BookingsRouteWithChildren = BookingsRoute._addFileChildren(
-  BookingsRouteChildren,
-)
-
-interface PackagesRouteChildren {
-  PackagesIdRoute: typeof PackagesIdRoute
-}
-
-const PackagesRouteChildren: PackagesRouteChildren = {
-  PackagesIdRoute: PackagesIdRoute,
-}
-
-const PackagesRouteWithChildren = PackagesRoute._addFileChildren(
-  PackagesRouteChildren,
-)
-
 interface RiderRouteChildren {
   RiderHistoryRoute: typeof RiderHistoryRoute
   RiderProfileRoute: typeof RiderProfileRoute
@@ -740,11 +708,13 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
-  BookingsRoute: BookingsRouteWithChildren,
-  PackagesRoute: PackagesRouteWithChildren,
   RiderRoute: RiderRouteWithChildren,
   BookPackageIdRoute: BookPackageIdRoute,
+  BookingsIdRoute: BookingsIdRoute,
+  PackagesIdRoute: PackagesIdRoute,
   PayBookingIdRoute: PayBookingIdRoute,
+  BookingsIndexRoute: BookingsIndexRoute,
+  PackagesIndexRoute: PackagesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
