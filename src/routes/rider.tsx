@@ -11,7 +11,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/rider")({ component: RiderShell });
 
 function RiderShell() {
-  const { user, loading, isRider, signOut } = useAuth();
+  const { user, loading, isRider, signOut, refreshRoles } = useAuth();
   const navigate = useNavigate();
   const loc = useLocation();
   const [claiming, setClaiming] = useState(false);
@@ -36,8 +36,7 @@ function RiderShell() {
     if (!data) return toast.error("No demo rider slots left");
     toast.success("You're now a demo rider!");
     setRiderId(data as string);
-    await signOut();
-    navigate({ to: "/auth", search: { redirect: "/rider" } });
+    await refreshRoles();
   }
 
   if (loading || checking) return <PhoneFrame><div className="grid place-items-center h-full">Loading…</div></PhoneFrame>;
