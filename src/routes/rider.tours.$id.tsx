@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/StatusBadge";
 import { fmtDate, fmtTime, money } from "@/lib/format";
-import { ArrowLeft, Phone, MessageCircle, Calendar, Users, MapPin, CheckCircle2, PlayCircle, Flag } from "lucide-react";
+import { ArrowLeft, Phone, MessageCircle, Calendar, Users, MapPin, CheckCircle2, PlayCircle, Flag, Check, X, Truck, Home } from "lucide-react";
 import { toast } from "sonner";
+import { rejectAssignment } from "@/lib/booking";
+import { useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/rider/tours/$id")({ component: RiderTour });
 
