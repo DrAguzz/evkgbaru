@@ -18,7 +18,7 @@ interface Props {
  * Stylised route map showing checkpoints connected by a curved path.
  * Mimics a tracking map without requiring a real map provider.
  */
-export function RouteMap({ stops, title = "Tour route", className = "" }: Props) {
+export function RouteMap({ stops, title = "Tour route", className = "", live = false }: Props) {
   const n = Math.max(stops.length, 2);
   // Compute positions along a gentle S-curve
   const points = stops.map((_, i) => {
