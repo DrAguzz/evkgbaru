@@ -28,7 +28,7 @@ function AdminDashboard() {
       setS({ totalBookings, revenue, activeRiders, completed, pending, inProgress });
 
       const { data: r } = await supabase.from("bookings")
-        .select("id, booking_no, booking_date, booking_time, total_price, booking_status, tour_packages(package_name), profiles!bookings_tourist_id_fkey(name)")
+        .select("id, booking_no, booking_date, booking_time, total_price, booking_status, tour_packages(package_name), profiles!bookings_tourist_profile_fkey(name)")
         .order("created_at", { ascending: false }).limit(8);
       setRecent((r ?? []) as unknown as Recent[]);
     })();

@@ -33,7 +33,7 @@ function AdminBookings() {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("bookings")
-      .select("id, booking_no, booking_date, booking_time, pax, total_price, booking_status, payment_status, pickup_hub_id, rider_id, tour_packages(package_name), profiles!bookings_tourist_id_fkey(name, phone), hubs:pickup_hub_id(name), riders(id, name)")
+      .select("id, booking_no, booking_date, booking_time, pax, total_price, booking_status, payment_status, pickup_hub_id, rider_id, tour_packages(package_name), profiles!bookings_tourist_profile_fkey(name, phone), hubs:pickup_hub_id(name), riders(id, name)")
       .order("created_at", { ascending: false });
     setRows((data ?? []) as unknown as Row[]);
   }, []);
