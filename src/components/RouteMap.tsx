@@ -1,4 +1,4 @@
-import { MapPin, Navigation, Flag } from "lucide-react";
+import { MapPin, Navigation, Flag, Bike, Radio } from "lucide-react";
 
 export interface RouteStop {
   id: string;
@@ -11,6 +11,7 @@ interface Props {
   stops: RouteStop[];
   title?: string;
   className?: string;
+  live?: boolean;
 }
 
 /**
