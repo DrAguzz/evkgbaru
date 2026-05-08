@@ -169,9 +169,9 @@ function Landing() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold">How it works — for all users</h2>
-            <p className="text-muted-foreground mt-2">One platform, three experiences.</p>
+            <p className="text-muted-foreground mt-2">One platform, two experiences.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
             {[
               {
                 icon: Users, title: "For Tourist", color: "bg-primary/10 text-primary",
@@ -182,11 +182,6 @@ function Landing() {
                 icon: ShieldCheck, title: "For Tour Rider", color: "bg-secondary/10 text-secondary",
                 items: ["Receive auto assignment", "Pickup tourist", "Lead the tour route", "Ensure safety & experience", "Complete tour & return"],
                 cta: { to: "/rider" as const, label: "Open Rider App" },
-              },
-              {
-                icon: LayoutDashboard, title: "For Admin / Hub", color: "bg-warning/10 text-warning",
-                items: ["Manage packages & riders", "Monitor tours in real-time", "Ensure operations smooth", "Support & assist"],
-                cta: { to: "/admin" as const, label: "Open Admin" },
               },
             ].map((card) => (
               <Card key={card.title} className="rounded-2xl border-0 shadow-card">
