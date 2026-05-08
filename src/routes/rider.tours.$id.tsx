@@ -55,7 +55,6 @@ function RiderTour() {
   async function startTour() {
     setBusy(true);
     await supabase.from("bookings").update({ booking_status: "in_progress" }).eq("id", id);
-    await supabase.from("notifications").insert({ user_id: (b as Booking).profiles ? undefined : undefined, title: "Tour started", message: "Your rider has started the tour." });
     setBusy(false); load();
   }
 
