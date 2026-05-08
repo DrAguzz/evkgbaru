@@ -27,6 +27,7 @@ interface Progress { id: string; location_id: string | null; status: string; seq
 function RiderTour() {
   const { id } = Route.useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [b, setB] = useState<Booking | null>(null);
   const [routes, setRoutes] = useState<RouteRow[]>([]);
   const [progress, setProgress] = useState<Progress[]>([]);
