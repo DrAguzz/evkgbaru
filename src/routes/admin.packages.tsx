@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { money } from "@/lib/format";
-import { Plus, Pencil, Clock, Users } from "lucide-react";
+import { Plus, Pencil, Clock, Users, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/packages")({ component: AdminPackages });
