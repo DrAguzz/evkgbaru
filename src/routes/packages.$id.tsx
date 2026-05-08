@@ -56,15 +56,14 @@ function PackageDetail() {
             </div>
           </div>
 
-          {/* route map placeholder */}
-          <Card className="rounded-2xl border-0 shadow-card">
-            <CardContent className="p-0">
-              <div className="aspect-[16/7] bg-gradient-to-br from-accent to-secondary/30 grid place-items-center rounded-2xl relative overflow-hidden">
-                <MapPin className="w-12 h-12 text-primary/40" />
-                <span className="absolute bottom-3 right-3 text-xs px-2 py-1 rounded-full bg-background/80">Map preview</span>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Route map */}
+          <RouteMap
+            title={`${routes.length} stops`}
+            stops={routes.map((r, i) => ({
+              id: String(r.sequence_no) + i,
+              name: r.locations?.name ?? `Stop ${r.sequence_no}`,
+            }))}
+          />
 
           <div>
             <h2 className="text-xl font-semibold mb-3">Route checkpoints</h2>
