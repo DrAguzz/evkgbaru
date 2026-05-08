@@ -9,38 +9,242 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PackagesRouteImport } from './routes/packages'
+import { Route as BookingsRouteImport } from './routes/bookings'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as PayBookingIdRouteImport } from './routes/pay.$bookingId'
+import { Route as PackagesIdRouteImport } from './routes/packages.$id'
+import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
+import { Route as BookPackageIdRouteImport } from './routes/book.$packageId'
+import { Route as AppProfileRouteImport } from './routes/app.profile'
+import { Route as AppPackagesRouteImport } from './routes/app.packages'
+import { Route as AppBookingsRouteImport } from './routes/app.bookings'
+import { Route as AppPackagesIdRouteImport } from './routes/app.packages.$id'
+import { Route as AppBookPackageIdRouteImport } from './routes/app.book.$packageId'
 
+const PackagesRoute = PackagesRouteImport.update({
+  id: '/packages',
+  path: '/packages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsRoute = BookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const PayBookingIdRoute = PayBookingIdRouteImport.update({
+  id: '/pay/$bookingId',
+  path: '/pay/$bookingId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PackagesIdRoute = PackagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PackagesRoute,
+} as any)
+const BookingsIdRoute = BookingsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => BookingsRoute,
+} as any)
+const BookPackageIdRoute = BookPackageIdRouteImport.update({
+  id: '/book/$packageId',
+  path: '/book/$packageId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPackagesRoute = AppPackagesRouteImport.update({
+  id: '/packages',
+  path: '/packages',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBookingsRoute = AppBookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPackagesIdRoute = AppPackagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppPackagesRoute,
+} as any)
+const AppBookPackageIdRoute = AppBookPackageIdRouteImport.update({
+  id: '/book/$packageId',
+  path: '/book/$packageId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/bookings': typeof BookingsRouteWithChildren
+  '/packages': typeof PackagesRouteWithChildren
+  '/app/bookings': typeof AppBookingsRoute
+  '/app/packages': typeof AppPackagesRouteWithChildren
+  '/app/profile': typeof AppProfileRoute
+  '/book/$packageId': typeof BookPackageIdRoute
+  '/bookings/$id': typeof BookingsIdRoute
+  '/packages/$id': typeof PackagesIdRoute
+  '/pay/$bookingId': typeof PayBookingIdRoute
+  '/app/': typeof AppIndexRoute
+  '/app/book/$packageId': typeof AppBookPackageIdRoute
+  '/app/packages/$id': typeof AppPackagesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/bookings': typeof BookingsRouteWithChildren
+  '/packages': typeof PackagesRouteWithChildren
+  '/app/bookings': typeof AppBookingsRoute
+  '/app/packages': typeof AppPackagesRouteWithChildren
+  '/app/profile': typeof AppProfileRoute
+  '/book/$packageId': typeof BookPackageIdRoute
+  '/bookings/$id': typeof BookingsIdRoute
+  '/packages/$id': typeof PackagesIdRoute
+  '/pay/$bookingId': typeof PayBookingIdRoute
+  '/app': typeof AppIndexRoute
+  '/app/book/$packageId': typeof AppBookPackageIdRoute
+  '/app/packages/$id': typeof AppPackagesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/bookings': typeof BookingsRouteWithChildren
+  '/packages': typeof PackagesRouteWithChildren
+  '/app/bookings': typeof AppBookingsRoute
+  '/app/packages': typeof AppPackagesRouteWithChildren
+  '/app/profile': typeof AppProfileRoute
+  '/book/$packageId': typeof BookPackageIdRoute
+  '/bookings/$id': typeof BookingsIdRoute
+  '/packages/$id': typeof PackagesIdRoute
+  '/pay/$bookingId': typeof PayBookingIdRoute
+  '/app/': typeof AppIndexRoute
+  '/app/book/$packageId': typeof AppBookPackageIdRoute
+  '/app/packages/$id': typeof AppPackagesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/auth'
+    | '/bookings'
+    | '/packages'
+    | '/app/bookings'
+    | '/app/packages'
+    | '/app/profile'
+    | '/book/$packageId'
+    | '/bookings/$id'
+    | '/packages/$id'
+    | '/pay/$bookingId'
+    | '/app/'
+    | '/app/book/$packageId'
+    | '/app/packages/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/bookings'
+    | '/packages'
+    | '/app/bookings'
+    | '/app/packages'
+    | '/app/profile'
+    | '/book/$packageId'
+    | '/bookings/$id'
+    | '/packages/$id'
+    | '/pay/$bookingId'
+    | '/app'
+    | '/app/book/$packageId'
+    | '/app/packages/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/auth'
+    | '/bookings'
+    | '/packages'
+    | '/app/bookings'
+    | '/app/packages'
+    | '/app/profile'
+    | '/book/$packageId'
+    | '/bookings/$id'
+    | '/packages/$id'
+    | '/pay/$bookingId'
+    | '/app/'
+    | '/app/book/$packageId'
+    | '/app/packages/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  BookingsRoute: typeof BookingsRouteWithChildren
+  PackagesRoute: typeof PackagesRouteWithChildren
+  BookPackageIdRoute: typeof BookPackageIdRoute
+  PayBookingIdRoute: typeof PayBookingIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/packages': {
+      id: '/packages'
+      path: '/packages'
+      fullPath: '/packages'
+      preLoaderRoute: typeof PackagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings': {
+      id: '/bookings'
+      path: '/bookings'
+      fullPath: '/bookings'
+      preLoaderRoute: typeof BookingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +252,142 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/pay/$bookingId': {
+      id: '/pay/$bookingId'
+      path: '/pay/$bookingId'
+      fullPath: '/pay/$bookingId'
+      preLoaderRoute: typeof PayBookingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/packages/$id': {
+      id: '/packages/$id'
+      path: '/$id'
+      fullPath: '/packages/$id'
+      preLoaderRoute: typeof PackagesIdRouteImport
+      parentRoute: typeof PackagesRoute
+    }
+    '/bookings/$id': {
+      id: '/bookings/$id'
+      path: '/$id'
+      fullPath: '/bookings/$id'
+      preLoaderRoute: typeof BookingsIdRouteImport
+      parentRoute: typeof BookingsRoute
+    }
+    '/book/$packageId': {
+      id: '/book/$packageId'
+      path: '/book/$packageId'
+      fullPath: '/book/$packageId'
+      preLoaderRoute: typeof BookPackageIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/profile': {
+      id: '/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/packages': {
+      id: '/app/packages'
+      path: '/packages'
+      fullPath: '/app/packages'
+      preLoaderRoute: typeof AppPackagesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/bookings': {
+      id: '/app/bookings'
+      path: '/bookings'
+      fullPath: '/app/bookings'
+      preLoaderRoute: typeof AppBookingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/packages/$id': {
+      id: '/app/packages/$id'
+      path: '/$id'
+      fullPath: '/app/packages/$id'
+      preLoaderRoute: typeof AppPackagesIdRouteImport
+      parentRoute: typeof AppPackagesRoute
+    }
+    '/app/book/$packageId': {
+      id: '/app/book/$packageId'
+      path: '/book/$packageId'
+      fullPath: '/app/book/$packageId'
+      preLoaderRoute: typeof AppBookPackageIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppPackagesRouteChildren {
+  AppPackagesIdRoute: typeof AppPackagesIdRoute
+}
+
+const AppPackagesRouteChildren: AppPackagesRouteChildren = {
+  AppPackagesIdRoute: AppPackagesIdRoute,
+}
+
+const AppPackagesRouteWithChildren = AppPackagesRoute._addFileChildren(
+  AppPackagesRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppBookingsRoute: typeof AppBookingsRoute
+  AppPackagesRoute: typeof AppPackagesRouteWithChildren
+  AppProfileRoute: typeof AppProfileRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppBookPackageIdRoute: typeof AppBookPackageIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppBookingsRoute: AppBookingsRoute,
+  AppPackagesRoute: AppPackagesRouteWithChildren,
+  AppProfileRoute: AppProfileRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppBookPackageIdRoute: AppBookPackageIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface BookingsRouteChildren {
+  BookingsIdRoute: typeof BookingsIdRoute
+}
+
+const BookingsRouteChildren: BookingsRouteChildren = {
+  BookingsIdRoute: BookingsIdRoute,
+}
+
+const BookingsRouteWithChildren = BookingsRoute._addFileChildren(
+  BookingsRouteChildren,
+)
+
+interface PackagesRouteChildren {
+  PackagesIdRoute: typeof PackagesIdRoute
+}
+
+const PackagesRouteChildren: PackagesRouteChildren = {
+  PackagesIdRoute: PackagesIdRoute,
+}
+
+const PackagesRouteWithChildren = PackagesRoute._addFileChildren(
+  PackagesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  AuthRoute: AuthRoute,
+  BookingsRoute: BookingsRouteWithChildren,
+  PackagesRoute: PackagesRouteWithChildren,
+  BookPackageIdRoute: BookPackageIdRoute,
+  PayBookingIdRoute: PayBookingIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
