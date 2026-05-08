@@ -46,7 +46,7 @@ function BookPage() {
     })();
   }, [packageId]);
 
-  if (!pkg) return <div className="min-h-screen grid place-items-center">Loading…</div>;
+  if (loading || !user || !pkg) return <div className="min-h-screen grid place-items-center">Loading…</div>;
   const total = pkg.price * pax;
 
   return (
