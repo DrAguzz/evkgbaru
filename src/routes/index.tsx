@@ -114,7 +114,7 @@ function Landing() {
                 <div className="grid place-items-center w-16 h-16 rounded-2xl bg-card shadow-card mx-auto">
                   <s.icon className="w-7 h-7 text-primary" />
                 </div>
-                <span className="absolute -top-1 -right-1 grid place-items-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">{s.n}</span>
+                
               </div>
               <div className="mt-4 font-semibold text-sm uppercase tracking-wide">{s.title}</div>
               <p className="text-xs text-muted-foreground mt-1">{s.desc}</p>
