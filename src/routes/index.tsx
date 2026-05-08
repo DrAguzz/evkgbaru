@@ -2,19 +2,55 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader, SiteFooter } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Bike, MapPin, Shield, Clock, Star, CreditCard, ArrowRight, CheckCircle2 } from "lucide-react";
+import {
+  Bike, ArrowRight, UserPlus, Package, CreditCard, CheckCircle2, UserCheck,
+  PlayCircle, Navigation, MapPin, Flag, Home, Workflow, Zap, Activity, Globe,
+  Shield, Sparkles, Cpu, Leaf, Users, ShieldCheck, LayoutDashboard,
+} from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "EVRide — Guided EV Bike Tours in Kuala Lumpur" },
-      { name: "description", content: "Discover Kuala Lumpur on a silent EV bike with a local guide. Heritage rides, food trails, Merdeka tours and more." },
+      { name: "description", content: "Web-based open platform for tourists to book EV bike tour packages, make payments, and enjoy guided journeys with local riders." },
       { property: "og:title", content: "EVRide — Guided EV Bike Tours in Kuala Lumpur" },
-      { property: "og:description", content: "Book a premium EV bike tour around KL with a guided rider." },
+      { property: "og:description", content: "Book a premium EV bike tour around KL with auto-assigned local rider and real-time tracking." },
     ],
   }),
   component: Landing,
 });
+
+const bookingJourney = [
+  { n: 1, icon: UserPlus, title: "Register", desc: "Create an account as a tourist" },
+  { n: 2, icon: Package, title: "Pick Package", desc: "Browse and choose tour package" },
+  { n: 3, icon: CreditCard, title: "Confirm & Pay", desc: "Confirm details and make payment" },
+  { n: 4, icon: CheckCircle2, title: "Success", desc: "Booking success & auto-assign rider" },
+  { n: 5, icon: UserCheck, title: "Rider Assign", desc: "Tour rider assigned & notified" },
+];
+
+const tourJourney = [
+  { n: 1, icon: PlayCircle, title: "Pickup / Ready", desc: "Tour rider pickup tourist at checkpoint or hotel" },
+  { n: 2, icon: Navigation, title: "Move to Location", desc: "Rider leads the way, tourist follows behind on their own bike" },
+  { n: 3, icon: MapPin, title: "Explore Location", desc: "Enjoy the destinations as per package itinerary" },
+  { n: 4, icon: Flag, title: "Completed", desc: "Tour completed successfully" },
+  { n: 5, icon: Home, title: "Return to Hub", desc: "Return to checkpoint or hub safely" },
+];
+
+const whyBetter = [
+  { icon: Workflow, title: "Seamless Flow", desc: "Easy steps from register to ride" },
+  { icon: Zap, title: "Auto-Assign Rider", desc: "System auto-assigns best available rider" },
+  { icon: Activity, title: "Real-Time Tracking", desc: "Live tracking for safety & peace of mind" },
+  { icon: CheckCircle2, title: "Complete Experience", desc: "From pickup to return, we handle all" },
+  { icon: Globe, title: "Web Based", desc: "Accessible anywhere, anytime, any device" },
+];
+
+const benefits = [
+  { icon: Shield, title: "Safe & Secure", desc: "Verified riders & real-time monitoring" },
+  { icon: Sparkles, title: "Better Experience", desc: "Local expertise & scenic routes" },
+  { icon: Bike, title: "Flexible & Affordable", desc: "Various packages to suit every tourist" },
+  { icon: Cpu, title: "Smart Technology", desc: "Auto assign, tracking, & digital journey" },
+  { icon: Leaf, title: "Sustainable Travel", desc: "Promoting responsible & eco-friendly tourism" },
+];
 
 function Landing() {
   return (
@@ -25,22 +61,23 @@ function Landing() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-hero opacity-95" />
         <div
-          className="absolute inset-0 opacity-30 mix-blend-overlay"
+          className="absolute inset-0 opacity-25 mix-blend-overlay"
           style={{
             backgroundImage: "url(https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=1600)",
             backgroundSize: "cover", backgroundPosition: "center",
           }}
         />
-        <div className="container relative mx-auto px-4 py-24 md:py-32 text-primary-foreground">
+        <div className="container relative mx-auto px-4 py-20 md:py-28 text-primary-foreground">
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-3 py-1 text-xs font-medium">
-              <Bike className="w-3.5 h-3.5" /> Silent. Clean. Guided.
+              <Bike className="w-3.5 h-3.5" /> Tourist Open Web · Tour Booking Journey
             </span>
             <h1 className="mt-4 text-4xl md:text-6xl font-extrabold leading-tight">
-              Explore Kuala Lumpur<br />on an EV bike.
+              Explore Kuala Lumpur<br />on a guided EV bike.
             </h1>
             <p className="mt-4 text-lg text-white/90 max-w-lg">
-              Premium guided e-bike tours through KLCC, Kampung Baru, Merdeka Square and more. Book in seconds — your local rider takes care of the rest.
+              Web-based open platform for tourists to book tour packages, make payments,
+              and enjoy a guided journey with our local tour riders.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/packages">
@@ -58,118 +95,135 @@ function Landing() {
         </div>
       </section>
 
-      {/* Highlights */}
+      {/* Booking journey — 5 steps */}
       <section className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-4 gap-4">
-          {[
-            { icon: Bike, title: "100% Electric", desc: "Silent EV bikes for clean city rides." },
-            { icon: MapPin, title: "Local Routes", desc: "Curated KL heritage & food trails." },
-            { icon: Shield, title: "Licensed Riders", desc: "Trained guides + safety briefing." },
-            { icon: Clock, title: "Flexible Slots", desc: "Daily slots, easy booking." },
-          ].map((h) => (
-            <Card key={h.title} className="rounded-2xl shadow-card border-0">
-              <CardContent className="p-6">
-                <span className="grid place-items-center w-12 h-12 rounded-xl bg-accent text-primary mb-4">
-                  <h.icon className="w-5 h-5" />
-                </span>
-                <div className="font-semibold">{h.title}</div>
-                <p className="text-sm text-muted-foreground mt-1">{h.desc}</p>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold">Tourist Booking Journey</h2>
+          <p className="text-muted-foreground mt-2">From sign-up to your assigned rider in 5 simple steps.</p>
         </div>
-      </section>
-
-      {/* How it works */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center">How it works</h2>
-        <div className="mt-10 grid md:grid-cols-4 gap-6">
-          {[
-            { n: 1, title: "Choose package", desc: "Browse curated KL tour packages." },
-            { n: 2, title: "Book & pay", desc: "Pick a date, time and pax. Pay securely." },
-            { n: 3, title: "Meet your rider", desc: "We auto-assign a local guide." },
-            { n: 4, title: "Enjoy the ride", desc: "Track checkpoints in real time." },
-          ].map((s) => (
-            <div key={s.n} className="text-center">
-              <div className="mx-auto grid place-items-center w-14 h-14 rounded-full bg-primary text-primary-foreground font-bold text-lg shadow-soft">
-                {s.n}
+        <div className="relative grid grid-cols-2 md:grid-cols-5 gap-6">
+          <div className="hidden md:block absolute left-[10%] right-[10%] top-8 h-px bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
+          {bookingJourney.map((s) => (
+            <div key={s.n} className="relative text-center">
+              <div className="mx-auto relative">
+                <div className="grid place-items-center w-16 h-16 rounded-2xl bg-card shadow-card mx-auto">
+                  <s.icon className="w-7 h-7 text-primary" />
+                </div>
+                <span className="absolute -top-1 -right-1 grid place-items-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">{s.n}</span>
               </div>
-              <div className="mt-3 font-semibold">{s.title}</div>
-              <p className="text-sm text-muted-foreground">{s.desc}</p>
+              <div className="mt-4 font-semibold text-sm uppercase tracking-wide">{s.title}</div>
+              <p className="text-xs text-muted-foreground mt-1">{s.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Popular packages teaser */}
+      {/* Why this journey is better */}
+      <section className="bg-hero text-primary-foreground py-14">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-center">Why this journey is better</h2>
+          <div className="mt-8 grid grid-cols-2 md:grid-cols-5 gap-4">
+            {whyBetter.map((w) => (
+              <div key={w.title} className="text-center px-2">
+                <div className="grid place-items-center w-12 h-12 rounded-xl bg-white/15 backdrop-blur mx-auto">
+                  <w.icon className="w-5 h-5" />
+                </div>
+                <div className="mt-3 font-semibold text-sm uppercase tracking-wide">{w.title}</div>
+                <p className="text-xs opacity-90 mt-1">{w.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tour journey flow */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold">Tour Journey Flow & Rider Experience</h2>
+          <p className="text-muted-foreground mt-2">What happens after your booking is confirmed.</p>
+        </div>
+        <div className="relative grid grid-cols-2 md:grid-cols-5 gap-6">
+          <div className="hidden md:block absolute left-[10%] right-[10%] top-8 h-px bg-gradient-to-r from-secondary/20 via-secondary to-secondary/20" />
+          {tourJourney.map((s) => (
+            <div key={s.n} className="relative text-center">
+              <div className="mx-auto relative">
+                <div className="grid place-items-center w-16 h-16 rounded-2xl bg-secondary/10 mx-auto">
+                  <s.icon className="w-7 h-7 text-secondary" />
+                </div>
+                <span className="absolute -top-1 -right-1 grid place-items-center w-6 h-6 rounded-full bg-secondary text-secondary-foreground text-xs font-bold">{s.n}</span>
+              </div>
+              <div className="mt-4 font-semibold text-sm uppercase tracking-wide">{s.title}</div>
+              <p className="text-xs text-muted-foreground mt-1">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* How it works for all users */}
       <section className="bg-accent/40 py-16">
         <div className="container mx-auto px-4">
-          <div className="flex items-end justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-bold">Popular tour packages</h2>
-              <p className="text-muted-foreground">A taste of KL on two electric wheels.</p>
-            </div>
-            <Link to="/packages" className="text-primary font-medium hidden md:inline-flex items-center gap-1">
-              View all <ArrowRight className="w-4 h-4" />
-            </Link>
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold">How it works — for all users</h2>
+            <p className="text-muted-foreground mt-2">One platform, three experiences.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-5">
             {[
-              { name: "KL Heritage Ride", time: "2h 30m", price: "RM150", img: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800" },
-              { name: "Kampung Baru Food Ride", time: "1h 30m", price: "RM90", img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800" },
-              { name: "Merdeka City Ride", time: "2h 0m", price: "RM120", img: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800" },
-            ].map((p) => (
-              <Card key={p.name} className="overflow-hidden rounded-2xl border-0 shadow-card">
-                <div className="aspect-[4/3] bg-muted overflow-hidden">
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" />
-                </div>
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between">
-                    <div className="font-semibold">{p.name}</div>
-                    <div className="text-primary font-bold">{p.price}</div>
+              {
+                icon: Users, title: "For Tourist", color: "bg-primary/10 text-primary",
+                items: ["Register & choose package", "Make payment", "Get auto-assigned rider", "Enjoy the tour", "Real-time tracking", "Safe return to hub"],
+                cta: { to: "/packages" as const, label: "Book a tour" },
+              },
+              {
+                icon: ShieldCheck, title: "For Tour Rider", color: "bg-secondary/10 text-secondary",
+                items: ["Receive auto assignment", "Pickup tourist", "Lead the tour route", "Ensure safety & experience", "Complete tour & return"],
+                cta: { to: "/rider" as const, label: "Open Rider App" },
+              },
+              {
+                icon: LayoutDashboard, title: "For Admin / Hub", color: "bg-warning/10 text-warning",
+                items: ["Manage packages & riders", "Monitor tours in real-time", "Ensure operations smooth", "Support & assist"],
+                cta: { to: "/admin" as const, label: "Open Admin" },
+              },
+            ].map((card) => (
+              <Card key={card.title} className="rounded-2xl border-0 shadow-card">
+                <CardContent className="p-6">
+                  <div className={`grid place-items-center w-12 h-12 rounded-xl ${card.color}`}>
+                    <card.icon className="w-5 h-5" />
                   </div>
-                  <div className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" /> {p.time}
-                  </div>
+                  <div className="mt-4 font-bold text-lg uppercase tracking-wide">{card.title}</div>
+                  <ul className="mt-4 space-y-2 text-sm">
+                    {card.items.map((it) => (
+                      <li key={it} className="flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-success mt-0.5 shrink-0" /> <span>{it}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link to={card.cta.to} className="mt-5 inline-flex items-center text-primary font-medium text-sm">
+                    {card.cta.label} <ArrowRight className="w-4 h-4 ml-1" />
+                  </Link>
                 </CardContent>
               </Card>
             ))}
           </div>
-          <div className="mt-8 text-center md:hidden">
-            <Link to="/packages"><Button variant="outline">View all packages</Button></Link>
-          </div>
         </div>
       </section>
 
-      {/* Benefits */}
+      {/* Key benefits */}
       <section className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-3xl font-bold">Why ride with EVRide?</h2>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Zero emission, silent EV bikes",
-                "Insured tours with safety briefing",
-                "Real-time checkpoint tracking",
-                "Cashless payment, instant confirmation",
-                "Multilingual local riders",
-              ].map((t) => (
-                <li key={t} className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-secondary mt-0.5" />
-                  <span>{t}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <Card className="rounded-2xl shadow-card border-0 bg-hero text-primary-foreground">
-            <CardContent className="p-8">
-              <Star className="w-6 h-6 mb-3" />
-              <p className="text-lg leading-relaxed italic">
-                "Best way to see KL — our rider Ahmad showed us hidden food spots in Kampung Baru we'd never have found ourselves."
-              </p>
-              <div className="mt-4 text-sm font-medium">— Sarah, Singapore</div>
-            </CardContent>
-          </Card>
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold">Key Benefits</h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {benefits.map((b) => (
+            <Card key={b.title} className="rounded-2xl border-0 shadow-card">
+              <CardContent className="p-5 text-center">
+                <div className="grid place-items-center w-12 h-12 rounded-xl bg-primary/10 text-primary mx-auto">
+                  <b.icon className="w-5 h-5" />
+                </div>
+                <div className="mt-3 font-semibold text-sm">{b.title}</div>
+                <p className="text-xs text-muted-foreground mt-1">{b.desc}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </section>
 
@@ -178,7 +232,7 @@ function Landing() {
         <Card className="rounded-3xl bg-hero text-primary-foreground border-0 shadow-soft">
           <CardContent className="p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="text-2xl md:text-3xl font-bold">Ready to ride?</h3>
+              <h3 className="text-2xl md:text-3xl font-bold">Explore More. Worry Less. We Ride With You.</h3>
               <p className="mt-1 opacity-90">Book in under 60 seconds.</p>
             </div>
             <div className="flex gap-3">
