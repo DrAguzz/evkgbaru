@@ -59,7 +59,8 @@ function AdminHubs() {
                   <div className="font-semibold truncate">{h.name}</div>
                   <div className="text-xs text-muted-foreground line-clamp-2">{h.address}</div>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => { setEditing(h); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => { setEditing(h); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => del(h)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
               </div>
               <div className="mt-3 text-xs text-muted-foreground space-y-0.5">
                 <div>Hours: {h.operating_hour ?? "—"}</div>
