@@ -88,6 +88,13 @@ export type Database = {
             referencedRelation: "riders"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "bookings_tourist_profile_fkey"
+            columns: ["tourist_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       hubs: {
