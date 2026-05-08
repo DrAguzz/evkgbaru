@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Calendar, Package, Bike, MapPin, Users, LogOut, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, Calendar, Package, Bike, MapPin, Users, LogOut, ShieldCheck, Route as RouteIcon, BarChart3, Pin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
