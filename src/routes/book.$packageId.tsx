@@ -20,7 +20,7 @@ const SLOTS = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "1
 
 function BookPage() {
   const { packageId } = Route.useParams();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [pkg, setPkg] = useState<{ id: string; package_name: string; price: number; max_pax: number; start_hub_id: string | null } | null>(null);
   const [hubs, setHubs] = useState<{ id: string; name: string }[]>([]);
@@ -33,8 +33,8 @@ function BookPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!user) navigate({ to: "/auth", search: { redirect: `/book/${packageId}` } });
-  }, [user, packageId, navigate]);
+    if (!loading && !user) navigate({ to: "/auth", search: { redirect: `/book/${packageId}` } });
+  }, [loading, user, packageId, navigate]);
 
   useEffect(() => {
     (async () => {
