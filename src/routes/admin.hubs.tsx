@@ -32,9 +32,14 @@ function AdminHubs() {
       : supabase.from("hubs").insert(payload);
     const { error } = await op;
     if (error) return toast.error(error.message);
-    toast.success("Saved"); setOpen(false); setEditing(null); load();
   }
 
+  async function del(h: Hub) {
+    if (!confirm(`Delete hub "${h.name}"?`)) return;
+    const { error } = await supabase.from("hubs").delete().eq("id", h.id);
+    if (error) return toast.error(error.message);
+    toast.success("Deleted"); load();
+  }
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
