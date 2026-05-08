@@ -18,6 +18,10 @@ function AppShell() {
     if (!loading && !user) navigate({ to: "/auth", search: { redirect: "/app" } });
   }, [loading, user, navigate]);
 
+  if (loading || !user) {
+    return <PhoneFrame><div className="grid place-items-center h-full">Loading…</div></PhoneFrame>;
+  }
+
   const tabs: { to: "/app" | "/app/packages" | "/app/bookings" | "/app/profile"; icon: typeof Home; label: string; exact?: boolean }[] = [
     { to: "/app", icon: Home, label: "Home", exact: true },
     { to: "/app/packages", icon: Compass, label: "Packages" },

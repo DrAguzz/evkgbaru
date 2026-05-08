@@ -47,7 +47,7 @@ function PayPage() {
     })();
   }, [bookingId, user]);
 
-  if (authLoading || !booking) return <div className="min-h-screen grid place-items-center">Loading…</div>;
+  if (authLoading || !user || !booking) return <div className="min-h-screen grid place-items-center">Loading…</div>;
 
   if (booking.payment_status === "paid") {
     return (

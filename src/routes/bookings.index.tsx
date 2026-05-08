@@ -28,6 +28,10 @@ function MyBookings() {
     if (!loading && !user) navigate({ to: "/auth", search: { redirect: "/bookings" } });
   }, [user, loading, navigate]);
 
+  if (loading || !user) {
+    return <div className="min-h-screen grid place-items-center">Loading…</div>;
+  }
+
   useEffect(() => {
     if (!user) return;
     (async () => {

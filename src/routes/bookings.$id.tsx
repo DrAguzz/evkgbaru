@@ -29,7 +29,7 @@ interface Progress { location_id: string | null; status: string; arrival_time: s
 
 function BookingDetail() {
   const { id } = Route.useParams();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [b, setB] = useState<Booking | null>(null);
   const [routes, setRoutes] = useState<RouteRow[]>([]);
   const [progress, setProgress] = useState<Progress[]>([]);
@@ -52,18 +52,22 @@ function BookingDetail() {
     setHasReview(!!rev);
   }, [id]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    if (loading || !user) return;
+    void load();
+  }, [load, loading, user]);
 
   // realtime
   useEffect(() => {
+    if (loading || !user) return;
     const ch = supabase.channel(`booking-${id}-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "bookings", filter: `id=eq.${id}` }, () => load())
       .on("postgres_changes", { event: "*", schema: "public", table: "tour_progress", filter: `booking_id=eq.${id}` }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
-  }, [id, load]);
+  }, [id, load, loading, user]);
 
-  if (!b) return <div className="min-h-screen grid place-items-center">Loading…</div>;
+  if (loading || !user || !b) return <div className="min-h-screen grid place-items-center">Loading…</div>;
 
   const currentSeq = progress[progress.length - 1]?.sequence_no ?? 0;
 
