@@ -33,6 +33,7 @@ function AdminRiders() {
 
   async function save() {
     if (!editing) return;
+    if (!editing.name.trim()) return toast.error("Name is required");
     const { hubs: _h, id, ...payload } = editing;
     void _h;
     const op = id
@@ -41,6 +42,13 @@ function AdminRiders() {
     const { error } = await op;
     if (error) return toast.error(error.message);
     toast.success("Saved"); setOpen(false); setEditing(null); load();
+  }
+
+  async function del(r: Rider) {
+    if (!confirm(`Delete rider "${r.name}"?`)) return;
+    const { error } = await supabase.from("riders").delete().eq("id", r.id);
+    if (error) return toast.error(error.message);
+    toast.success("Deleted"); load();
   }
 
   return (
