@@ -11,6 +11,7 @@ interface AuthState {
   loading: boolean;
   isAdmin: boolean;
   isRider: boolean;
+  refreshRoles: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signUp: (email: string, password: string, meta: { name: string; phone?: string; nationality?: string }) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
@@ -55,6 +56,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     isAdmin: roles.includes("admin") || roles.includes("super_admin"),
     isRider: roles.includes("rider"),
+    async refreshRoles() {
+      if (user) await loadRoles(user.id);
+    },
     async signIn(email, password) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       return { error: error?.message ?? null };
