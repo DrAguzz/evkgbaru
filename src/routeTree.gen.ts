@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RiderRouteImport } from './routes/rider'
 import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -25,6 +26,11 @@ import { Route as AppBookingsRouteImport } from './routes/app.bookings'
 import { Route as AppPackagesIdRouteImport } from './routes/app.packages.$id'
 import { Route as AppBookPackageIdRouteImport } from './routes/app.book.$packageId'
 
+const RiderRoute = RiderRouteImport.update({
+  id: '/rider',
+  path: '/rider',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PackagesRoute = PackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRouteWithChildren
   '/packages': typeof PackagesRouteWithChildren
+  '/rider': typeof RiderRoute
   '/app/bookings': typeof AppBookingsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
   '/app/profile': typeof AppProfileRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRouteWithChildren
   '/packages': typeof PackagesRouteWithChildren
+  '/rider': typeof RiderRoute
   '/app/bookings': typeof AppBookingsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
   '/app/profile': typeof AppProfileRoute
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRouteWithChildren
   '/packages': typeof PackagesRouteWithChildren
+  '/rider': typeof RiderRoute
   '/app/bookings': typeof AppBookingsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
   '/app/profile': typeof AppProfileRoute
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bookings'
     | '/packages'
+    | '/rider'
     | '/app/bookings'
     | '/app/packages'
     | '/app/profile'
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bookings'
     | '/packages'
+    | '/rider'
     | '/app/bookings'
     | '/app/packages'
     | '/app/profile'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bookings'
     | '/packages'
+    | '/rider'
     | '/app/bookings'
     | '/app/packages'
     | '/app/profile'
@@ -211,12 +223,20 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BookingsRoute: typeof BookingsRouteWithChildren
   PackagesRoute: typeof PackagesRouteWithChildren
+  RiderRoute: typeof RiderRoute
   BookPackageIdRoute: typeof BookPackageIdRoute
   PayBookingIdRoute: typeof PayBookingIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/rider': {
+      id: '/rider'
+      path: '/rider'
+      fullPath: '/rider'
+      preLoaderRoute: typeof RiderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/packages': {
       id: '/packages'
       path: '/packages'
@@ -385,9 +405,20 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BookingsRoute: BookingsRouteWithChildren,
   PackagesRoute: PackagesRouteWithChildren,
+  RiderRoute: RiderRoute,
   BookPackageIdRoute: BookPackageIdRoute,
   PayBookingIdRoute: PayBookingIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
