@@ -1,4 +1,4 @@
-import { MapPin, Navigation, Flag } from "lucide-react";
+import { MapPin, Navigation, Flag, Bike, Radio } from "lucide-react";
 
 export interface RouteStop {
   id: string;
@@ -11,13 +11,14 @@ interface Props {
   stops: RouteStop[];
   title?: string;
   className?: string;
+  live?: boolean;
 }
 
 /**
  * Stylised route map showing checkpoints connected by a curved path.
  * Mimics a tracking map without requiring a real map provider.
  */
-export function RouteMap({ stops, title = "Tour route", className = "" }: Props) {
+export function RouteMap({ stops, title = "Tour route", className = "", live = false }: Props) {
   const n = Math.max(stops.length, 2);
   // Compute positions along a gentle S-curve
   const points = stops.map((_, i) => {
@@ -106,10 +107,41 @@ export function RouteMap({ stops, title = "Tour route", className = "" }: Props)
           );
         })}
 
+        {/* Animated rider marker at current checkpoint */}
+        {(() => {
+          const curIdx = stops.findIndex((s) => s.current);
+          if (curIdx < 0) return null;
+          const p = points[curIdx];
+          return (
+            <div
+              className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+              style={{ left: `${p.x}%`, top: `${p.y - 12}%` }}
+            >
+              <div className="relative">
+                <span className="absolute inset-0 rounded-full bg-primary/40 animate-ping" />
+                <div className="relative grid place-items-center w-9 h-9 rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-primary/20">
+                  <Bike className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Title chip */}
         <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-background/90 backdrop-blur shadow-sm">
           <Navigation className="w-3 h-3 text-primary" /> {title}
         </div>
+
+        {/* LIVE indicator */}
+        {live && (
+          <div className="absolute top-3 right-3 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-destructive text-destructive-foreground shadow-md">
+            <span className="relative flex w-2 h-2">
+              <span className="absolute inset-0 rounded-full bg-white animate-ping opacity-75" />
+              <span className="relative w-2 h-2 rounded-full bg-white" />
+            </span>
+            Live
+          </div>
+        )}
       </div>
     </div>
   );
