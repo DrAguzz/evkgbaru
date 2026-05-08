@@ -55,10 +55,24 @@ function RiderTour() {
   const nextRoute = routes.find((r) => r.sequence_no === nextSeq);
   const allDone = progress.length >= routes.length && routes.length > 0;
 
-  async function startTour() {
+  async function setStatus(status: string) {
     setBusy(true);
-    await supabase.from("bookings").update({ booking_status: "in_progress" }).eq("id", id);
+    await supabase.from("bookings").update({ booking_status: status }).eq("id", id);
     setBusy(false); load();
+  }
+  async function acceptTour() { await setStatus("accepted"); toast.success("Tour accepted"); }
+  async function pickup() { await setStatus("picked_up"); toast.success("Customer picked up"); }
+  async function startTour() { await setStatus("in_progress"); toast.success("Tour started"); }
+  async function returnToHub() { await setStatus("returning"); toast.success("Returning to hub"); }
+
+  async function rejectTour() {
+    if (!b) return;
+    if (!confirm("Reject this tour? Another rider will be assigned.")) return;
+    setBusy(true);
+    await rejectAssignment(id, b.rider_id);
+    setBusy(false);
+    toast.success("Tour rejected — reassigning…");
+    navigate({ to: "/rider" });
   }
 
   async function checkIn() {
