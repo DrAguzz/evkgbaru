@@ -17,6 +17,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RiderIndexRouteImport } from './routes/rider.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as RiderProfileRouteImport } from './routes/rider.profile'
 import { Route as RiderHistoryRouteImport } from './routes/rider.history'
 import { Route as PayBookingIdRouteImport } from './routes/pay.$bookingId'
 import { Route as PackagesIdRouteImport } from './routes/packages.$id'
@@ -68,6 +69,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const RiderProfileRoute = RiderProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => RiderRoute,
 } as any)
 const RiderHistoryRoute = RiderHistoryRouteImport.update({
   id: '/history',
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/packages/$id': typeof PackagesIdRoute
   '/pay/$bookingId': typeof PayBookingIdRoute
   '/rider/history': typeof RiderHistoryRoute
+  '/rider/profile': typeof RiderProfileRoute
   '/app/': typeof AppIndexRoute
   '/rider/': typeof RiderIndexRoute
   '/app/book/$packageId': typeof AppBookPackageIdRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/packages/$id': typeof PackagesIdRoute
   '/pay/$bookingId': typeof PayBookingIdRoute
   '/rider/history': typeof RiderHistoryRoute
+  '/rider/profile': typeof RiderProfileRoute
   '/app': typeof AppIndexRoute
   '/rider': typeof RiderIndexRoute
   '/app/book/$packageId': typeof AppBookPackageIdRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/packages/$id': typeof PackagesIdRoute
   '/pay/$bookingId': typeof PayBookingIdRoute
   '/rider/history': typeof RiderHistoryRoute
+  '/rider/profile': typeof RiderProfileRoute
   '/app/': typeof AppIndexRoute
   '/rider/': typeof RiderIndexRoute
   '/app/book/$packageId': typeof AppBookPackageIdRoute
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
     | '/packages/$id'
     | '/pay/$bookingId'
     | '/rider/history'
+    | '/rider/profile'
     | '/app/'
     | '/rider/'
     | '/app/book/$packageId'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/packages/$id'
     | '/pay/$bookingId'
     | '/rider/history'
+    | '/rider/profile'
     | '/app'
     | '/rider'
     | '/app/book/$packageId'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/packages/$id'
     | '/pay/$bookingId'
     | '/rider/history'
+    | '/rider/profile'
     | '/app/'
     | '/rider/'
     | '/app/book/$packageId'
@@ -319,6 +331,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/rider/profile': {
+      id: '/rider/profile'
+      path: '/profile'
+      fullPath: '/rider/profile'
+      preLoaderRoute: typeof RiderProfileRouteImport
+      parentRoute: typeof RiderRoute
     }
     '/rider/history': {
       id: '/rider/history'
@@ -456,12 +475,14 @@ const PackagesRouteWithChildren = PackagesRoute._addFileChildren(
 
 interface RiderRouteChildren {
   RiderHistoryRoute: typeof RiderHistoryRoute
+  RiderProfileRoute: typeof RiderProfileRoute
   RiderIndexRoute: typeof RiderIndexRoute
   RiderToursIdRoute: typeof RiderToursIdRoute
 }
 
 const RiderRouteChildren: RiderRouteChildren = {
   RiderHistoryRoute: RiderHistoryRoute,
+  RiderProfileRoute: RiderProfileRoute,
   RiderIndexRoute: RiderIndexRoute,
   RiderToursIdRoute: RiderToursIdRoute,
 }
