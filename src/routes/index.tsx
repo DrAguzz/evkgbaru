@@ -7,6 +7,7 @@ import {
   PlayCircle, Navigation, MapPin, Flag, Home, Workflow, Zap, Activity, Globe,
   Shield, Sparkles, Cpu, Leaf, Users, ShieldCheck, LayoutDashboard,
 } from "lucide-react";
+import heroRider from "@/assets/hero-rider.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
