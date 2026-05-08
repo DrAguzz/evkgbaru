@@ -18,12 +18,12 @@ function AppShell() {
     if (!loading && !user) navigate({ to: "/auth", search: { redirect: "/app" } });
   }, [loading, user, navigate]);
 
-  const tabs = [
+  const tabs: { to: "/app" | "/app/packages" | "/app/bookings" | "/app/profile"; icon: typeof Home; label: string; exact?: boolean }[] = [
     { to: "/app", icon: Home, label: "Home", exact: true },
     { to: "/app/packages", icon: Compass, label: "Packages" },
     { to: "/app/bookings", icon: Ticket, label: "Bookings" },
     { to: "/app/profile", icon: User, label: "Profile" },
-  ] as const;
+  ];
 
   return (
     <PhoneFrame>
