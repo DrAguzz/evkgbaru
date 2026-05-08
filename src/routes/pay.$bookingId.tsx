@@ -25,11 +25,17 @@ const METHODS = [
 function PayPage() {
   const { bookingId } = Route.useParams();
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
   const [booking, setBooking] = useState<{ id: string; booking_no: string; total_price: number; pax: number; payment_status: string; tour_packages: { package_name: string } | null } | null>(null);
   const [method, setMethod] = useState("card");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    if (!authLoading && !user) navigate({ to: "/auth", search: { redirect: `/pay/${bookingId}` } });
+  }, [authLoading, user, bookingId, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
     (async () => {
       const { data } = await supabase
         .from("bookings")
@@ -38,9 +44,9 @@ function PayPage() {
         .single();
       setBooking(data as typeof booking);
     })();
-  }, [bookingId]);
+  }, [bookingId, user]);
 
-  if (!booking) return <div className="min-h-screen grid place-items-center">Loading…</div>;
+  if (authLoading || !booking) return <div className="min-h-screen grid place-items-center">Loading…</div>;
 
   if (booking.payment_status === "paid") {
     return (
