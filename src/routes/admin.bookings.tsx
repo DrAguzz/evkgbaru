@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
+import { Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { money, fmtDate, fmtTime } from "@/lib/format";
 import { StatusBadge } from "@/components/StatusBadge";
