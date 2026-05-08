@@ -70,7 +70,8 @@ function AdminRiders() {
                   <div className="font-semibold">{r.name}</div>
                   <div className="text-xs text-muted-foreground inline-flex items-center gap-1"><Star className="w-3 h-3 fill-warning text-warning" /> {Number(r.rating).toFixed(1)}</div>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => { setEditing(r); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => { setEditing(r); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => del(r)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
               </div>
               <div className="mt-3 text-xs text-muted-foreground space-y-0.5">
                 <div>Hub: {r.hubs?.name ?? "—"}</div>
