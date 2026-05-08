@@ -37,7 +37,7 @@ function AdminBookingDetail() {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("bookings")
-      .select("id, booking_no, booking_date, booking_time, pax, total_price, booking_status, payment_status, special_request, pickup_hub_id, rider_id, package_id, tour_packages(package_name, image, duration_minutes), hubs:pickup_hub_id(name, address), profiles!bookings_tourist_id_fkey(name, phone, email), riders(id, name, phone, vehicle_id)")
+      .select("id, booking_no, booking_date, booking_time, pax, total_price, booking_status, payment_status, special_request, pickup_hub_id, rider_id, package_id, tour_packages(package_name, image, duration_minutes), hubs:pickup_hub_id(name, address), profiles!bookings_tourist_profile_fkey(name, phone, email), riders(id, name, phone, vehicle_id)")
       .eq("id", id).maybeSingle();
     setB(data as unknown as Booking);
     if (data?.package_id) {

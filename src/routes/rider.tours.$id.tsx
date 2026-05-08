@@ -36,7 +36,7 @@ function RiderTour() {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("bookings")
-      .select("id, booking_no, booking_date, booking_time, pax, total_price, booking_status, special_request, package_id, rider_id, tour_packages(package_name, duration_minutes, image), hubs:pickup_hub_id(name, address), profiles!bookings_tourist_id_fkey(name, phone)")
+      .select("id, booking_no, booking_date, booking_time, pax, total_price, booking_status, special_request, package_id, rider_id, tour_packages(package_name, duration_minutes, image), hubs:pickup_hub_id(name, address), profiles!bookings_tourist_profile_fkey(name, phone)")
       .eq("id", id).single();
     setB(data as unknown as Booking);
     if (data?.package_id) {
