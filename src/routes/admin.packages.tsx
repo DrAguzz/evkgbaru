@@ -51,6 +51,12 @@ function AdminPackages() {
     setOpen(false); setEditing(null); load();
   }
 
+  async function del(p: Pkg) {
+    if (!confirm(`Delete "${p.package_name}"?`)) return;
+    const { error } = await supabase.from("tour_packages").delete().eq("id", p.id);
+    if (error) return toast.error(error.message);
+    toast.success("Deleted"); load();
+  }
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
