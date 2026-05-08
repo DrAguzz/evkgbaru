@@ -40,7 +40,10 @@ function AuthPage() {
 
   const [busy, setBusy] = useState(false);
 
-  const after = (path?: string) => navigate({ to: (path as "/") ?? "/" });
+  const after = (path?: string) => {
+    const target = path && path.startsWith("/") ? path : "/";
+    navigate({ to: target as "/", replace: true });
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
