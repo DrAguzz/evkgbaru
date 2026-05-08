@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Clock, MapPin, Users, Shield, Calendar, ChevronRight } from "lucide-react";
 import { money, fmtDuration } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
+import { RouteMap } from "@/components/RouteMap";
 
 export const Route = createFileRoute("/packages/$id")({
   component: PackageDetail,
