@@ -84,7 +84,6 @@ function AuthPage() {
                   setBusy(false);
                   if (error) return toast.error(error);
                   toast.success("Welcome back!");
-                  after(search.redirect);
                 }}>Login</Button>
                 <button type="button" className="text-xs text-muted-foreground hover:text-primary" onClick={() => toast.info("Reset link will be sent (mock)")}>
                   Forgot password?
@@ -116,8 +115,7 @@ function AuthPage() {
                   const { error } = await signUp(rEmail, rPassword, { name: rName, phone: rPhone, nationality: rNat });
                   setBusy(false);
                   if (error) return toast.error(error);
-                  toast.success("Account created — you're signed in!");
-                  after(search.redirect);
+                  toast.success("Account created successfully.");
                 }}>Create account</Button>
               </TabsContent>
             </Tabs>
