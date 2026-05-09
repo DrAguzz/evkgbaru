@@ -27,7 +27,7 @@ function AppBookings() {
   return (
     <div className="pb-6">
       {/* Coloured header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-secondary via-secondary to-primary/80 text-secondary-foreground rounded-b-[28px] px-5 pt-10 pb-8">
+      <div className="relative overflow-hidden bg-gradient-to-br from-secondary via-secondary to-primary/80 text-white rounded-b-[28px] px-5 pt-10 pb-8">
         <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/15 blur-3xl" />
         <div className="absolute -bottom-20 -left-10 w-64 h-64 rounded-full bg-primary/40 blur-3xl" />
         <div className="relative">
