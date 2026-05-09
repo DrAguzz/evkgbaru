@@ -24,12 +24,24 @@ function MyBookings() {
   const navigate = useNavigate();
   const [rows, setRows] = useState<Row[]>([]);
 
-  useEffect(() => {
-    if (!loading && !user) navigate({ to: "/login", search: { redirect: "/bookings" } });
-  }, [user, loading, navigate]);
-
   if (loading || !user) {
-    return <div className="min-h-screen grid place-items-center">Loading…</div>;
+    if (loading) return <div className="min-h-screen grid place-items-center">Loading…</div>;
+    return (
+      <div className="min-h-screen flex flex-col">
+        <SiteHeader />
+        <div className="container mx-auto px-4 py-16 flex-1 grid place-items-center">
+          <Card className="w-full max-w-md rounded-2xl border-0 shadow-card">
+            <CardContent className="p-8 text-center space-y-4">
+              <h1 className="text-2xl font-bold">Login to view bookings</h1>
+              <p className="text-sm text-muted-foreground">Your bookings are private and only visible after sign in.</p>
+              <Button className="rounded-full w-full" onClick={() => navigate({ to: "/login", search: { redirect: "/bookings" } })}>Login</Button>
+              <Link to="/packages"><Button variant="outline" className="rounded-full w-full">Browse packages</Button></Link>
+            </CardContent>
+          </Card>
+        </div>
+        <SiteFooter />
+      </div>
+    );
   }
 
   useEffect(() => {
