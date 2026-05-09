@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChevronLeft, CreditCard, Wallet, Building2, BanknoteIcon, Tag, X } from "lucide-react";
 import { money } from "@/lib/format";
+import { packageToSlug } from "@/lib/package-slug";
 import { processMockPayment } from "@/lib/booking";
 import { toast } from "sonner";
 
@@ -68,7 +69,7 @@ function AppBook() {
 
   return (
     <div className="px-5 pt-8 pb-24">
-      <button onClick={() => nav({ to: "/app/packages/$id", params: { id: pkg.id } })} className="grid place-items-center w-10 h-10 rounded-full bg-accent mb-4"><ChevronLeft className="w-5 h-5" /></button>
+      <button onClick={() => pkg && nav({ to: "/app/packages/$slug", params: { slug: packageToSlug(pkg.package_name) } })} className="grid place-items-center w-10 h-10 rounded-full bg-accent mb-4"><ChevronLeft className="w-5 h-5" /></button>
       <h1 className="text-xl font-bold">{step === 1 ? "Booking details" : "Payment"}</h1>
       <div className="text-sm text-muted-foreground mb-4">{pkg.package_name}</div>
 
