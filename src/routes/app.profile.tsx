@@ -70,10 +70,32 @@ function AppProfile() {
           </button>
         </div>
       </div>
-      <div className="rounded-2xl bg-card shadow-card divide-y">
-        <div className="flex items-center gap-3 p-4"><Bike className="w-4 h-4 text-primary" /><span className="text-sm">{profile?.phone ?? "Add phone number"}</span></div>
-        <div className="flex items-center gap-3 p-4"><Globe className="w-4 h-4 text-primary" /><span className="text-sm">{profile?.nationality ?? "Add nationality"}</span></div>
-        <div className="flex items-center gap-3 p-4"><MapPin className="w-4 h-4 text-primary" /><span className="text-sm">Kuala Lumpur</span></div>
+      <div className="relative rounded-3xl overflow-hidden border border-white/40 dark:border-white/10 bg-white/55 dark:bg-white/5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.18),inset_0_1px_0_0_rgba(255,255,255,0.6)]">
+        {/* Specular highlight */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
+        <div className="pointer-events-none absolute -top-24 -left-10 w-56 h-56 rounded-full bg-white/40 blur-3xl opacity-60" />
+        <div className="pointer-events-none absolute -bottom-20 -right-10 w-56 h-56 rounded-full bg-primary/20 blur-3xl opacity-60" />
+
+        <div className="relative divide-y divide-white/40 dark:divide-white/10">
+          <div className="flex items-center gap-3 p-4">
+            <span className="grid place-items-center w-9 h-9 rounded-full bg-white/60 dark:bg-white/10 backdrop-blur ring-1 ring-white/60 dark:ring-white/15 shadow-sm">
+              <Bike className="w-4 h-4 text-primary" />
+            </span>
+            <span className="text-sm font-medium">{profile?.phone ?? "Add phone number"}</span>
+          </div>
+          <div className="flex items-center gap-3 p-4">
+            <span className="grid place-items-center w-9 h-9 rounded-full bg-white/60 dark:bg-white/10 backdrop-blur ring-1 ring-white/60 dark:ring-white/15 shadow-sm">
+              <Globe className="w-4 h-4 text-primary" />
+            </span>
+            <span className="text-sm font-medium">{profile?.nationality ?? "Add nationality"}</span>
+          </div>
+          <div className="flex items-center gap-3 p-4">
+            <span className="grid place-items-center w-9 h-9 rounded-full bg-white/60 dark:bg-white/10 backdrop-blur ring-1 ring-white/60 dark:ring-white/15 shadow-sm">
+              <MapPin className="w-4 h-4 text-primary" />
+            </span>
+            <span className="text-sm font-medium">Kuala Lumpur</span>
+          </div>
+        </div>
       </div>
       <Button variant="outline" className="w-full rounded-full" onClick={async () => { await signOut(); nav({ to: "/" }); }}>
         <LogOut className="w-4 h-4 mr-2" /> Sign out
