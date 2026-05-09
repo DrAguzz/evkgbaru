@@ -465,6 +465,8 @@ export type Database = {
           created_at: string
           hub_id: string | null
           id: string
+          license_type: string | null
+          license_valid_until: string | null
           name: string
           phone: string | null
           rating: number
@@ -479,6 +481,8 @@ export type Database = {
           created_at?: string
           hub_id?: string | null
           id?: string
+          license_type?: string | null
+          license_valid_until?: string | null
           name: string
           phone?: string | null
           rating?: number
@@ -493,6 +497,8 @@ export type Database = {
           created_at?: string
           hub_id?: string | null
           id?: string
+          license_type?: string | null
+          license_valid_until?: string | null
           name?: string
           phone?: string | null
           rating?: number
