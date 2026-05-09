@@ -104,7 +104,7 @@ function PackageDetail() {
                 <div className="flex items-center gap-1"><Clock className="w-4 h-4 text-muted-foreground" /> 9am–6pm slots</div>
               </div>
               <Button className="w-full rounded-full" size="lg" onClick={() => {
-                if (!user) navigate({ to: "/auth", search: { redirect: `/book/${pkg.id}` } });
+                if (!user) navigate({ to: "/login", search: { redirect: `/book/${pkg.id}` } });
                 else navigate({ to: "/book/$packageId", params: { packageId: pkg.id } });
               }}>
                 Book now <ChevronRight className="w-4 h-4 ml-1" />

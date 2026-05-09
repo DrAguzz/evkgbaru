@@ -33,7 +33,7 @@ function BookPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth", search: { redirect: `/book/${packageId}` } });
+    if (!loading && !user) navigate({ to: "/login", search: { redirect: `/book/${packageId}` } });
   }, [loading, user, packageId, navigate]);
 
   useEffect(() => {

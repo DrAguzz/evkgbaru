@@ -32,7 +32,7 @@ function PayPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && !user) navigate({ to: "/auth", search: { redirect: `/pay/${bookingId}` } });
+    if (!authLoading && !user) navigate({ to: "/login", search: { redirect: `/pay/${bookingId}` } });
   }, [authLoading, user, bookingId, navigate]);
 
   useEffect(() => {
