@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Bike, ArrowRight, UserPlus, Package, CreditCard, CheckCircle2, UserCheck,
-  PlayCircle, Navigation, MapPin, Flag, Home, Workflow, Zap, Activity, Globe,
+  PlayCircle, Navigation, MapPin, Flag, Home, Route as RouteIcon, BikeIcon, Radar, Smartphone, PackageCheck,
   Shield, Sparkles, Cpu, Leaf, Users, ShieldCheck, LayoutDashboard,
 } from "lucide-react";
 import heroRider from "@/assets/hero-rider.png";
@@ -38,11 +38,11 @@ const tourJourney = [
 ];
 
 const whyBetter = [
-  { icon: Workflow, title: "Seamless Flow", desc: "Easy steps from register to ride" },
-  { icon: Zap, title: "Auto-Assign Rider", desc: "System auto-assigns best available rider" },
-  { icon: Activity, title: "Real-Time Tracking", desc: "Live tracking for safety & peace of mind" },
-  { icon: CheckCircle2, title: "Complete Experience", desc: "From pickup to return, we handle all" },
-  { icon: Globe, title: "Web Based", desc: "Accessible anywhere, anytime, any device" },
+  { icon: RouteIcon, title: "Seamless Flow", desc: "Easy steps from register to ride", grad: "from-sky-400 via-blue-500 to-indigo-600" },
+  { icon: BikeIcon, title: "Auto-Assign Rider", desc: "System auto-assigns best available rider", grad: "from-emerald-400 via-teal-500 to-cyan-600" },
+  { icon: Radar, title: "Real-Time Tracking", desc: "Live tracking for safety & peace of mind", grad: "from-fuchsia-400 via-pink-500 to-rose-500" },
+  { icon: PackageCheck, title: "Complete Experience", desc: "From pickup to return, we handle all", grad: "from-amber-400 via-orange-500 to-red-500" },
+  { icon: Smartphone, title: "Mobile First", desc: "Accessible anywhere, anytime, any device", grad: "from-violet-400 via-purple-500 to-fuchsia-600" },
 ];
 
 const benefits = [
@@ -111,13 +111,15 @@ function Landing() {
       <section className="bg-hero text-primary-foreground py-14">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center">Why this journey is better</h2>
-          <div className="mt-8 grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="mt-10 grid grid-cols-2 md:grid-cols-5 gap-6">
             {whyBetter.map((w) => (
-              <div key={w.title} className="text-center px-2">
-                <div className="grid place-items-center w-12 h-12 rounded-xl bg-white/15 backdrop-blur mx-auto">
-                  <w.icon className="w-5 h-5" />
+              <div key={w.title} className="group text-center px-2">
+                <div className={`relative mx-auto w-20 h-20 rounded-[26px] bg-gradient-to-br ${w.grad} shadow-2xl shadow-black/30 ring-1 ring-white/30 grid place-items-center transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-105`}>
+                  <div className="absolute inset-0 rounded-[26px] bg-gradient-to-b from-white/30 to-transparent opacity-60" />
+                  <div className="absolute -inset-2 rounded-[32px] bg-white/0 group-hover:bg-white/10 blur-xl transition" />
+                  <w.icon className="relative w-10 h-10 text-white drop-shadow-md" strokeWidth={2.2} />
                 </div>
-                <div className="mt-3 font-semibold text-sm uppercase tracking-wide">{w.title}</div>
+                <div className="mt-4 font-semibold text-sm uppercase tracking-wide">{w.title}</div>
                 <p className="text-xs opacity-90 mt-1">{w.desc}</p>
               </div>
             ))}
