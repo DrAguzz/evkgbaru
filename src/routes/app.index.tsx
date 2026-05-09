@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { Bike, Search, MapPin, Compass, Sparkles, Tag, Bell, ArrowRight, Clock, Star } from "lucide-react";
+import { Bike, Search, MapPin, Compass, Sparkles, Tag, ArrowRight, Clock, Star } from "lucide-react";
 import { money, fmtDuration } from "@/lib/format";
 import { Input } from "@/components/ui/input";
 import { StatusBadge } from "@/components/StatusBadge";
