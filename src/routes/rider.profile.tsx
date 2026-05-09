@@ -33,7 +33,7 @@ function RiderProfile() {
   }
 
   return (
-    <div className="px-5 pt-8 pb-6">
+    <div className="px-5 pt-8 pb-24">
       <div className="flex items-center gap-3">
         <div className="grid place-items-center w-14 h-14 rounded-2xl bg-hero text-primary-foreground"><Bike className="w-6 h-6" /></div>
         <div>
