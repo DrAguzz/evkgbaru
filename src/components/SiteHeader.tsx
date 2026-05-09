@@ -68,26 +68,28 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t mt-20">
-      <div className="container mx-auto px-4 py-10 grid md:grid-cols-3 gap-8 text-sm">
+    <footer className="mt-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-200">
+      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary/20 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-secondary/20 blur-3xl pointer-events-none" />
+      <div className="relative container mx-auto px-4 py-12 grid md:grid-cols-3 gap-8 text-sm">
         <div>
-          <div className="flex items-center gap-2 font-bold text-lg mb-2">
-            <span className="grid place-items-center w-8 h-8 rounded-lg bg-hero text-primary-foreground"><Bike className="w-4 h-4" /></span>
+          <div className="flex items-center gap-2 font-bold text-lg mb-3 text-white">
+            <span className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 text-primary-foreground shadow-lg shadow-primary/30"><Bike className="w-4 h-4" /></span>
             EV Kg Baru
           </div>
-          <p className="text-muted-foreground">Premium guided EV bike tours around Kuala Lumpur.</p>
+          <p className="text-slate-400">Premium guided EV bike tours around Kuala Lumpur.</p>
         </div>
         <div>
-          <div className="font-semibold mb-2">Support</div>
-          <p className="text-muted-foreground">WhatsApp: +60 12-345 6789</p>
-          <p className="text-muted-foreground">Email: hello@evride.my</p>
+          <div className="font-semibold mb-2 text-white">Support</div>
+          <p className="text-slate-400">WhatsApp: +60 12-345 6789</p>
+          <p className="text-slate-400">Email: hello@evkgbaru.my</p>
         </div>
         <div>
-          <div className="font-semibold mb-2">Safety</div>
-          <p className="text-muted-foreground">All riders are licensed and trained. Helmets and safety briefing included with every tour.</p>
+          <div className="font-semibold mb-2 text-white">Safety</div>
+          <p className="text-slate-400">All riders are licensed and trained. Helmets and safety briefing included with every tour.</p>
         </div>
       </div>
-      <div className="border-t py-4 text-xs text-center text-muted-foreground">© {new Date().getFullYear()} EV Kg Baru. All rights reserved.</div>
+      <div className="relative border-t border-white/10 py-4 text-xs text-center text-slate-500">© {new Date().getFullYear()} EV Kg Baru. All rights reserved.</div>
     </footer>
   );
 }
