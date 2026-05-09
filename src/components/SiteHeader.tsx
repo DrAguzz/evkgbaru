@@ -20,9 +20,8 @@ export function SiteHeader() {
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <Link to="/packages" className="hover:text-primary transition-colors">Packages</Link>
           <Link to="/bookings" className="hover:text-primary transition-colors">My Bookings</Link>
-          <Link to="/app" className="hover:text-primary transition-colors">Mobile App</Link>
+          <Link to="/app" className="hover:text-primary transition-colors">Download App</Link>
           <Link to="/rider" className="hover:text-primary transition-colors">Rider App</Link>
-          <Link to="/admin" className="hover:text-primary transition-colors">Admin</Link>
         </nav>
         <div className="flex items-center gap-2">
           {!user ? (
