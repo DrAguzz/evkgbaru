@@ -1,16 +1,27 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { money, fmtDuration } from "@/lib/format";
+import { packageToSlug } from "@/lib/package-slug";
 import { Clock, Star, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/app/packages")({ component: AppPackages });
 
 function AppPackages() {
   const [pkgs, setPkgs] = useState<{ id: string; package_name: string; price: number; image: string | null; duration_minutes: number; description: string | null }[]>([]);
+  const navigate = useNavigate({ from: "/app/packages" });
+
   useEffect(() => {
     supabase.from("tour_packages").select("id,package_name,price,image,duration_minutes,description").eq("status", "active").eq("is_promo", false).then(({ data }) => setPkgs(data ?? []));
   }, []);
+
+  const openPackage = (packageName: string) => {
+    navigate({
+      to: "/app/packages/$slug",
+      params: { slug: packageToSlug(packageName) },
+    });
+  };
+
   return (
     <div className="pb-6">
       {/* Coloured header */}
@@ -25,10 +36,17 @@ function AppPackages() {
 
       <div className="px-5 mt-5 grid grid-cols-2 gap-3">
         {pkgs.map((p, i) => (
-          <Link
+          <div
             key={p.id}
-            to="/app/packages/$id"
-            params={{ id: p.id }}
+            onClick={() => openPackage(p.package_name)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openPackage(p.package_name);
+              }
+            }}
+            role="button"
+            tabIndex={0}
             style={{ animationDelay: `${i * 40}ms` }}
             className="group relative block rounded-2xl overflow-hidden bg-card ring-1 ring-border/40 shadow-card hover:shadow-elegant hover:ring-primary/30 hover:-translate-y-0.5 transition-all duration-300 animate-fade-in active:scale-[0.98]"
           >
@@ -54,11 +72,18 @@ function AppPackages() {
             </div>
             <div className="p-2.5 flex items-center justify-between">
               <div className="font-bold text-primary text-sm">{money(p.price)}</div>
-              <span className="grid place-items-center w-7 h-7 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openPackage(p.package_name);
+                }}
+                className="grid place-items-center w-7 h-7 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+              >
                 <ArrowRight className="w-3.5 h-3.5" />
-              </span>
+              </button>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>

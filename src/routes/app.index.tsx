@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { packageToSlug } from "@/lib/package-slug";
 import { Bike, Search, MapPin, Compass, Sparkles, Tag, ArrowRight, Clock, Star } from "lucide-react";
 import { money, fmtDuration } from "@/lib/format";
 import { Input } from "@/components/ui/input";
@@ -181,8 +182,8 @@ function AppHome() {
             {filtered.slice(0, 4).map((p) => (
               <Link
                 key={p.id}
-                to="/app/packages/$id"
-                params={{ id: p.id }}
+                to="/app/packages/$slug"
+                params={{ slug: packageToSlug(p.package_name) }}
                 className="flex gap-3 p-2.5 rounded-2xl bg-card shadow-card ring-1 ring-border/40 hover:ring-primary/30 transition"
               >
                 <div className="w-20 h-20 rounded-xl overflow-hidden bg-muted shrink-0">
