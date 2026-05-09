@@ -270,7 +270,7 @@ function Row({ icon: Icon, label, children }: { icon: React.ComponentType<{ clas
       <span className="grid place-items-center w-9 h-9 rounded-full bg-white/60 dark:bg-white/10 backdrop-blur ring-1 ring-white/60 dark:ring-white/15 shadow-sm shrink-0">
         <Icon className="w-4 h-4 text-primary" />
       </span>
-      <span className="sr-only">{label}</span>
+      <span className="text-sm font-medium text-foreground text-left shrink-0">{label}</span>
       <div className="flex-1 min-w-0 flex items-center justify-end">{children}</div>
     </div>
   );
