@@ -12,10 +12,18 @@ function AppPackages() {
     supabase.from("tour_packages").select("id,package_name,price,image,duration_minutes,description").eq("status", "active").eq("is_promo", false).then(({ data }) => setPkgs(data ?? []));
   }, []);
   return (
-    <div className="px-5 pt-8 pb-6">
-      <h1 className="text-2xl font-bold">Packages</h1>
-      <p className="text-sm text-muted-foreground">Choose your KL adventure.</p>
-      <div className="mt-4 grid grid-cols-2 gap-3">
+    <div className="pb-6">
+      {/* Coloured header */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-secondary/80 text-primary-foreground rounded-b-[28px] px-5 pt-10 pb-8">
+        <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/15 blur-3xl" />
+        <div className="absolute -bottom-20 -left-10 w-64 h-64 rounded-full bg-secondary/40 blur-3xl" />
+        <div className="relative">
+          <h1 className="text-3xl font-extrabold leading-tight drop-shadow-sm">Packages</h1>
+          <p className="text-sm opacity-90 mt-1">Choose your KL adventure.</p>
+        </div>
+      </div>
+
+      <div className="px-5 mt-5 grid grid-cols-2 gap-3">
         {pkgs.map((p, i) => (
           <Link
             key={p.id}
