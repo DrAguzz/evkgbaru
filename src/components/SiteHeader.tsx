@@ -48,11 +48,6 @@ export function SiteHeader() {
                     <BikeIcon className="w-4 h-4 mr-2" /> Rider App
                   </DropdownMenuItem>
                 )}
-                {isAdmin && (
-                  <DropdownMenuItem onClick={() => navigate({ to: "/admin" })}>
-                    <LayoutDashboard className="w-4 h-4 mr-2" /> Admin
-                  </DropdownMenuItem>
-                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={async () => { await signOut(); navigate({ to: "/" }); }}>
                   <LogOut className="w-4 h-4 mr-2" /> Sign out
