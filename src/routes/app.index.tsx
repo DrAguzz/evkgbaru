@@ -48,11 +48,11 @@ function AppHome() {
     ? pkgs.filter((p) => p.package_name.toLowerCase().includes(q.toLowerCase()))
     : pkgs;
 
-  const cats = [
-    { icon: Compass, l: "Heritage", c: "from-primary/15 to-primary/5 text-primary" },
-    { icon: Sparkles, l: "Food", c: "from-secondary/15 to-secondary/5 text-secondary" },
-    { icon: MapPin, l: "City", c: "from-success/15 to-success/5 text-success" },
-    { icon: Tag, l: "Promo", c: "from-warning/15 to-warning/5 text-warning" },
+  const cats: { icon: typeof Compass; l: string; c: string; to: "/app/category/$slug" | "/app/promos"; slug?: "heritage" | "food" | "city" }[] = [
+    { icon: Compass,  l: "Heritage", c: "from-primary/15 to-primary/5 text-primary",     to: "/app/category/$slug", slug: "heritage" },
+    { icon: Sparkles, l: "Food",     c: "from-secondary/15 to-secondary/5 text-secondary", to: "/app/category/$slug", slug: "food" },
+    { icon: MapPin,   l: "City",     c: "from-success/15 to-success/5 text-success",     to: "/app/category/$slug", slug: "city" },
+    { icon: Tag,      l: "Promo",    c: "from-warning/15 to-warning/5 text-warning",     to: "/app/promos" },
   ];
 
   return (
@@ -97,14 +97,19 @@ function AppHome() {
       <div className="px-5 mt-6 space-y-6">
         {/* Categories */}
         <div className="grid grid-cols-4 gap-3">
-          {cats.map((c) => (
-            <Link key={c.l} to="/app/packages" className="flex flex-col items-center gap-1.5 group">
-              <span className={`grid place-items-center w-14 h-14 rounded-2xl bg-gradient-to-br ${c.c} ring-1 ring-border/40 shadow-sm group-hover:scale-105 transition-transform`}>
-                <c.icon className="w-5 h-5" />
-              </span>
-              <span className="text-[11px] font-medium text-foreground/80">{c.l}</span>
-            </Link>
-          ))}
+          {cats.map((c) => {
+            const linkProps = c.slug
+              ? { to: "/app/category/$slug" as const, params: { slug: c.slug } }
+              : { to: "/app/promos" as const };
+            return (
+              <Link key={c.l} {...linkProps} className="flex flex-col items-center gap-1.5 group active:scale-95 transition-transform">
+                <span className={`grid place-items-center w-14 h-14 rounded-2xl bg-gradient-to-br ${c.c} ring-1 ring-border/40 shadow-sm group-hover:scale-105 group-active:scale-100 transition-transform`}>
+                  <c.icon className="w-5 h-5" />
+                </span>
+                <span className="text-[11px] font-medium text-foreground/80">{c.l}</span>
+              </Link>
+            );
+          })}
         </div>
 
         {/* Active booking */}
