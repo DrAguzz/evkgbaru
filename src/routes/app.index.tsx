@@ -24,8 +24,9 @@ function AppHome() {
   useEffect(() => {
     (async () => {
       if (user) {
-        const { data: prof } = await supabase.from("profiles").select("name").eq("id", user.id).single();
+        const { data: prof } = await supabase.from("profiles").select("name, avatar_url").eq("id", user.id).single();
         setName((prof?.name ?? "explorer").split(" ")[0]);
+        setAvatar(prof?.avatar_url ?? null);
       }
       const { data } = await supabase.from("tour_packages")
         .select("id,package_name,price,image,duration_minutes,description")
