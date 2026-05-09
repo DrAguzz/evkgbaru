@@ -129,3 +129,8 @@
 .bg-hero { background: var(--gradient-hero); }
 .shadow-soft { box-shadow: var(--shadow-soft); }
 .shadow-card { box-shadow: var(--shadow-card); }
+
+@keyframes slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
