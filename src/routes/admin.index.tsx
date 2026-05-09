@@ -47,7 +47,7 @@ function AdminDashboard() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Overview of EVRide operations</p>
+        <p className="text-sm text-muted-foreground">Overview of EV Kg Baru operations</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">

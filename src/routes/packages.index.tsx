@@ -10,7 +10,7 @@ import { Clock, MapPin, Users, Search } from "lucide-react";
 import { money, fmtDuration } from "@/lib/format";
 
 export const Route = createFileRoute("/packages/")({
-  head: () => ({ meta: [{ title: "Tour Packages — EVRide" }, { name: "description", content: "Browse all EV bike tour packages around Kuala Lumpur." }] }),
+  head: () => ({ meta: [{ title: "Tour Packages — EV Kg Baru" }, { name: "description", content: "Browse all EV bike tour packages around Kuala Lumpur." }] }),
   component: PackagesList,
 });
 

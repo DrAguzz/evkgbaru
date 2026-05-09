@@ -17,7 +17,7 @@ export function SplashScreen() {
         <div className="mx-auto grid place-items-center w-20 h-20 rounded-3xl bg-white/15 backdrop-blur ring-1 ring-white/30 mb-4 animate-pulse">
           <Bike className="w-10 h-10" />
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">{s?.splash_title || "EVRide"}</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{s?.splash_title || "EV Kg Baru"}</h1>
         <p className="text-sm opacity-90 mt-1">{s?.splash_subtitle || "Explore KL on electric bikes"}</p>
         <div className="mt-6 mx-auto w-10 h-1 rounded-full bg-white/40 overflow-hidden">
           <div className="h-full w-1/2 bg-white animate-[slide_1.2s_ease-in-out_infinite]" />

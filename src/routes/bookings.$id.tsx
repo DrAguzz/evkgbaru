@@ -251,7 +251,7 @@ function BookingDetail() {
           <Card className="rounded-2xl border-0 shadow-card">
             <CardContent className="p-5 space-y-2 text-sm">
               <div className="font-semibold flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-success" /> Need help?</div>
-              <p className="text-muted-foreground">Contact EVRide support — we're here 9am to 9pm daily.</p>
+              <p className="text-muted-foreground">Contact EV Kg Baru support — we're here 9am to 9pm daily.</p>
               <Button variant="outline" className="w-full rounded-full" onClick={() => window.open("https://wa.me/60123456789")}>
                 <MessageCircle className="w-4 h-4 mr-1" /> Chat support
               </Button>
