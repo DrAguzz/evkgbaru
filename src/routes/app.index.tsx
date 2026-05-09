@@ -15,6 +15,7 @@ interface Active { id: string; booking_no: string; booking_status: string; tour_
 function AppHome() {
   const { user } = useAuth();
   const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState<string | null>(null);
   const [pkgs, setPkgs] = useState<Pkg[]>([]);
   const [active, setActive] = useState<Active | null>(null);
   const [unread, setUnread] = useState(0);
