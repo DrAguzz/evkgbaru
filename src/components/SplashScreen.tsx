@@ -54,23 +54,24 @@ export function SplashScreen({
   const goRegister = () =>
     onRegister ? onRegister() : navigate({ to: "/register", search: { redirect: "/app" } });
 
+  const hasImage = !!cur.image_url;
+
   return (
     <div className="absolute inset-0 z-50 flex flex-col bg-gradient-to-br from-primary via-primary to-primary/70 text-primary-foreground overflow-hidden">
-      {cur.image_url ? (
+      {hasImage ? (
         <img
-          key={cur.image_url}
-          src={cur.image_url}
+          key={cur.image_url!}
+          src={cur.image_url!}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-60 animate-fade-in"
+          className="absolute inset-0 w-full h-full object-cover animate-fade-in"
         />
       ) : null}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/70" />
 
       {/* Skip */}
       {interactive && !isLast && (
         <button
           onClick={goLogin}
-          className="absolute top-4 right-4 z-10 text-xs font-semibold tracking-wide bg-white/15 backdrop-blur px-3 py-1.5 rounded-full ring-1 ring-white/30 hover:bg-white/25 transition"
+          className="absolute top-4 right-4 z-10 text-xs font-semibold tracking-wide bg-white/20 backdrop-blur px-3 py-1.5 rounded-full ring-1 ring-white/40 hover:bg-white/30 transition"
         >
           Skip
         </button>
@@ -78,15 +79,19 @@ export function SplashScreen({
 
       {/* Content */}
       <div className="relative flex-1 flex flex-col items-center justify-end px-7 pb-8 text-center animate-fade-in">
-        <div className="mx-auto grid place-items-center w-16 h-16 rounded-3xl bg-white/15 backdrop-blur ring-1 ring-white/30 mb-4">
-          <Bike className="w-8 h-8" />
-        </div>
-        <h1 className="text-2xl font-bold tracking-tight drop-shadow">
-          {cur.title || "EV Kg Baru"}
-        </h1>
-        <p className="text-sm opacity-90 mt-2 max-w-xs">
-          {cur.subtitle || "Explore KL on electric bikes"}
-        </p>
+        {!hasImage && (
+          <>
+            <div className="mx-auto grid place-items-center w-16 h-16 rounded-3xl bg-white/15 backdrop-blur ring-1 ring-white/30 mb-4">
+              <Bike className="w-8 h-8" />
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight drop-shadow">
+              {cur.title || "EV Kg Baru"}
+            </h1>
+            <p className="text-sm opacity-90 mt-2 max-w-xs">
+              {cur.subtitle || "Explore KL on electric bikes"}
+            </p>
+          </>
+        )}
 
         {/* Dots */}
         {slides.length > 1 && (
@@ -95,7 +100,7 @@ export function SplashScreen({
               <span
                 key={idx}
                 className={`h-1.5 rounded-full transition-all ${
-                  idx === i ? "w-6 bg-white" : "w-1.5 bg-white/40"
+                  idx === i ? "w-6 bg-white" : "w-1.5 bg-white/60"
                 }`}
               />
             ))}
