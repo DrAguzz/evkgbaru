@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/rider/profile")({ component: RiderProfile });
 
-interface R { id: string; name: string; phone: string | null; vehicle_id: string | null; vehicle_type: string | null; status: string; rating: number; commission_rate: number; }
+interface R { id: string; name: string; phone: string | null; vehicle_id: string | null; vehicle_type: string | null; status: string; rating: number; license_type: string | null; license_valid_until: string | null; }
 
 function RiderProfile() {
   const { user, signOut } = useAuth();
@@ -53,7 +53,8 @@ function RiderProfile() {
       <div className="mt-4 rounded-2xl bg-card shadow-card p-4 space-y-2 text-sm">
         <Row k="Phone" v={r.phone ?? "—"} />
         <Row k="Vehicle" v={`${r.vehicle_type ?? ""} · ${r.vehicle_id ?? "—"}`} />
-        <Row k="Commission" v={`${(Number(r.commission_rate) * 100).toFixed(0)}%`} />
+        <Row k="License Type" v={r.license_type ?? "—"} />
+        <Row k="License Valid Until" v={r.license_valid_until ? new Date(r.license_valid_until).toLocaleDateString() : "—"} />
         <Row k="Email" v={user?.email ?? ""} />
       </div>
 
