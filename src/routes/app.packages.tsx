@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { money, fmtDuration } from "@/lib/format";
-import { packageToSlug } from "@/lib/package-slug";
 import { Clock, Star, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/app/packages")({ component: AppPackages });
@@ -15,10 +14,10 @@ function AppPackages() {
     supabase.from("tour_packages").select("id,package_name,price,image,duration_minutes,description").eq("status", "active").eq("is_promo", false).then(({ data }) => setPkgs(data ?? []));
   }, []);
 
-  const openPackage = (packageName: string) => {
+  const openPackage = (packageId: string) => {
     navigate({
-      to: "/app/packages/$slug",
-      params: { slug: packageToSlug(packageName) },
+      to: "/app/book/$packageId",
+      params: { packageId },
     });
   };
 
@@ -38,11 +37,11 @@ function AppPackages() {
         {pkgs.map((p, i) => (
           <div
             key={p.id}
-            onClick={() => openPackage(p.package_name)}
+            onClick={() => openPackage(p.id)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                openPackage(p.package_name);
+                openPackage(p.id);
               }
             }}
             role="button"
@@ -76,7 +75,7 @@ function AppPackages() {
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  openPackage(p.package_name);
+                  openPackage(p.id);
                 }}
                 className="grid place-items-center w-7 h-7 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
               >
