@@ -68,7 +68,13 @@ function RiderHome() {
           return (
             <Link key={r.id} to="/rider/tours/$id" params={{ id: r.id }} className="block rounded-2xl bg-card shadow-card overflow-hidden">
               <div className="flex items-center gap-3 p-3">
-                <div className="grid place-items-center w-14 h-14 rounded-full bg-hero text-primary-foreground font-bold text-lg shrink-0">{initials}</div>
+                <div className="w-14 h-14 rounded-full overflow-hidden bg-hero text-primary-foreground shrink-0 ring-2 ring-background shadow-sm">
+                  {r.profiles?.avatar_url ? (
+                    <img src={r.profiles.avatar_url} alt={r.profiles.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full grid place-items-center font-bold text-lg">{initials}</div>
+                  )}
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-[10px] text-muted-foreground">{r.booking_no}</div>
                   <div className="font-semibold text-sm truncate">{r.profiles?.name}</div>
