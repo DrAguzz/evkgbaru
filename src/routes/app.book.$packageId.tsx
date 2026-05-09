@@ -94,7 +94,7 @@ function AppBook() {
             catch (e) { toast.error(e instanceof Error ? e.message : "Payment failed"); }
             finally { setBusy(false); }
           }}>Pay {money(total)}</Button>
-          {bookingId && <Link to="/bookings/$id" params={{ id: bookingId }} className="block text-center text-xs text-muted-foreground">View booking on web</Link>}
+          {bookingId && <Link to="/app/bookings/$id" params={{ id: bookingId }} className="block text-center text-xs text-muted-foreground">View booking on web</Link>}
         </div>
       )}
     </div>
