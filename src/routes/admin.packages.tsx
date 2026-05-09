@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { money } from "@/lib/format";
-import { Plus, Pencil, Clock, Users, Trash2 } from "lucide-react";
+import { Plus, Pencil, Clock, Users, Trash2, Upload, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/packages")({ component: AdminPackages });
@@ -24,6 +24,25 @@ function AdminPackages() {
   const [rows, setRows] = useState<Pkg[]>([]);
   const [editing, setEditing] = useState<Pkg | null>(null);
   const [open, setOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  async function uploadImage(file: File) {
+    if (!editing) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `packages/pkg-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from("app-assets")
+      .upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) {
+      setUploading(false);
+      return toast.error(upErr.message);
+    }
+    const { data: pub } = supabase.storage.from("app-assets").getPublicUrl(path);
+    setEditing({ ...editing, image: pub.publicUrl });
+    setUploading(false);
+    toast.success("Image uploaded");
+  }
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("tour_packages").select("*").order("created_at", { ascending: false });
@@ -103,7 +122,32 @@ function AdminPackages() {
                 <div><Label>Min pax</Label><Input type="number" value={editing.min_pax} onChange={(e) => setEditing({ ...editing, min_pax: Number(e.target.value) })} /></div>
                 <div><Label>Max pax</Label><Input type="number" value={editing.max_pax} onChange={(e) => setEditing({ ...editing, max_pax: Number(e.target.value) })} /></div>
               </div>
-              <div><Label>Image URL</Label><Input value={editing.image ?? ""} onChange={(e) => setEditing({ ...editing, image: e.target.value })} /></div>
+              <div className="space-y-2">
+                <Label>Image</Label>
+                {editing.image && (
+                  <div className="aspect-[16/9] rounded-lg overflow-hidden bg-muted">
+                    <img src={editing.image} alt="" className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <label className="flex-1">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f); e.target.value = ""; }}
+                    />
+                    <Button type="button" variant="outline" className="w-full pointer-events-none" disabled={uploading}>
+                      {uploading ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Upload className="w-4 h-4 mr-1" />}
+                      {uploading ? "Uploading..." : editing.image ? "Change image" : "Upload image"}
+                    </Button>
+                  </label>
+                  {editing.image && (
+                    <Button type="button" variant="ghost" size="icon" onClick={() => setEditing({ ...editing, image: "" })}><Trash2 className="w-4 h-4" /></Button>
+                  )}
+                </div>
+                <Input placeholder="…or paste image URL" value={editing.image ?? ""} onChange={(e) => setEditing({ ...editing, image: e.target.value })} />
+              </div>
               <div className="flex items-center justify-between"><Label>Active</Label><Switch checked={editing.status === "active"} onCheckedChange={(v) => setEditing({ ...editing, status: v ? "active" : "inactive" })} /></div>
               <Button className="w-full rounded-full" onClick={save}>Save</Button>
             </div>
