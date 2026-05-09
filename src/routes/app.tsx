@@ -33,24 +33,35 @@ function AppShell() {
     return <PhoneFrame>{showSplash ? <SplashScreen /> : <div className="grid place-items-center h-full">Loading…</div>}</PhoneFrame>;
   }
 
-  const tabs: { to: "/app" | "/app/packages" | "/app/bookings" | "/app/profile"; icon: typeof Home; label: string; exact?: boolean }[] = [
-    { to: "/app", icon: Home, label: "Home", exact: true },
-    { to: "/app/packages", icon: Compass, label: "Packages" },
-    { to: "/app/bookings", icon: Ticket, label: "Bookings" },
-    { to: "/app/profile", icon: User, label: "Profile" },
+  const tabs: { to: "/app" | "/app/packages" | "/app/bookings" | "/app/profile"; icon: typeof Home; label: string; exact?: boolean; color: string }[] = [
+    { to: "/app", icon: Home, label: "Home", exact: true, color: "from-primary to-primary/70" },
+    { to: "/app/packages", icon: Compass, label: "Packages", color: "from-secondary to-secondary/70" },
+    { to: "/app/bookings", icon: Ticket, label: "Bookings", color: "from-success to-success/70" },
+    { to: "/app/profile", icon: User, label: "Profile", color: "from-warning to-warning/70" },
   ];
 
   return (
     <PhoneFrame>
-      <div className="flex flex-col h-full md:h-[820px] pb-20">
+      <div className="flex flex-col h-full md:h-[820px] pb-24">
         <div className="flex-1 overflow-y-auto"><Outlet /></div>
-        <nav className="absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t flex items-center justify-around py-2 px-2 z-30">
+        <nav className="absolute bottom-3 left-3 right-3 z-30 rounded-3xl border border-white/40 dark:border-white/10 bg-white/55 dark:bg-white/5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),inset_0_1px_0_0_rgba(255,255,255,0.6)] flex items-center justify-around py-2 px-2 overflow-hidden">
+          <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
           {tabs.map((t) => {
             const active = t.exact ? loc.pathname === t.to : loc.pathname.startsWith(t.to);
             return (
-              <Link key={t.to} to={t.to} className={cn("flex flex-col items-center gap-0.5 flex-1 py-1.5 rounded-xl transition", active ? "text-primary" : "text-muted-foreground")}>
-                <t.icon className="w-5 h-5" />
-                <span className="text-[10px] font-medium">{t.label}</span>
+              <Link
+                key={t.to}
+                to={t.to}
+                className={cn(
+                  "relative flex flex-col items-center gap-0.5 flex-1 py-1.5 rounded-2xl transition-all duration-300 group",
+                  active ? "text-white" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {active && (
+                  <span className={cn("absolute inset-1 rounded-2xl bg-gradient-to-br shadow-lg -z-0", t.color)} />
+                )}
+                <t.icon className={cn("relative w-5 h-5 transition-transform", active ? "scale-110 drop-shadow" : "group-hover:scale-110")} />
+                <span className="relative text-[10px] font-semibold tracking-wide">{t.label}</span>
               </Link>
             );
           })}
