@@ -19,11 +19,7 @@ function RiderShell() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/login", search: { redirect: "/rider" } });
-  }, [loading, user, navigate]);
-
-  useEffect(() => {
-    if (!user) return;
+    if (!user) { setChecking(false); return; }
     supabase.from("riders").select("id").eq("user_id", user.id).maybeSingle()
       .then(({ data }) => { setRiderId(data?.id ?? null); setChecking(false); });
   }, [user, isRider]);
