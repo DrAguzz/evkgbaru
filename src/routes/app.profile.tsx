@@ -39,7 +39,8 @@ function AppProfile() {
     if (!user || !editing) return;
     setSaving(true);
     const value = draft.trim() || null;
-    const { error } = await supabase.from("profiles").update({ [editing]: value }).eq("id", user.id);
+    const payload = { [editing]: value } as Partial<Profile>;
+    const { error } = await supabase.from("profiles").update(payload).eq("id", user.id);
     setSaving(false);
     if (error) return toast.error(error.message);
     setProfile((p) => p ? { ...p, [editing]: value } as Profile : p);
