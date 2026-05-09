@@ -60,13 +60,8 @@ function Landing() {
 
       {/* Hero */}
       <section
-        className="relative overflow-hidden bg-hero min-h-[600px] md:min-h-[680px] flex items-center"
-        style={{
-          backgroundImage: `url(${heroRider})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center right",
-          backgroundRepeat: "no-repeat",
-        }}
+        className="relative overflow-hidden bg-hero min-h-[600px] md:min-h-[680px] flex items-center bg-cover bg-no-repeat bg-center md:bg-right"
+        style={{ backgroundImage: `url(${heroRider})` }}
       >
         {/* Gradient overlay: dark left → clear right */}
         <div
