@@ -36,10 +36,17 @@ function AppPackages() {
 
       <div className="px-5 mt-5 grid grid-cols-2 gap-3">
         {pkgs.map((p, i) => (
-          <button
+          <div
             key={p.id}
-            type="button"
             onClick={() => openPackage(p.package_name)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openPackage(p.package_name);
+              }
+            }}
+            role="button"
+            tabIndex={0}
             style={{ animationDelay: `${i * 40}ms` }}
             className="group relative block rounded-2xl overflow-hidden bg-card ring-1 ring-border/40 shadow-card hover:shadow-elegant hover:ring-primary/30 hover:-translate-y-0.5 transition-all duration-300 animate-fade-in active:scale-[0.98]"
           >
@@ -65,7 +72,8 @@ function AppPackages() {
             </div>
             <div className="p-2.5 flex items-center justify-between">
               <div className="font-bold text-primary text-sm">{money(p.price)}</div>
-              <span
+              <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   openPackage(p.package_name);
@@ -73,9 +81,9 @@ function AppPackages() {
                 className="grid place-items-center w-7 h-7 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
               >
                 <ArrowRight className="w-3.5 h-3.5" />
-              </span>
+              </button>
             </div>
-          </button>
+          </div>
         ))}
       </div>
     </div>
