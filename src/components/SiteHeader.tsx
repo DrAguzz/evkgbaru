@@ -26,8 +26,8 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           {!user ? (
             <>
-              <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/auth" })}>Login</Button>
-              <Button size="sm" onClick={() => navigate({ to: "/auth", search: { mode: "register" } })}>Sign up</Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/login" })}>Login</Button>
+              <Button size="sm" onClick={() => navigate({ to: "/register" })}>Sign up</Button>
             </>
           ) : (
             <DropdownMenu>
