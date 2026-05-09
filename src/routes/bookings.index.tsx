@@ -25,7 +25,7 @@ function MyBookings() {
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth", search: { redirect: "/bookings" } });
+    if (!loading && !user) navigate({ to: "/login", search: { redirect: "/bookings" } });
   }, [user, loading, navigate]);
 
   if (loading || !user) {
