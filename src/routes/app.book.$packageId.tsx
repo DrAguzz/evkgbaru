@@ -117,9 +117,8 @@ function AppBook() {
               promo_code: promo?.code ?? null, discount_amount: discount,
             }).select("id").single();
             if (!error && promo) {
-              await supabase.rpc("increment", {}).then(() => {}).catch(() => {});
-              // best-effort: bump used_count
-              await supabase.from("promo_codes").update({ used_count: (await supabase.from("promo_codes").select("used_count").eq("id", promo.id).single()).data?.used_count != null ? ((await supabase.from("promo_codes").select("used_count").eq("id", promo.id).single()).data!.used_count + 1) : 1 }).eq("id", promo.id);
+              const { data: cur } = await supabase.from("promo_codes").select("used_count").eq("id", promo.id).single();
+              await supabase.from("promo_codes").update({ used_count: (cur?.used_count ?? 0) + 1 }).eq("id", promo.id);
             }
             setBusy(false);
             if (error) return toast.error(error.message);
