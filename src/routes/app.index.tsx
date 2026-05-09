@@ -162,7 +162,7 @@ function AppHome() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-warning">Promo</div>
-              <div className="font-semibold mt-0.5">10% off your first ride 🎉</div>
+              <div className="font-semibold mt-0.5">10% off your first ride</div>
               <div className="text-xs text-muted-foreground mt-0.5">Use code <span className="font-mono font-semibold text-foreground">WELCOME10</span> at checkout.</div>
             </div>
             <div className="grid place-items-center w-12 h-12 rounded-2xl bg-warning/20 text-warning shrink-0">
