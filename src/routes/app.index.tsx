@@ -67,7 +67,7 @@ function AppHome() {
           <div>
             <div className="text-xs opacity-80">Hello,</div>
             <div className="text-2xl font-bold leading-tight">{name || "explorer"}</div>
-            <div className="text-xs opacity-80 mt-1">Where to today?</div>
+            <div className="text-xs opacity-80 mt-1">Your next Kuala Lumpur adventure starts here</div>
           </div>
           <Link
             to="/app/profile"
