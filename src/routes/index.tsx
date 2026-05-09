@@ -84,7 +84,7 @@ function Landing() {
             <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-3 py-1 text-xs font-medium">
               <Bike className="w-3.5 h-3.5" /> Tourist Open Web · Tour Booking Journey
             </span>
-            <h1 className="mt-5 text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-lg">
+            <h1 className="mt-5 text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-lg whitespace-nowrap">
               Explore Kuala Lumpur<br />on a guided EV bike.
             </h1>
             <p className="mt-5 text-lg text-white/90 max-w-lg drop-shadow">
