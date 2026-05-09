@@ -69,10 +69,17 @@ function AppHome() {
             <div className="text-2xl font-bold leading-tight">{name || "explorer"} 👋</div>
             <div className="text-xs opacity-80 mt-1">Where to today?</div>
           </div>
-          <Link to="/app/profile" className="relative grid place-items-center w-11 h-11 rounded-full bg-white/15 backdrop-blur-md ring-1 ring-white/20 hover:bg-white/25 transition">
-            <Bell className="w-4 h-4" />
-            {unread > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 grid place-items-center min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-[10px] font-bold ring-2 ring-primary">{unread}</span>
+          <Link
+            to="/app/profile"
+            aria-label="Open profile"
+            className="relative grid place-items-center w-12 h-12 rounded-full bg-white/15 backdrop-blur-md ring-2 ring-white/40 hover:ring-white/70 hover:scale-105 transition shadow-lg shadow-black/20 overflow-hidden"
+          >
+            {avatar ? (
+              <img src={avatar} alt={name || "Profile"} className="w-full h-full object-cover" />
+            ) : (
+              <span className="grid place-items-center w-full h-full bg-gradient-to-br from-white/30 to-white/10 text-sm font-bold uppercase tracking-wide">
+                {(name || "U").slice(0, 1)}
+              </span>
             )}
           </Link>
         </div>
