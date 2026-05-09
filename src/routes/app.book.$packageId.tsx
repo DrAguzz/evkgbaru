@@ -7,10 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronLeft, CreditCard, Wallet, Building2, BanknoteIcon } from "lucide-react";
+import { ChevronLeft, CreditCard, Wallet, Building2, BanknoteIcon, Tag, X } from "lucide-react";
 import { money } from "@/lib/format";
 import { processMockPayment } from "@/lib/booking";
 import { toast } from "sonner";
+
+interface AppliedPromo { id: string; code: string; discount_type: string; discount_value: number; min_amount: number; }
 
 export const Route = createFileRoute("/app/book/$packageId")({ component: AppBook });
 const SLOTS = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
@@ -31,6 +33,9 @@ function AppBook() {
   const [method, setMethod] = useState("card");
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [promoInput, setPromoInput] = useState("");
+  const [promo, setPromo] = useState<AppliedPromo | null>(null);
+  const [promoBusy, setPromoBusy] = useState(false);
 
   useEffect(() => {
     supabase.from("tour_packages").select("id,package_name,price,max_pax,start_hub_id").eq("id", packageId).single().then(({ data }) => { setPkg(data); if (data?.start_hub_id) setHub(data.start_hub_id); });
@@ -38,7 +43,28 @@ function AppBook() {
   }, [packageId]);
 
   if (!pkg) return <div className="p-8">Loading…</div>;
-  const total = pkg.price * pax;
+  const subtotal = pkg.price * pax;
+  const discount = !promo ? 0 : promo.discount_type === "percentage"
+    ? Math.round(subtotal * (promo.discount_value / 100) * 100) / 100
+    : Math.min(promo.discount_value, subtotal);
+  const total = Math.max(0, subtotal - discount);
+
+  async function applyPromo() {
+    const code = promoInput.trim().toUpperCase();
+    if (!code) return;
+    setPromoBusy(true);
+    const { data, error } = await supabase.from("promo_codes").select("id,code,discount_type,discount_value,min_amount,max_uses,used_count,valid_from,valid_until,status").eq("code", code).maybeSingle();
+    setPromoBusy(false);
+    if (error || !data) return toast.error("Invalid promo code");
+    const now = new Date();
+    if (data.status !== "active") return toast.error("This code is not active");
+    if (data.valid_from && new Date(data.valid_from) > now) return toast.error("This code is not yet valid");
+    if (data.valid_until && new Date(data.valid_until) < now) return toast.error("This code has expired");
+    if (data.max_uses != null && data.used_count >= data.max_uses) return toast.error("This code has reached its usage limit");
+    if (subtotal < Number(data.min_amount)) return toast.error(`Minimum spend ${money(Number(data.min_amount))}`);
+    setPromo({ id: data.id, code: data.code, discount_type: data.discount_type, discount_value: Number(data.discount_value), min_amount: Number(data.min_amount) });
+    toast.success(`Promo "${data.code}" applied`);
+  }
 
   return (
     <div className="px-5 pt-8 pb-24">
