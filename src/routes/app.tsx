@@ -1,7 +1,8 @@
 import { createFileRoute, Outlet, Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { PhoneFrame } from "@/components/PhoneFrame";
+import { SplashScreen } from "@/components/SplashScreen";
 import { Home, Compass, Ticket, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -13,13 +14,23 @@ function AppShell() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const loc = useLocation();
+  const wasAuthed = useRef(false);
+  const [showSplash, setShowSplash] = useState(false);
+
+  useEffect(() => { if (user) wasAuthed.current = true; }, [user]);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth", search: { redirect: "/app" } });
+    if (loading) return;
+    if (!user) {
+      // Show splash on logout (or first visit unauthenticated) before sending to /auth
+      setShowSplash(true);
+      const t = setTimeout(() => navigate({ to: "/auth", search: { redirect: "/app" } }), 1400);
+      return () => clearTimeout(t);
+    }
   }, [loading, user, navigate]);
 
   if (loading || !user) {
-    return <PhoneFrame><div className="grid place-items-center h-full">Loading…</div></PhoneFrame>;
+    return <PhoneFrame>{showSplash ? <SplashScreen /> : <div className="grid place-items-center h-full">Loading…</div>}</PhoneFrame>;
   }
 
   const tabs: { to: "/app" | "/app/packages" | "/app/bookings" | "/app/profile"; icon: typeof Home; label: string; exact?: boolean }[] = [
