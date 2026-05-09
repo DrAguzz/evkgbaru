@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Clock, Users, MapPin, ChevronLeft, Star, ShieldCheck, CheckCircle2, Navigation } from "lucide-react";
 import { money, fmtDuration } from "@/lib/format";
 
-export const Route = createFileRoute("/app/packages/$id")({ component: AppPkgDetail });
+export const Route = createFileRoute("/app/packages/$slug")({ component: AppPkgDetail });
 
 interface Pkg {
   id: string;
