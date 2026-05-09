@@ -145,49 +145,6 @@ function AppHome() {
           </div>
         </div>
 
-        {/* Trending — horizontal scroll */}
-        {filtered.length > 0 && (
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <div className="font-bold text-base">Trending now</div>
-                <div className="text-xs text-muted-foreground">Curated by locals</div>
-              </div>
-              <Link to="/app/packages" className="text-xs font-semibold text-primary inline-flex items-center gap-1">
-                See all <ArrowRight className="w-3 h-3" />
-              </Link>
-            </div>
-            <div className="-mx-5 px-5 flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [&::-webkit-scrollbar]:hidden">
-              {filtered.slice(0, 5).map((p) => (
-                <Link
-                  key={p.id}
-                  to="/app/packages/$id"
-                  params={{ id: p.id }}
-                  className="snap-start shrink-0 w-[78%] rounded-2xl overflow-hidden bg-card shadow-card ring-1 ring-border/40"
-                >
-                  <div className="relative aspect-[16/10] bg-muted">
-                    {p.image && <img src={p.image} alt={p.package_name} className="w-full h-full object-cover" loading="lazy" />}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute top-2 left-2 inline-flex items-center gap-1 bg-white/90 backdrop-blur px-2 py-0.5 rounded-full text-[10px] font-semibold text-foreground">
-                      <Star className="w-3 h-3 fill-warning text-warning" /> 4.9
-                    </div>
-                    <div className="absolute bottom-2 left-2 right-2 text-white">
-                      <div className="font-semibold text-sm leading-tight line-clamp-1">{p.package_name}</div>
-                      <div className="flex items-center gap-2 text-[11px] opacity-90 mt-0.5">
-                        <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" /> {fmtDuration(p.duration_minutes)}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-3 flex items-center justify-between">
-                    <div className="text-[11px] text-muted-foreground line-clamp-1">{p.description ?? "E-bike guided tour"}</div>
-                    <div className="font-bold text-primary text-sm">{money(p.price)}</div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* All packages — list */}
         <div>
           <div className="flex items-center justify-between mb-3">
