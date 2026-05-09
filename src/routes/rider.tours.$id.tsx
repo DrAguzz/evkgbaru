@@ -99,7 +99,7 @@ function RiderTour() {
   }
 
   return (
-    <div className="pb-8">
+    <div className="pb-24">
       <div className="relative h-44 bg-muted">
         <img src={b.tour_packages?.image ?? ""} alt="" className="w-full h-full object-cover" />
         <Link to="/rider" className="absolute top-4 left-4 grid place-items-center w-9 h-9 rounded-full bg-background/90 backdrop-blur"><ArrowLeft className="w-4 h-4" /></Link>
@@ -136,23 +136,23 @@ function RiderTour() {
         {/* Checkpoints */}
         <div className="mt-4 rounded-2xl bg-card shadow-card p-4">
           <div className="font-semibold mb-3">Checkpoints</div>
-          <ol className="relative pl-6 space-y-3">
-            <span className="absolute left-2 top-1 bottom-1 w-px bg-border" />
+          <div className="relative pl-7 space-y-4">
+            <span aria-hidden className="absolute left-[10px] top-2 bottom-2 w-px bg-border" />
             {routes.map((r) => {
               const done = progress.find((p) => p.sequence_no === r.sequence_no);
               const current = !done && r.sequence_no === nextSeq && b.booking_status === "in_progress";
               return (
-                <li key={r.sequence_no} className="relative">
-                  <span className={`absolute -left-[11px] top-1 w-4 h-4 rounded-full border-2 ${done ? "bg-success border-success" : current ? "bg-primary border-primary animate-pulse" : "bg-background border-border"}`} />
-                  <div className="text-sm font-medium">{r.locations?.name}</div>
-                  <div className="text-xs text-muted-foreground">
+                <div key={r.sequence_no} className="relative">
+                  <span className={`absolute -left-[22px] top-0.5 w-4 h-4 rounded-full border-2 ${done ? "bg-success border-success" : current ? "bg-primary border-primary animate-pulse" : "bg-background border-border"}`} />
+                  <div className="text-sm font-medium leading-tight">{r.locations?.name}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
                     {done ? `Arrived ${done.arrival_time ? new Date(done.arrival_time).toLocaleTimeString() : ""}` : `~${r.estimated_minutes} min`}
                   </div>
-                  {done?.remarks && <div className="text-xs italic text-muted-foreground">"{done.remarks}"</div>}
-                </li>
+                  {done?.remarks && <div className="text-xs italic text-muted-foreground mt-0.5">"{done.remarks}"</div>}
+                </div>
               );
             })}
-          </ol>
+          </div>
 
           {/* Action */}
           <div className="mt-4 space-y-2">

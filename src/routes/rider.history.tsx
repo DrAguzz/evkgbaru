@@ -31,7 +31,7 @@ function RiderHistory() {
   const earnings = rows.reduce((s, r) => s + Number(r.total_price) * 0.2, 0);
 
   return (
-    <div className="px-5 pt-8 pb-6">
+    <div className="px-5 pt-8 pb-24">
       <h1 className="text-2xl font-bold">History</h1>
       <div className="mt-4 rounded-2xl bg-hero text-primary-foreground p-4">
         <div className="text-xs opacity-80">Total earnings</div>

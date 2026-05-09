@@ -45,7 +45,7 @@ function RiderHome() {
   }, [load]);
 
   return (
-    <div className="px-5 pt-8 pb-6">
+    <div className="px-5 pt-8 pb-24">
       <div className="text-xs text-muted-foreground">Welcome back</div>
       <h1 className="text-2xl font-bold">{riderName || "Rider"}</h1>
 
