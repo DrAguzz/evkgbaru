@@ -25,9 +25,18 @@ function AppBookings() {
   }, [user]);
 
   return (
-    <div className="px-5 pt-8 pb-6">
-      <h1 className="text-2xl font-bold">My Bookings</h1>
-      <div className="mt-4 space-y-3">
+    <div className="pb-6">
+      {/* Coloured header */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-secondary via-secondary to-primary/80 text-secondary-foreground rounded-b-[28px] px-5 pt-10 pb-8">
+        <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/15 blur-3xl" />
+        <div className="absolute -bottom-20 -left-10 w-64 h-64 rounded-full bg-primary/40 blur-3xl" />
+        <div className="relative">
+          <h1 className="text-3xl font-extrabold leading-tight drop-shadow-sm">My Bookings</h1>
+          <p className="text-sm opacity-90 mt-1">Track all your tours in one place.</p>
+        </div>
+      </div>
+
+      <div className="px-5 mt-5 space-y-3">
         {rows.length === 0 && <div className="text-center text-sm text-muted-foreground py-10">No bookings yet.</div>}
         {rows.map((r) => (
           <Link key={r.id} to="/app/bookings/$id" params={{ id: r.id }} className="block rounded-2xl overflow-hidden bg-card shadow-card">
