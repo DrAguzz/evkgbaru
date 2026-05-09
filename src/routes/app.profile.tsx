@@ -187,13 +187,10 @@ function AppProfile() {
 
       {/* Notifications */}
       <SectionCard title="Notifications">
-        <Row icon={Bell} label="Notifications">
-          <Link to="/app/profile" className="flex items-center justify-between flex-1 -my-1">
-            <span className="text-sm font-medium">Inbox</span>
-            <span className="flex items-center gap-2">
-              {unread > 0 && <span className="px-2 py-0.5 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">{unread}</span>}
-              <ChevronRight className="w-4 h-4 text-muted-foreground" />
-            </span>
+        <Row icon={Bell} label="Inbox">
+          <Link to="/app/profile" className="flex items-center justify-end gap-2 flex-1 -my-1">
+            {unread > 0 && <span className="px-2 py-0.5 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">{unread}</span>}
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </Link>
         </Row>
         <Row icon={Bell} label="Push notifications">
