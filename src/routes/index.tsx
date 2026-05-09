@@ -38,11 +38,11 @@ const tourJourney = [
 ];
 
 const whyBetter = [
-  { icon: RouteIcon, title: "Seamless Flow", desc: "Easy steps from register to ride", grad: "from-sky-400 via-blue-500 to-indigo-600" },
-  { icon: BikeIcon, title: "Auto-Assign Rider", desc: "System auto-assigns best available rider", grad: "from-emerald-400 via-teal-500 to-cyan-600" },
-  { icon: Radar, title: "Real-Time Tracking", desc: "Live tracking for safety & peace of mind", grad: "from-fuchsia-400 via-pink-500 to-rose-500" },
-  { icon: PackageCheck, title: "Complete Experience", desc: "From pickup to return, we handle all", grad: "from-amber-400 via-orange-500 to-red-500" },
-  { icon: Smartphone, title: "Mobile First", desc: "Accessible anywhere, anytime, any device", grad: "from-violet-400 via-purple-500 to-fuchsia-600" },
+  { icon: RouteIcon, title: "Seamless Flow", desc: "Easy steps from register to ride" },
+  { icon: BikeIcon, title: "Auto-Assign Rider", desc: "System auto-assigns best available rider" },
+  { icon: Radar, title: "Real-Time Tracking", desc: "Live tracking for safety & peace of mind" },
+  { icon: PackageCheck, title: "Complete Experience", desc: "From pickup to return, we handle all" },
+  { icon: Smartphone, title: "Mobile First", desc: "Accessible anywhere, anytime, any device" },
 ];
 
 const benefits = [
@@ -132,7 +132,7 @@ function Landing() {
           <div className="mt-10 grid grid-cols-2 md:grid-cols-5 gap-6">
             {whyBetter.map((w) => (
               <div key={w.title} className="group text-center px-2">
-                <div className={`relative mx-auto w-20 h-20 rounded-[26px] bg-gradient-to-br ${w.grad} shadow-2xl shadow-black/30 ring-1 ring-white/30 grid place-items-center transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-105`}>
+                <div className="relative mx-auto w-20 h-20 rounded-[26px] bg-gradient-to-br from-primary via-primary to-primary/70 shadow-2xl shadow-black/30 ring-1 ring-white/30 grid place-items-center transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-105">
                   <div className="absolute inset-0 rounded-[26px] bg-gradient-to-b from-white/30 to-transparent opacity-60" />
                   <div className="absolute -inset-2 rounded-[32px] bg-white/0 group-hover:bg-white/10 blur-xl transition" />
                   <w.icon className="relative w-10 h-10 text-white drop-shadow-md" strokeWidth={2.2} />
