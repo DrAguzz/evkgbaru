@@ -24,6 +24,25 @@ function AdminPackages() {
   const [rows, setRows] = useState<Pkg[]>([]);
   const [editing, setEditing] = useState<Pkg | null>(null);
   const [open, setOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  async function uploadImage(file: File) {
+    if (!editing) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `packages/pkg-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from("app-assets")
+      .upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) {
+      setUploading(false);
+      return toast.error(upErr.message);
+    }
+    const { data: pub } = supabase.storage.from("app-assets").getPublicUrl(path);
+    setEditing({ ...editing, image: pub.publicUrl });
+    setUploading(false);
+    toast.success("Image uploaded");
+  }
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("tour_packages").select("*").order("created_at", { ascending: false });
