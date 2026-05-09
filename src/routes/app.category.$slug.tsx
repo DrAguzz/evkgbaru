@@ -74,40 +74,56 @@ function CategoryPage() {
 export function PkgCard({ p }: { p: Pkg }) {
   const showPromo = p.is_promo && p.promo_price != null;
   return (
-    <div className="rounded-2xl overflow-hidden bg-card shadow-card ring-1 ring-border/40">
-      <div className="relative aspect-[16/9] bg-muted">
-        {p.image && <img src={p.image} alt={p.package_name} className="w-full h-full object-cover" loading="lazy" />}
-        <div className="absolute top-2 left-2 inline-flex items-center gap-1 bg-white/90 backdrop-blur px-2 py-0.5 rounded-full text-[10px] font-semibold text-foreground">
-          <Star className="w-3 h-3 fill-warning text-warning" /> 4.9
+    <div className="group rounded-3xl overflow-hidden bg-card shadow-card ring-1 ring-border/40 hover:shadow-elegant hover:-translate-y-0.5 hover:ring-primary/30 transition-all duration-300">
+      {/* Image */}
+      <div className="relative aspect-[16/10] bg-muted overflow-hidden">
+        {p.image && (
+          <img
+            src={p.image}
+            alt={p.package_name}
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        )}
+        {/* Bottom fade so badges sit cleanly */}
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/55 via-black/15 to-transparent pointer-events-none" />
+        {/* Top-row badges */}
+        <div className="absolute top-2 left-2 right-2 flex items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur px-2 py-0.5 rounded-full text-[10px] font-semibold text-foreground shadow-sm">
+            <Star className="w-3 h-3 fill-warning text-warning" /> 4.9
+          </span>
+          <span className="px-2 py-0.5 rounded-full bg-primary/90 text-primary-foreground text-[10px] font-semibold shadow-sm">{p.category}</span>
         </div>
-        <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-primary/90 text-primary-foreground text-[10px] font-semibold">{p.category}</span>
+        {/* Promo pill */}
         {showPromo && (
-          <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-warning text-warning-foreground text-[10px] font-bold uppercase tracking-wider">
-            <Tag className="w-3 h-3" /> -{p.discount_percentage ?? 0}%
+          <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-warning text-warning-foreground text-[10px] font-bold uppercase tracking-wider shadow-md">
+            <Tag className="w-3 h-3" /> -{p.discount_percentage ?? 0}% OFF
           </span>
         )}
       </div>
-      <div className="p-3">
-        <div className="font-semibold text-sm leading-tight line-clamp-1">{p.package_name}</div>
-        <div className="text-xs text-muted-foreground line-clamp-2 mt-1">{p.description ?? "Guided EV bike tour."}</div>
-        <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
+
+      {/* Content — has its own padding so it never overlaps the image */}
+      <div className="p-4 space-y-2">
+        <div className="font-semibold text-sm leading-snug line-clamp-1">{p.package_name}</div>
+        <div className="text-xs text-muted-foreground line-clamp-2">{p.description ?? "Guided EV bike tour."}</div>
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" /> {fmtDuration(p.duration_minutes)}</span>
           <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" /> KL hub</span>
         </div>
-        <div className="mt-3 flex items-center justify-between">
+        <div className="pt-2 mt-1 border-t border-border/50 flex items-center justify-between gap-2 flex-wrap">
           <div>
             {showPromo ? (
               <div className="flex items-baseline gap-2">
-                <span className="text-primary font-bold">{money(p.promo_price!)}</span>
+                <span className="text-primary font-bold text-base">{money(p.promo_price!)}</span>
                 <span className="text-xs text-muted-foreground line-through">{money(p.price)}</span>
               </div>
             ) : (
-              <span className="text-primary font-bold">{money(p.price)}</span>
+              <span className="text-primary font-bold text-base">{money(p.price)}</span>
             )}
           </div>
           <div className="flex gap-2">
             <Link to="/app/packages/$id" params={{ id: p.id }} className="px-3 py-1.5 text-xs font-semibold rounded-full ring-1 ring-border hover:bg-accent transition">Details</Link>
-            <Link to="/app/book/$packageId" params={{ packageId: p.id }} className="px-3 py-1.5 text-xs font-semibold rounded-full bg-primary text-primary-foreground shadow-sm">Book Now</Link>
+            <Link to="/app/book/$packageId" params={{ packageId: p.id }} className="px-3 py-1.5 text-xs font-semibold rounded-full bg-primary text-primary-foreground shadow-sm hover:shadow-md transition">Book Now</Link>
           </div>
         </div>
       </div>
