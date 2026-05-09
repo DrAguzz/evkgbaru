@@ -24,7 +24,7 @@ function AppShell() {
     if (!user) {
       // Show splash on logout (or first visit unauthenticated) before sending to /auth
       setShowSplash(true);
-      const t = setTimeout(() => navigate({ to: "/auth", search: { redirect: "/app" } }), 1400);
+      const t = setTimeout(() => navigate({ to: "/login", search: { redirect: "/app" } }), 1400);
       return () => clearTimeout(t);
     }
   }, [loading, user, navigate]);
