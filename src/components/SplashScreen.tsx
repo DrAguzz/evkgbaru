@@ -6,7 +6,15 @@ import { Button } from "@/components/ui/button";
 
 type Slide = { image_url: string | null; title: string | null; subtitle: string | null };
 
-export function SplashScreen({ interactive = false }: { interactive?: boolean }) {
+export function SplashScreen({
+  interactive = false,
+  onLogin,
+  onRegister,
+}: {
+  interactive?: boolean;
+  onLogin?: () => void;
+  onRegister?: () => void;
+}) {
   const navigate = useNavigate();
   const [slides, setSlides] = useState<Slide[]>([]);
   const [i, setI] = useState(0);
