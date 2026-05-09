@@ -63,21 +63,24 @@ function RiderHome() {
       <h2 className="mt-6 mb-3 font-semibold">Assigned tours</h2>
       {rows.length === 0 && <div className="text-center text-sm text-muted-foreground py-10">No active tours yet.</div>}
       <div className="space-y-3">
-        {rows.map((r) => (
-          <Link key={r.id} to="/rider/tours/$id" params={{ id: r.id }} className="block rounded-2xl bg-card shadow-card overflow-hidden">
-            <div className="flex">
-              <div className="w-24 h-28 bg-muted shrink-0"><img src={r.tour_packages?.image ?? ""} alt="" className="w-full h-full object-cover" /></div>
-              <div className="p-3 flex-1">
-                <div className="text-[10px] text-muted-foreground">{r.booking_no}</div>
-                <div className="font-semibold text-sm">{r.tour_packages?.package_name}</div>
-                <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><Calendar className="w-3 h-3" /> {fmtDate(r.booking_date)} · {fmtTime(r.booking_time)}</div>
-                <div className="text-xs text-muted-foreground flex items-center gap-1"><Users className="w-3 h-3" /> {r.pax} pax · {r.profiles?.name}</div>
-                <div className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3" /> {r.hubs?.name}</div>
-                <div className="mt-1 flex justify-between items-center"><StatusBadge status={r.booking_status} /><ChevronRight className="w-4 h-4 text-muted-foreground" /></div>
+        {rows.map((r) => {
+          const initials = (r.profiles?.name ?? "?").split(" ").map((s) => s[0]).slice(0, 2).join("").toUpperCase();
+          return (
+            <Link key={r.id} to="/rider/tours/$id" params={{ id: r.id }} className="block rounded-2xl bg-card shadow-card overflow-hidden">
+              <div className="flex items-center gap-3 p-3">
+                <div className="grid place-items-center w-14 h-14 rounded-full bg-hero text-primary-foreground font-bold text-lg shrink-0">{initials}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[10px] text-muted-foreground">{r.booking_no}</div>
+                  <div className="font-semibold text-sm truncate">{r.profiles?.name}</div>
+                  <div className="text-xs text-muted-foreground truncate">{r.tour_packages?.package_name}</div>
+                  <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><Calendar className="w-3 h-3" /> {fmtDate(r.booking_date)} · {fmtTime(r.booking_time)}</div>
+                  <div className="text-xs text-muted-foreground flex items-center gap-1"><Users className="w-3 h-3" /> {r.pax} pax · <MapPin className="w-3 h-3" /> {r.hubs?.name}</div>
+                  <div className="mt-1 flex justify-between items-center"><StatusBadge status={r.booking_status} /><ChevronRight className="w-4 h-4 text-muted-foreground" /></div>
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
