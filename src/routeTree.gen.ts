@@ -43,7 +43,7 @@ import { Route as AdminLocationsRouteImport } from './routes/admin.locations'
 import { Route as AdminHubsRouteImport } from './routes/admin.hubs'
 import { Route as AdminBookingsIndexRouteImport } from './routes/admin.bookings.index'
 import { Route as RiderToursIdRouteImport } from './routes/rider.tours.$id'
-import { Route as AppPackagesIdRouteImport } from './routes/app.packages.$id'
+import { Route as AppPackagesSlugRouteImport } from './routes/app.packages.$slug'
 import { Route as AppCategorySlugRouteImport } from './routes/app.category.$slug'
 import { Route as AppBookingsIdRouteImport } from './routes/app.bookings.$id'
 import { Route as AppBookPackageIdRouteImport } from './routes/app.book.$packageId'
@@ -219,9 +219,9 @@ const RiderToursIdRoute = RiderToursIdRouteImport.update({
   path: '/tours/$id',
   getParentRoute: () => RiderRoute,
 } as any)
-const AppPackagesIdRoute = AppPackagesIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
+const AppPackagesSlugRoute = AppPackagesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
   getParentRoute: () => AppPackagesRoute,
 } as any)
 const AppCategorySlugRoute = AppCategorySlugRouteImport.update({
@@ -282,7 +282,7 @@ export interface FileRoutesByFullPath {
   '/app/book/$packageId': typeof AppBookPackageIdRoute
   '/app/bookings/$id': typeof AppBookingsIdRoute
   '/app/category/$slug': typeof AppCategorySlugRoute
-  '/app/packages/$id': typeof AppPackagesIdRoute
+  '/app/packages/$slug': typeof AppPackagesSlugRoute
   '/rider/tours/$id': typeof RiderToursIdRoute
   '/admin/bookings/': typeof AdminBookingsIndexRoute
 }
@@ -320,7 +320,7 @@ export interface FileRoutesByTo {
   '/app/book/$packageId': typeof AppBookPackageIdRoute
   '/app/bookings/$id': typeof AppBookingsIdRoute
   '/app/category/$slug': typeof AppCategorySlugRoute
-  '/app/packages/$id': typeof AppPackagesIdRoute
+  '/app/packages/$slug': typeof AppPackagesSlugRoute
   '/rider/tours/$id': typeof RiderToursIdRoute
   '/admin/bookings': typeof AdminBookingsIndexRoute
 }
@@ -362,7 +362,7 @@ export interface FileRoutesById {
   '/app/book/$packageId': typeof AppBookPackageIdRoute
   '/app/bookings/$id': typeof AppBookingsIdRoute
   '/app/category/$slug': typeof AppCategorySlugRoute
-  '/app/packages/$id': typeof AppPackagesIdRoute
+  '/app/packages/$slug': typeof AppPackagesSlugRoute
   '/rider/tours/$id': typeof RiderToursIdRoute
   '/admin/bookings/': typeof AdminBookingsIndexRoute
 }
@@ -405,7 +405,7 @@ export interface FileRouteTypes {
     | '/app/book/$packageId'
     | '/app/bookings/$id'
     | '/app/category/$slug'
-    | '/app/packages/$id'
+    | '/app/packages/$slug'
     | '/rider/tours/$id'
     | '/admin/bookings/'
   fileRoutesByTo: FileRoutesByTo
@@ -443,7 +443,7 @@ export interface FileRouteTypes {
     | '/app/book/$packageId'
     | '/app/bookings/$id'
     | '/app/category/$slug'
-    | '/app/packages/$id'
+    | '/app/packages/$slug'
     | '/rider/tours/$id'
     | '/admin/bookings'
   id:
@@ -484,7 +484,7 @@ export interface FileRouteTypes {
     | '/app/book/$packageId'
     | '/app/bookings/$id'
     | '/app/category/$slug'
-    | '/app/packages/$id'
+    | '/app/packages/$slug'
     | '/rider/tours/$id'
     | '/admin/bookings/'
   fileRoutesById: FileRoutesById
@@ -746,11 +746,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RiderToursIdRouteImport
       parentRoute: typeof RiderRoute
     }
-    '/app/packages/$id': {
-      id: '/app/packages/$id'
-      path: '/$id'
-      fullPath: '/app/packages/$id'
-      preLoaderRoute: typeof AppPackagesIdRouteImport
+    '/app/packages/$slug': {
+      id: '/app/packages/$slug'
+      path: '/$slug'
+      fullPath: '/app/packages/$slug'
+      preLoaderRoute: typeof AppPackagesSlugRouteImport
       parentRoute: typeof AppPackagesRoute
     }
     '/app/category/$slug': {
@@ -829,11 +829,11 @@ const AppBookingsRouteWithChildren = AppBookingsRoute._addFileChildren(
 )
 
 interface AppPackagesRouteChildren {
-  AppPackagesIdRoute: typeof AppPackagesIdRoute
+  AppPackagesSlugRoute: typeof AppPackagesSlugRoute
 }
 
 const AppPackagesRouteChildren: AppPackagesRouteChildren = {
-  AppPackagesIdRoute: AppPackagesIdRoute,
+  AppPackagesSlugRoute: AppPackagesSlugRoute,
 }
 
 const AppPackagesRouteWithChildren = AppPackagesRoute._addFileChildren(
@@ -897,3 +897,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
