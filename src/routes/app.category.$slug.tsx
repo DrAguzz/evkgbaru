@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { money, fmtDuration } from "@/lib/format";
+import { packageToSlug } from "@/lib/package-slug";
 import { ArrowLeft, Clock, Star, MapPin, Tag } from "lucide-react";
 
 export const Route = createFileRoute("/app/category/$slug")({ component: CategoryPage });
@@ -122,7 +123,7 @@ export function PkgCard({ p }: { p: Pkg }) {
             )}
           </div>
           <div className="flex gap-2">
-            <Link to="/app/packages/$id" params={{ id: p.id }} className="px-3 py-1.5 text-xs font-semibold rounded-full ring-1 ring-border hover:bg-accent transition">Details</Link>
+            <Link to="/app/packages/$slug" params={{ slug: packageToSlug(p.package_name) }} className="px-3 py-1.5 text-xs font-semibold rounded-full ring-1 ring-border hover:bg-accent transition">Details</Link>
             <Link to="/app/book/$packageId" params={{ packageId: p.id }} className="px-3 py-1.5 text-xs font-semibold rounded-full bg-primary text-primary-foreground shadow-sm hover:shadow-md transition">Book Now</Link>
           </div>
         </div>
