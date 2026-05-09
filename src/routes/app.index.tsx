@@ -114,7 +114,7 @@ function AppHome() {
 
         {/* Active booking */}
         {active && (
-          <Link to="/bookings/$id" params={{ id: active.id }} className="block">
+          <Link to="/app/bookings/$id" params={{ id: active.id }} className="block">
             <div className="relative overflow-hidden rounded-2xl p-4 bg-gradient-to-r from-secondary to-secondary/70 text-secondary-foreground shadow-elegant">
               <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl" />
               <div className="relative flex items-center gap-3">

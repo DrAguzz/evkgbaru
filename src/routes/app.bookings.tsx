@@ -30,7 +30,7 @@ function AppBookings() {
       <div className="mt-4 space-y-3">
         {rows.length === 0 && <div className="text-center text-sm text-muted-foreground py-10">No bookings yet.</div>}
         {rows.map((r) => (
-          <Link key={r.id} to="/bookings/$id" params={{ id: r.id }} className="block rounded-2xl overflow-hidden bg-card shadow-card">
+          <Link key={r.id} to="/app/bookings/$id" params={{ id: r.id }} className="block rounded-2xl overflow-hidden bg-card shadow-card">
             <div className="flex">
               <div className="w-24 h-24 bg-muted shrink-0"><img src={r.tour_packages?.image ?? ""} alt="" className="w-full h-full object-cover" /></div>
               <div className="p-3 flex-1">
