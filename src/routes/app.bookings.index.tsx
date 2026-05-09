@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { StatusBadge } from "@/components/StatusBadge";
 import { money, fmtDate, fmtTime } from "@/lib/format";
 
-export const Route = createFileRoute("/app/bookings")({ component: AppBookings });
+export const Route = createFileRoute("/app/bookings/")({ component: AppBookings });
 
 interface Row {
   id: string; booking_no: string; booking_date: string; booking_time: string;
