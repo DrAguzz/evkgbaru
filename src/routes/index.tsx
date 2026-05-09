@@ -97,29 +97,29 @@ function Landing() {
                   Book Your EV Bike Tour <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
-              <Link to="/app" className="group flex items-center gap-2 rounded-2xl bg-black/80 hover:bg-black text-white px-5 py-2.5 ring-1 ring-white/15 backdrop-blur shadow-xl shadow-black/30 transition">
-                {/* Apple logo */}
-                <svg viewBox="0 0 24 24" className="w-7 h-7" fill="currentColor" aria-hidden>
-                  <path d="M16.365 1.43c0 1.14-.43 2.22-1.13 3.02-.76.86-2 .92-2.46.92-.05-1.06.46-2.16 1.12-2.94.74-.88 2-1 2.47-1zM20.5 17.13c-.45 1.05-.66 1.52-1.24 2.45-.81 1.3-1.95 2.92-3.36 2.93-1.25.01-1.57-.81-3.27-.8-1.7.01-2.05.81-3.3.8-1.41-.01-2.49-1.47-3.3-2.77C2.6 16.93 2.4 11.7 5.05 8.97c1.16-1.2 2.69-1.92 4.13-1.92 1.47 0 2.39.81 3.6.81 1.18 0 1.9-.81 3.6-.81 1.29 0 2.65.7 3.62 1.92-3.18 1.74-2.66 6.27.5 8.16z" />
-                </svg>
-                <div className="text-left leading-tight">
-                  <div className="text-[10px] opacity-80">Download on the</div>
-                  <div className="text-sm font-semibold">App Store</div>
-                </div>
-              </Link>
-              <Link to="/app" className="group flex items-center gap-2 rounded-2xl bg-black/80 hover:bg-black text-white px-5 py-2.5 ring-1 ring-white/15 backdrop-blur shadow-xl shadow-black/30 transition">
-                {/* Google Play logo */}
-                <svg viewBox="0 0 512 512" className="w-7 h-7" aria-hidden>
-                  <path fill="#00d4ff" d="M48 60v392c0 6 2 11 6 14l203-203L54 46c-4 3-6 8-6 14z" />
-                  <path fill="#00f076" d="M341 256l72-72L65 41c-4-2-9-2-12 0l290 215z" />
-                  <path fill="#ffd600" d="M413 184l-72 72 71 71 73-39c10-6 16-15 16-25s-6-19-16-25l-72-54z" />
-                  <path fill="#ff3a44" d="M53 471c4 2 9 2 13-1l347-143-72-71L53 471z" />
-                </svg>
-                <div className="text-left leading-tight">
-                  <div className="text-[10px] opacity-80">Get it on</div>
-                  <div className="text-sm font-semibold">Google Play</div>
-                </div>
-              </Link>
+              <div className="flex flex-nowrap items-center gap-3 w-full sm:w-auto">
+                <Link to="/app" className="group flex items-center gap-2 rounded-2xl bg-black/80 hover:bg-black text-white px-5 py-2.5 ring-1 ring-white/15 backdrop-blur shadow-xl shadow-black/30 transition whitespace-nowrap">
+                  <svg viewBox="0 0 24 24" className="w-7 h-7 shrink-0" fill="currentColor" aria-hidden>
+                    <path d="M16.365 1.43c0 1.14-.43 2.22-1.13 3.02-.76.86-2 .92-2.46.92-.05-1.06.46-2.16 1.12-2.94.74-.88 2-1 2.47-1zM20.5 17.13c-.45 1.05-.66 1.52-1.24 2.45-.81 1.3-1.95 2.92-3.36 2.93-1.25.01-1.57-.81-3.27-.8-1.7.01-2.05.81-3.3.8-1.41-.01-2.49-1.47-3.3-2.77C2.6 16.93 2.4 11.7 5.05 8.97c1.16-1.2 2.69-1.92 4.13-1.92 1.47 0 2.39.81 3.6.81 1.18 0 1.9-.81 3.6-.81 1.29 0 2.65.7 3.62 1.92-3.18 1.74-2.66 6.27.5 8.16z" />
+                  </svg>
+                  <div className="text-left leading-tight">
+                    <div className="text-[10px] opacity-80">Download on the</div>
+                    <div className="text-sm font-semibold">App Store</div>
+                  </div>
+                </Link>
+                <Link to="/app" className="group flex items-center gap-2 rounded-2xl bg-black/80 hover:bg-black text-white px-5 py-2.5 ring-1 ring-white/15 backdrop-blur shadow-xl shadow-black/30 transition whitespace-nowrap">
+                  <svg viewBox="0 0 512 512" className="w-7 h-7 shrink-0" aria-hidden>
+                    <path fill="#00d4ff" d="M48 60v392c0 6 2 11 6 14l203-203L54 46c-4 3-6 8-6 14z" />
+                    <path fill="#00f076" d="M341 256l72-72L65 41c-4-2-9-2-12 0l290 215z" />
+                    <path fill="#ffd600" d="M413 184l-72 72 71 71 73-39c10-6 16-15 16-25s-6-19-16-25l-72-54z" />
+                    <path fill="#ff3a44" d="M53 471c4 2 9 2 13-1l347-143-72-71L53 471z" />
+                  </svg>
+                  <div className="text-left leading-tight">
+                    <div className="text-[10px] opacity-80">Get it on</div>
+                    <div className="text-sm font-semibold">Google Play</div>
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
