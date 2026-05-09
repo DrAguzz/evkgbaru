@@ -61,9 +61,25 @@ function AppHome() {
   return (
     <div className="pb-8">
       {/* Hero header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/70 text-primary-foreground rounded-b-[28px] px-5 pt-10 pb-20">
-        <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/10 blur-2xl" />
-        <div className="absolute -bottom-20 -left-10 w-64 h-64 rounded-full bg-secondary/30 blur-3xl" />
+      <div
+        className="relative overflow-hidden text-primary-foreground rounded-b-[28px] px-5 pt-10 pb-20"
+        style={{
+          backgroundImage: `url(${heroRider})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center right",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Dark gradient overlay for readability */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.5) 35%, rgba(0,0,0,0.18) 70%, rgba(0,0,0,0.05) 100%)",
+          }}
+        />
+        <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-primary/20 blur-2xl" />
+        <div className="absolute -bottom-20 -left-10 w-64 h-64 rounded-full bg-secondary/20 blur-3xl" />
         <div className="relative flex items-start justify-between">
           <div>
             <div className="text-xs opacity-80">Hello,</div>
