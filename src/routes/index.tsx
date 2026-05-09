@@ -64,7 +64,7 @@ function Landing() {
         style={{
           backgroundImage: `url(${heroRider})`,
           backgroundSize: "cover",
-          backgroundPosition: "center right",
+          backgroundPosition: "center center",
           backgroundRepeat: "no-repeat",
         }}
       >
