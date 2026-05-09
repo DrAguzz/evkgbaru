@@ -197,26 +197,6 @@ function Landing() {
         </div>
       </section>
 
-      {/* Key benefits */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold">Key Benefits</h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {benefits.map((b) => (
-            <Card key={b.title} className="rounded-2xl border-0 shadow-card">
-              <CardContent className="p-5 text-center">
-                <div className="grid place-items-center w-12 h-12 rounded-xl bg-primary/10 text-primary mx-auto">
-                  <b.icon className="w-5 h-5" />
-                </div>
-                <div className="mt-3 font-semibold text-sm">{b.title}</div>
-                <p className="text-xs text-muted-foreground mt-1">{b.desc}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="container mx-auto px-4 pb-16">
         <Card className="rounded-3xl bg-hero text-primary-foreground border-0 shadow-soft">
