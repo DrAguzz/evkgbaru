@@ -19,7 +19,7 @@ function RiderShell() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth", search: { redirect: "/rider" } });
+    if (!loading && !user) navigate({ to: "/login", search: { redirect: "/rider" } });
   }, [loading, user, navigate]);
 
   useEffect(() => {

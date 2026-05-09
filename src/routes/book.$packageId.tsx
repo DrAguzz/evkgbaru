@@ -33,10 +33,6 @@ function BookPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth", search: { redirect: `/book/${packageId}` } });
-  }, [loading, user, packageId, navigate]);
-
-  useEffect(() => {
     (async () => {
       const { data: p } = await supabase.from("tour_packages").select("id,package_name,price,max_pax,start_hub_id").eq("id", packageId).single();
       setPkg(p);
@@ -46,7 +42,7 @@ function BookPage() {
     })();
   }, [packageId]);
 
-  if (loading || !user || !pkg) return <div className="min-h-screen grid place-items-center">Loading…</div>;
+  if (loading || !pkg) return <div className="min-h-screen grid place-items-center">Loading…</div>;
   const total = pkg.price * pax;
 
   return (
@@ -92,7 +88,10 @@ function BookPage() {
               <div className="flex justify-between text-sm"><span className="text-muted-foreground">{money(pkg.price)} × {pax} pax</span><span>{money(total)}</span></div>
               <div className="border-t pt-3 flex justify-between font-bold text-lg"><span>Total</span><span>{money(total)}</span></div>
               <Button className="w-full rounded-full" size="lg" disabled={busy || !hub} onClick={async () => {
-                if (!user) return;
+                if (!user) {
+                  navigate({ to: "/login", search: { redirect: `/book/${packageId}` } });
+                  return;
+                }
                 setBusy(true);
                 const { data, error } = await supabase.from("bookings").insert({
                   tourist_id: user.id,
@@ -109,6 +108,11 @@ function BookPage() {
                 toast.success("Booking created — proceed to payment");
                 navigate({ to: "/pay/$bookingId", params: { bookingId: data!.id } });
               }}>Confirm booking</Button>
+              {!user && (
+                <Button variant="outline" className="w-full rounded-full" onClick={() => navigate({ to: "/login", search: { redirect: `/book/${packageId}` } })}>
+                  Login to continue
+                </Button>
+              )}
               <Link to="/packages/$id" params={{ id: pkg.id }} className="block text-center text-xs text-muted-foreground hover:text-primary">← Back</Link>
             </CardContent>
           </Card>

@@ -32,10 +32,6 @@ function PayPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && !user) navigate({ to: "/auth", search: { redirect: `/pay/${bookingId}` } });
-  }, [authLoading, user, bookingId, navigate]);
-
-  useEffect(() => {
     if (!user) return;
     (async () => {
       const { data } = await supabase
@@ -47,7 +43,27 @@ function PayPage() {
     })();
   }, [bookingId, user]);
 
-  if (authLoading || !user || !booking) return <div className="min-h-screen grid place-items-center">Loading…</div>;
+  if (authLoading) return <div className="min-h-screen grid place-items-center">Loading…</div>;
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <SiteHeader />
+        <div className="flex-1 grid place-items-center px-4 py-12">
+          <Card className="w-full max-w-md rounded-2xl border-0 shadow-card text-center">
+            <CardContent className="p-8 space-y-3">
+              <div className="text-xl font-bold">Login required</div>
+              <p className="text-sm text-muted-foreground">Please login to continue your payment.</p>
+              <Button className="rounded-full" onClick={() => navigate({ to: "/login", search: { redirect: `/pay/${bookingId}` } })}>Go to login</Button>
+            </CardContent>
+          </Card>
+        </div>
+        <SiteFooter />
+      </div>
+    );
+  }
+
+  if (!booking) return <div className="min-h-screen grid place-items-center">Loading…</div>;
 
   if (booking.payment_status === "paid") {
     return (

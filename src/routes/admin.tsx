@@ -16,7 +16,7 @@ function AdminShell() {
   const [claiming, setClaiming] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth", search: { redirect: "/admin" } });
+    if (!loading && !user) navigate({ to: "/login", search: { redirect: "/admin" } });
   }, [loading, user, navigate]);
 
   if (loading || !user) return <div className="min-h-screen grid place-items-center">Loading…</div>;
