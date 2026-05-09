@@ -13,7 +13,7 @@ interface Row {
   pax: number; total_price: number; booking_status: string;
   tour_packages: { package_name: string; image: string | null } | null;
   hubs: { name: string } | null;
-  profiles: { name: string; phone: string | null } | null;
+  profiles: { name: string; phone: string | null; avatar_url: string | null } | null;
 }
 
 function RiderHome() {
@@ -27,7 +27,7 @@ function RiderHome() {
     if (!r) return;
     setRiderName(r.name);
     const { data } = await supabase.from("bookings")
-      .select("id, booking_no, booking_date, booking_time, pax, total_price, booking_status, tour_packages(package_name, image), hubs:pickup_hub_id(name), profiles!bookings_tourist_profile_fkey(name, phone)")
+      .select("id, booking_no, booking_date, booking_time, pax, total_price, booking_status, tour_packages(package_name, image), hubs:pickup_hub_id(name), profiles!bookings_tourist_profile_fkey(name, phone, avatar_url)")
       .eq("rider_id", r.id)
       .in("booking_status", ["assigned", "accepted", "picked_up", "in_progress", "returning", "paid"])
       .order("booking_date").order("booking_time");
