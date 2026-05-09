@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Clock, Users, MapPin, ChevronLeft, Star, ShieldCheck, CheckCircle2, Navigation } from "lucide-react";
 import { money, fmtDuration } from "@/lib/format";
+import { packageToSlug } from "@/lib/package-slug";
 
 export const Route = createFileRoute("/app/packages/$slug")({ component: AppPkgDetail });
 
@@ -21,7 +22,7 @@ interface Pkg {
 }
 
 function AppPkgDetail() {
-  const { id } = Route.useParams();
+  const { slug } = Route.useParams();
   const nav = useNavigate();
   const [p, setP] = useState<Pkg | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,27 +33,31 @@ function AppPkgDetail() {
     let active = true;
     setLoading(true);
     (async () => {
-      const { data } = await supabase
+      const { data: packages } = await supabase
         .from("tour_packages")
         .select("id,package_name,description,duration_minutes,price,min_pax,max_pax,image,category,start_hub_id")
-        .eq("id", id)
-        .maybeSingle();
+        .eq("status", "active");
+      const data = (packages ?? []).find((item) => packageToSlug(item.package_name) === slug) ?? null;
       if (!active) return;
       setP(data as Pkg | null);
       if (data?.start_hub_id) {
         const { data: h } = await supabase.from("hubs").select("name").eq("id", data.start_hub_id).maybeSingle();
         if (active) setHubName(h?.name ?? null);
       }
-      const { data: r } = await supabase
-        .from("package_routes")
-        .select("sequence_no, locations(name)")
-        .eq("package_id", id)
-        .order("sequence_no");
-      if (active) setRoutes((r ?? []) as unknown as typeof routes);
+      if (data?.id) {
+        const { data: r } = await supabase
+          .from("package_routes")
+          .select("sequence_no, locations(name)")
+          .eq("package_id", data.id)
+          .order("sequence_no");
+        if (active) setRoutes((r ?? []) as unknown as typeof routes);
+      } else if (active) {
+        setRoutes([]);
+      }
       setLoading(false);
     })();
     return () => { active = false; };
-  }, [id]);
+  }, [slug]);
 
   if (loading) {
     return <div className="p-8 text-center text-sm text-muted-foreground">Loading…</div>;
