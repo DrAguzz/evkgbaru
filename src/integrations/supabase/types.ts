@@ -433,46 +433,58 @@ export type Database = {
       }
       tour_packages: {
         Row: {
+          category: string
           created_at: string
           description: string | null
+          discount_percentage: number | null
           duration_minutes: number
           end_hub_id: string | null
           id: string
           image: string | null
+          is_promo: boolean
           max_pax: number
           min_pax: number
           package_name: string
           price: number
+          promo_price: number | null
           start_hub_id: string | null
           status: string
           updated_at: string
         }
         Insert: {
+          category?: string
           created_at?: string
           description?: string | null
+          discount_percentage?: number | null
           duration_minutes?: number
           end_hub_id?: string | null
           id?: string
           image?: string | null
+          is_promo?: boolean
           max_pax?: number
           min_pax?: number
           package_name: string
           price?: number
+          promo_price?: number | null
           start_hub_id?: string | null
           status?: string
           updated_at?: string
         }
         Update: {
+          category?: string
           created_at?: string
           description?: string | null
+          discount_percentage?: number | null
           duration_minutes?: number
           end_hub_id?: string | null
           id?: string
           image?: string | null
+          is_promo?: boolean
           max_pax?: number
           min_pax?: number
           package_name?: string
           price?: number
+          promo_price?: number | null
           start_hub_id?: string | null
           status?: string
           updated_at?: string
