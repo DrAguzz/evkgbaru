@@ -37,6 +37,25 @@ function RiderShell() {
 
   if (loading || checking) return <PhoneFrame><div className="grid place-items-center h-full">Loading…</div></PhoneFrame>;
 
+  if (!user) {
+    return (
+      <PhoneFrame>
+        <div className="px-6 pt-16 pb-8 flex flex-col items-center text-center h-full">
+          <div className="grid place-items-center w-20 h-20 rounded-3xl bg-hero text-primary-foreground mb-4"><Bike className="w-9 h-9" /></div>
+          <h1 className="text-2xl font-bold">Rider App</h1>
+          <p className="text-sm text-muted-foreground mt-2">Sign in to access tours, history and your rider profile.</p>
+          <Button className="mt-6 rounded-full w-full" onClick={() => navigate({ to: "/auth", search: { mode: "login", redirect: "/rider" } })}>
+            Sign in
+          </Button>
+          <Button variant="ghost" className="mt-2" onClick={() => navigate({ to: "/auth", search: { mode: "register", redirect: "/rider" } })}>
+            Create account
+          </Button>
+          <Button variant="ghost" className="mt-2" onClick={() => navigate({ to: "/" })}>Back to home</Button>
+        </div>
+      </PhoneFrame>
+    );
+  }
+
   if (user && !riderId) {
     return (
       <PhoneFrame>
