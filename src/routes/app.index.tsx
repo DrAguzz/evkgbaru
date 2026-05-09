@@ -6,6 +6,7 @@ import { Bike, Search, MapPin, Compass, Sparkles, Tag, ArrowRight, Clock, Star }
 import { money, fmtDuration } from "@/lib/format";
 import { Input } from "@/components/ui/input";
 import { StatusBadge } from "@/components/StatusBadge";
+import heroRider from "@/assets/hero-rider.png";
 
 export const Route = createFileRoute("/app/")({ component: AppHome });
 
