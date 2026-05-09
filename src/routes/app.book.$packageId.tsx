@@ -87,14 +87,40 @@ function AppBook() {
             </div>
           </div>
           <div><Label>Special request</Label><Textarea rows={2} value={special} onChange={(e) => setSpecial(e.target.value)} /></div>
-          <div className="rounded-xl bg-accent p-3 flex justify-between font-semibold"><span>Total</span><span>{money(total)}</span></div>
+
+          <div className="rounded-xl border p-3 space-y-2">
+            <Label className="flex items-center gap-1.5"><Tag className="w-3.5 h-3.5 text-primary" /> Promo code</Label>
+            {promo ? (
+              <div className="flex items-center justify-between bg-success/10 text-success rounded-lg px-3 py-2 text-sm font-medium">
+                <span>{promo.code} applied · −{money(discount)}</span>
+                <button type="button" onClick={() => { setPromo(null); setPromoInput(""); }} className="opacity-70 hover:opacity-100"><X className="w-4 h-4" /></button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Input value={promoInput} onChange={(e) => setPromoInput(e.target.value.toUpperCase())} placeholder="Enter code" className="uppercase tracking-wider" />
+                <Button type="button" variant="outline" onClick={applyPromo} disabled={promoBusy || !promoInput.trim()}>Apply</Button>
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-xl bg-accent p-3 space-y-1 text-sm">
+            <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>{money(subtotal)}</span></div>
+            {discount > 0 && <div className="flex justify-between text-success"><span>Discount ({promo?.code})</span><span>−{money(discount)}</span></div>}
+            <div className="flex justify-between font-bold pt-1 border-t"><span>Total</span><span>{money(total)}</span></div>
+          </div>
           <Button className="w-full rounded-full" size="lg" disabled={busy || !hub} onClick={async () => {
             if (!user) return;
             setBusy(true);
             const { data, error } = await supabase.from("bookings").insert({
               tourist_id: user.id, package_id: pkg.id, pickup_hub_id: hub, booking_date: date,
               booking_time: time, pax, total_price: total, special_request: special || null,
+              promo_code: promo?.code ?? null, discount_amount: discount,
             }).select("id").single();
+            if (!error && promo) {
+              await supabase.rpc("increment", {}).then(() => {}).catch(() => {});
+              // best-effort: bump used_count
+              await supabase.from("promo_codes").update({ used_count: (await supabase.from("promo_codes").select("used_count").eq("id", promo.id).single()).data?.used_count != null ? ((await supabase.from("promo_codes").select("used_count").eq("id", promo.id).single()).data!.used_count + 1) : 1 }).eq("id", promo.id);
+            }
             setBusy(false);
             if (error) return toast.error(error.message);
             setBookingId(data!.id); setStep(2);
