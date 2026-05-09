@@ -100,12 +100,13 @@ function RiderTour() {
 
   return (
     <div className="pb-24">
-      <div className="relative h-44 bg-muted">
+      <div className="relative h-56 bg-muted overflow-hidden rounded-b-3xl">
         <img src={b.tour_packages?.image ?? ""} alt="" className="w-full h-full object-cover" />
-        <Link to="/rider" className="absolute top-4 left-4 grid place-items-center w-9 h-9 rounded-full bg-background/90 backdrop-blur"><ArrowLeft className="w-4 h-4" /></Link>
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <Link to="/rider" className="absolute top-4 left-4 grid place-items-center w-9 h-9 rounded-full bg-background/90 backdrop-blur shadow-card"><ArrowLeft className="w-4 h-4" /></Link>
       </div>
 
-      <div className="px-5 -mt-6">
+      <div className="px-5 -mt-10 relative">
         <div className="rounded-2xl bg-card shadow-card p-4">
           <div className="flex justify-between items-start gap-2">
             <div>
