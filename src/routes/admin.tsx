@@ -62,7 +62,7 @@ function AdminShell() {
         <div className="p-5 border-b border-slate-800">
           <Link to="/" className="flex items-center gap-2 font-bold text-white">
             <span className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 text-primary-foreground"><Bike className="w-5 h-5" /></span>
-            <span>EVRide Admin</span>
+            <span>EV Kg Baru Admin</span>
           </Link>
         </div>
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">

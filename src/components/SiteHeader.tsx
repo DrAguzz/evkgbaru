@@ -15,7 +15,7 @@ export function SiteHeader() {
           <span className="grid place-items-center w-9 h-9 rounded-xl bg-hero text-primary-foreground">
             <Bike className="w-5 h-5" />
           </span>
-          <span>EVRide</span>
+          <span>EV Kg Baru</span>
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <Link to="/packages" className="hover:text-primary transition-colors">Packages</Link>
@@ -73,7 +73,7 @@ export function SiteFooter() {
         <div>
           <div className="flex items-center gap-2 font-bold text-lg mb-2">
             <span className="grid place-items-center w-8 h-8 rounded-lg bg-hero text-primary-foreground"><Bike className="w-4 h-4" /></span>
-            EVRide
+            EV Kg Baru
           </div>
           <p className="text-muted-foreground">Premium guided EV bike tours around Kuala Lumpur.</p>
         </div>
@@ -87,7 +87,7 @@ export function SiteFooter() {
           <p className="text-muted-foreground">All riders are licensed and trained. Helmets and safety briefing included with every tour.</p>
         </div>
       </div>
-      <div className="border-t py-4 text-xs text-center text-muted-foreground">© {new Date().getFullYear()} EVRide. All rights reserved.</div>
+      <div className="border-t py-4 text-xs text-center text-muted-foreground">© {new Date().getFullYear()} EV Kg Baru. All rights reserved.</div>
     </footer>
   );
 }

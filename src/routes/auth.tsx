@@ -66,7 +66,7 @@ function AuthPage() {
       <div className="flex-1 grid place-items-center px-4 py-12">
         <Card className="w-full max-w-md rounded-2xl border-0 shadow-card">
           <CardHeader>
-            <CardTitle className="text-2xl">Welcome to EVRide</CardTitle>
+            <CardTitle className="text-2xl">Welcome to EV Kg Baru</CardTitle>
             <CardDescription>Sign in to book and track your EV bike tours.</CardDescription>
           </CardHeader>
           <CardContent>

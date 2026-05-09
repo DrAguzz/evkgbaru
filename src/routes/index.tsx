@@ -12,9 +12,9 @@ import heroRider from "@/assets/hero-rider.png";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "EVRide — Guided EV Bike Tours in Kuala Lumpur" },
+      { title: "EV Kg Baru — Guided EV Bike Tours in Kuala Lumpur" },
       { name: "description", content: "Web-based open platform for tourists to book EV bike tour packages, make payments, and enjoy guided journeys with local riders." },
-      { property: "og:title", content: "EVRide — Guided EV Bike Tours in Kuala Lumpur" },
+      { property: "og:title", content: "EV Kg Baru — Guided EV Bike Tours in Kuala Lumpur" },
       { property: "og:description", content: "Book a premium EV bike tour around KL with auto-assigned local rider and real-time tracking." },
     ],
   }),

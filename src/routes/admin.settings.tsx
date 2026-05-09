@@ -58,7 +58,7 @@ function AdminSettings() {
             <div className="relative aspect-[9/16] w-[200px] rounded-2xl overflow-hidden ring-1 ring-border bg-gradient-to-br from-primary to-primary/60">
               {splashImage ? <img src={splashImage} alt="Splash preview" className="w-full h-full object-cover opacity-70" /> : <div className="w-full h-full grid place-items-center text-primary-foreground/70"><ImageIcon className="w-10 h-10" /></div>}
               <div className="absolute inset-x-0 bottom-0 p-3 text-white text-center bg-gradient-to-t from-black/60 to-transparent">
-                <div className="font-bold">{title || "EVRide"}</div>
+                <div className="font-bold">{title || "EV Kg Baru"}</div>
                 <div className="text-[10px] opacity-90">{subtitle || "Explore KL"}</div>
               </div>
             </div>
@@ -67,7 +67,7 @@ function AdminSettings() {
               <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadFile(f); }} />
               <Button variant="outline" disabled={busy} onClick={() => fileRef.current?.click()} className="rounded-full"><Upload className="w-4 h-4 mr-2" /> Upload image</Button>
               <div><Label>Image URL</Label><Input value={splashImage ?? ""} onChange={(e) => setSplashImage(e.target.value || null)} placeholder="https://…" /></div>
-              <div><Label>Title</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="EVRide" /></div>
+              <div><Label>Title</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="EV Kg Baru" /></div>
               <div><Label>Subtitle</Label><Input value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="Explore KL on electric bikes" /></div>
             </div>
           </div>
