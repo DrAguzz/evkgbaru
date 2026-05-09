@@ -1,8 +1,9 @@
 import { createFileRoute, Outlet, Link, useLocation } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { PhoneFrame } from "@/components/PhoneFrame";
 import { SplashScreen } from "@/components/SplashScreen";
+import { AppAuth } from "@/components/AppAuth";
 import { Home, Compass, Ticket, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,7 @@ function AppShell() {
   const { user, loading } = useAuth();
   const loc = useLocation();
   const wasAuthed = useRef(false);
+  const [authView, setAuthView] = useState<null | "login" | "register">(null);
 
   useEffect(() => { if (user) wasAuthed.current = true; }, [user]);
 
@@ -21,7 +23,19 @@ function AppShell() {
     return <PhoneFrame><div className="grid place-items-center h-full">Loading…</div></PhoneFrame>;
   }
   if (!user) {
-    return <PhoneFrame><SplashScreen interactive /></PhoneFrame>;
+    return (
+      <PhoneFrame>
+        {authView ? (
+          <AppAuth initialTab={authView} onBack={() => setAuthView(null)} />
+        ) : (
+          <SplashScreen
+            interactive
+            onLogin={() => setAuthView("login")}
+            onRegister={() => setAuthView("register")}
+          />
+        )}
+      </PhoneFrame>
+    );
   }
 
   const tabs: { to: "/app" | "/app/packages" | "/app/bookings" | "/app/profile"; icon: typeof Home; label: string; exact?: boolean; color: string }[] = [
