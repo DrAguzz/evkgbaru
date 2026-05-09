@@ -9,7 +9,7 @@ export const Route = createFileRoute("/app/packages")({ component: AppPackages }
 function AppPackages() {
   const [pkgs, setPkgs] = useState<{ id: string; package_name: string; price: number; image: string | null; duration_minutes: number; description: string | null }[]>([]);
   useEffect(() => {
-    supabase.from("tour_packages").select("id,package_name,price,image,duration_minutes,description").eq("status", "active").then(({ data }) => setPkgs(data ?? []));
+    supabase.from("tour_packages").select("id,package_name,price,image,duration_minutes,description").eq("status", "active").eq("is_promo", false).then(({ data }) => setPkgs(data ?? []));
   }, []);
   return (
     <div className="px-5 pt-8 pb-6">

@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          id: number
+          splash_image_url: string | null
+          splash_subtitle: string | null
+          splash_title: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          splash_image_url?: string | null
+          splash_subtitle?: string | null
+          splash_title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          splash_image_url?: string | null
+          splash_subtitle?: string | null
+          splash_title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           booking_date: string
@@ -21,11 +45,13 @@ export type Database = {
           booking_status: string
           booking_time: string
           created_at: string
+          discount_amount: number
           id: string
           package_id: string
           pax: number
           payment_status: string
           pickup_hub_id: string | null
+          promo_code: string | null
           rider_id: string | null
           special_request: string | null
           total_price: number
@@ -38,11 +64,13 @@ export type Database = {
           booking_status?: string
           booking_time: string
           created_at?: string
+          discount_amount?: number
           id?: string
           package_id: string
           pax?: number
           payment_status?: string
           pickup_hub_id?: string | null
+          promo_code?: string | null
           rider_id?: string | null
           special_request?: string | null
           total_price?: number
@@ -55,11 +83,13 @@ export type Database = {
           booking_status?: string
           booking_time?: string
           created_at?: string
+          discount_amount?: number
           id?: string
           package_id?: string
           pax?: number
           payment_status?: string
           pickup_hub_id?: string | null
+          promo_code?: string | null
           rider_id?: string | null
           special_request?: string | null
           total_price?: number
@@ -333,6 +363,54 @@ export type Database = {
           phone?: string | null
           status?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      promo_codes: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          discount_type: string
+          discount_value: number
+          id: string
+          max_uses: number | null
+          min_amount: number
+          status: string
+          updated_at: string
+          used_count: number
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          discount_type?: string
+          discount_value?: number
+          id?: string
+          max_uses?: number | null
+          min_amount?: number
+          status?: string
+          updated_at?: string
+          used_count?: number
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          discount_type?: string
+          discount_value?: number
+          id?: string
+          max_uses?: number | null
+          min_amount?: number
+          status?: string
+          updated_at?: string
+          used_count?: number
+          valid_from?: string | null
+          valid_until?: string | null
         }
         Relationships: []
       }
