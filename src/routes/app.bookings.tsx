@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -16,6 +16,8 @@ interface Row {
 function AppBookings() {
   const { user } = useAuth();
   const [rows, setRows] = useState<Row[]>([]);
+  const navigate = useNavigate({ from: "/app/bookings" });
+
   useEffect(() => {
     if (!user) return;
     supabase.from("bookings")
@@ -39,7 +41,19 @@ function AppBookings() {
       <div className="px-5 mt-5 space-y-3">
         {rows.length === 0 && <div className="text-center text-sm text-muted-foreground py-10">No bookings yet.</div>}
         {rows.map((r) => (
-          <Link key={r.id} to="/app/bookings/$id" params={{ id: r.id }} className="block rounded-2xl overflow-hidden bg-card shadow-card">
+          <div
+            key={r.id}
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate({ to: "/app/bookings/$id", params: { id: r.id } })}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                navigate({ to: "/app/bookings/$id", params: { id: r.id } });
+              }
+            }}
+            className="block rounded-2xl overflow-hidden bg-card shadow-card cursor-pointer"
+          >
             <div className="flex">
               <div className="w-24 h-24 bg-muted shrink-0"><img src={r.tour_packages?.image ?? ""} alt="" className="w-full h-full object-cover" /></div>
               <div className="p-3 flex-1">
@@ -52,7 +66,7 @@ function AppBookings() {
                 </div>
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>
