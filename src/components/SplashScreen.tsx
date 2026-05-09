@@ -49,8 +49,10 @@ export function SplashScreen({
   const cur = slides[i] ?? { image_url: null, title: null, subtitle: null };
   const isLast = i >= slides.length - 1;
 
-  const goLogin = () => navigate({ to: "/login", search: { redirect: "/app" } });
-  const goRegister = () => navigate({ to: "/register", search: { redirect: "/app" } });
+  const goLogin = () =>
+    onLogin ? onLogin() : navigate({ to: "/login", search: { redirect: "/app" } });
+  const goRegister = () =>
+    onRegister ? onRegister() : navigate({ to: "/register", search: { redirect: "/app" } });
 
   return (
     <div className="absolute inset-0 z-50 flex flex-col bg-gradient-to-br from-primary via-primary to-primary/70 text-primary-foreground overflow-hidden">
