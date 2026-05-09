@@ -66,7 +66,7 @@ function AppHome() {
         <div className="relative flex items-start justify-between">
           <div>
             <div className="text-xs opacity-80">Hello,</div>
-            <div className="text-2xl font-bold leading-tight">{name || "explorer"} 👋</div>
+            <div className="text-2xl font-bold leading-tight">{name || "explorer"}</div>
             <div className="text-xs opacity-80 mt-1">Where to today?</div>
           </div>
           <Link
