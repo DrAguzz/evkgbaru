@@ -1,0 +1,1 @@
+ALTER TABLE public.riders ADD COLUMN license_type text, ADD COLUMN license_valid_until date;
