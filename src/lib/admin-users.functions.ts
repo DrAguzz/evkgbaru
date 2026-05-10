@@ -69,9 +69,9 @@ export const updateAdminUser = createServerFn({ method: "POST" })
     await assertAdmin(context.userId);
 
     if (data.name !== undefined || data.phone !== undefined) {
-      const patch: Record<string, unknown> = {};
+      const patch: { name?: string; phone?: string | null } = {};
       if (data.name !== undefined) patch.name = data.name;
-      if (data.phone !== undefined) patch.phone = data.phone;
+      if (data.phone !== undefined) patch.phone = data.phone ?? null;
       const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", data.userId);
       if (error) throw new Response(error.message, { status: 400 });
     }
