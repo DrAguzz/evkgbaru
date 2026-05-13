@@ -82,7 +82,7 @@ function RiderShell() {
     <PhoneFrame>
       <div className="flex flex-col h-full md:h-[820px] pb-20">
         <div className="flex-1 overflow-y-auto"><Outlet /></div>
-        <nav className="absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t flex items-center justify-around py-2 px-2 z-30">
+        <nav className="fixed md:absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t flex items-center justify-around py-2 px-2 z-30">
           {tabs.map((t) => {
             const active = t.exact ? loc.pathname === t.to : loc.pathname.startsWith(t.to);
             return (

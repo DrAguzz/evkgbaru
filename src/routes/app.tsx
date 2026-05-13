@@ -49,7 +49,7 @@ function AppShell() {
     <PhoneFrame>
       <div className="flex flex-col h-full md:h-[820px] pb-24">
         <div className="flex-1 overflow-y-auto"><Outlet /></div>
-        <nav className="absolute bottom-3 left-3 right-3 z-30 rounded-3xl border border-white/40 dark:border-white/10 bg-white/55 dark:bg-white/5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),inset_0_1px_0_0_rgba(255,255,255,0.6)] flex items-center justify-around py-2 px-2 overflow-hidden">
+        <nav className="fixed md:absolute bottom-3 left-3 right-3 z-30 rounded-3xl border border-white/40 dark:border-white/10 bg-white/55 dark:bg-white/5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),inset_0_1px_0_0_rgba(255,255,255,0.6)] flex items-center justify-around py-2 px-2 overflow-hidden">
           <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
           {tabs.map((t) => {
             const active = t.exact ? loc.pathname === t.to : loc.pathname.startsWith(t.to);

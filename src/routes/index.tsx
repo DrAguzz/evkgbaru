@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { SiteHeader, SiteFooter } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +11,15 @@ import {
 import heroRider from "@/assets/hero-rider.png";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: () => {
+    if (typeof window !== "undefined" && !!(window as any).Capacitor) {
+      if (import.meta.env.VITE_APP_MODE === "rider") {
+        throw redirect({ to: "/rider" });
+      } else {
+        throw redirect({ to: "/app" });
+      }
+    }
+  },
   head: () => ({
     meta: [
       { title: "EV Kg Baru — Guided EV Bike Tours in Kuala Lumpur" },
