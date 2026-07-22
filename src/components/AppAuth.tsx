@@ -13,13 +13,21 @@ import { ensureDemoUser } from "@/lib/demo-login.functions";
 export function AppAuth({
   initialTab = "login",
   onBack,
+  loginOnly = false,
+  title,
+  subtitle,
+  showDemo = true,
 }: {
   initialTab?: "login" | "register";
   onBack: () => void;
+  loginOnly?: boolean;
+  title?: string;
+  subtitle?: string;
+  showDemo?: boolean;
 }) {
   const { signIn, signUp } = useAuth();
   const provisionDemo = useServerFn(ensureDemoUser);
-  const [tab, setTab] = useState<"login" | "register">(initialTab);
+  const [tab, setTab] = useState<"login" | "register">(loginOnly ? "login" : initialTab);
   const [busy, setBusy] = useState(false);
   const [showPw, setShowPw] = useState(false);
 
