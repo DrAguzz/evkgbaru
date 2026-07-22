@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logAudit } from "@/lib/audit";
+import evrideLogo from "@/assets/evride-logo.png.asset.json";
 
 export const Route = createFileRoute("/admin")({ component: AdminShell });
 
@@ -111,10 +112,7 @@ function AdminShell() {
       <aside className="w-64 shrink-0 bg-slate-950 text-slate-100 border-r border-slate-800 flex-col hidden lg:flex">
         <div className="p-5 border-b border-slate-800">
           <Link to="/" className="flex items-center gap-2 font-bold text-white">
-            <span className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 text-primary-foreground">
-              <Bike className="w-5 h-5" />
-            </span>
-            <span>EV Kg Baru</span>
+            <img src={evrideLogo.url} alt="EVRide" className="h-9 w-auto" />
           </Link>
           <div className="text-[11px] text-slate-400 mt-2 uppercase tracking-wider">
             {isSuperAdmin ? "Super Admin" : "Hub Admin"}
@@ -135,7 +133,7 @@ function AdminShell() {
           <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
           <aside className="absolute inset-y-0 left-0 w-72 bg-slate-950 text-slate-100 flex flex-col">
             <div className="p-4 flex items-center justify-between border-b border-slate-800">
-              <span className="font-bold">EV Kg Baru</span>
+              <span className="font-bold">EVRide</span>
               <button onClick={() => setMobileOpen(false)}><X className="w-5 h-5" /></button>
             </div>
             {Nav}
@@ -151,7 +149,7 @@ function AdminShell() {
       <div className="flex-1 min-w-0 flex flex-col">
         <header className="lg:hidden sticky top-0 z-30 flex items-center justify-between px-4 h-14 bg-slate-950 text-slate-100 border-b border-slate-800">
           <button onClick={() => setMobileOpen(true)} className="p-2 -ml-2"><Menu className="w-5 h-5" /></button>
-          <span className="font-semibold">EV Kg Baru</span>
+          <span className="font-semibold">EVRide</span>
           <div className="w-9" />
         </header>
         <main className="flex-1 p-4 md:p-6 max-w-[1600px] w-full mx-auto"><Outlet /></main>

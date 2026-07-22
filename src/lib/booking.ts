@@ -158,7 +158,7 @@ export async function processMockPayment(bookingId: string, method: string, amou
   await supabase.from("bookings").update({
     payment_status: "paid",
     booking_status: "paid",
-    insurance_provider: s?.default_insurance_provider ?? "EV Kg Baru Daily Cover",
+    insurance_provider: s?.default_insurance_provider ?? "EVRide Daily Cover",
     insurance_policy_no: `INS-${b?.booking_no ?? bookingId.slice(0, 8)}`,
     insurance_coverage_date: b?.booking_date,
     insurance_status: "active",
