@@ -73,10 +73,13 @@ function AdminCheckIn() {
     });
     if (error) return toast.error(error.message);
     await supabase.from("bookings").update({ booking_status: "customer_checked_in" }).eq("id", active.id);
-    await supabase.from("notifications").insert({
-      user_id: (await supabase.from("bookings").select("tourist_id").eq("id", active.id).single()).data?.tourist_id,
-      title: "Checked in", message: "You have been checked in at the hub. Safety briefing next.", type: "customer_checked_in", status: "unread",
-    });
+    const touristId = (await supabase.from("bookings").select("tourist_id").eq("id", active.id).single()).data?.tourist_id;
+    if (touristId) {
+      await supabase.from("notifications").insert({
+        user_id: touristId,
+        title: "Checked in", message: "You have been checked in at the hub. Safety briefing next.", type: "customer_checked_in", status: "unread",
+      });
+    }
     toast.success("Customer checked in");
     setActive(null); load();
   }
@@ -88,10 +91,13 @@ function AdminCheckIn() {
     });
     if (error) return toast.error(error.message);
     await supabase.from("bookings").update({ booking_status: "safety_briefing_completed" }).eq("id", r.id);
-    await supabase.from("notifications").insert({
-      user_id: (await supabase.from("bookings").select("tourist_id").eq("id", r.id).single()).data?.tourist_id,
-      title: "Safety briefing completed", message: "Your ride is ready to begin.", type: "briefing_completed", status: "unread",
-    });
+    const touristId = (await supabase.from("bookings").select("tourist_id").eq("id", r.id).single()).data?.tourist_id;
+    if (touristId) {
+      await supabase.from("notifications").insert({
+        user_id: touristId,
+        title: "Safety briefing completed", message: "Your ride is ready to begin.", type: "briefing_completed", status: "unread",
+      });
+    }
     toast.success("Briefing marked completed");
     load();
   }
