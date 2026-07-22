@@ -118,6 +118,53 @@ function AppBookingDetail() {
           )}
         </div>
 
+        {/* Meeting / Pickup */}
+        {b.meeting_method === "hotel_pickup" && (
+          <div className="rounded-2xl bg-card ring-1 ring-border/40 shadow-card p-4 space-y-2 text-sm">
+            <div className="font-semibold flex items-center gap-2"><MapPin className="w-4 h-4 text-primary" /> Hotel pickup</div>
+            <div>{b.pickup_location_name}</div>
+            <div className="text-xs text-muted-foreground">{b.pickup_address}</div>
+            <div className="flex justify-between pt-2 border-t text-xs">
+              <span className="text-muted-foreground">{b.pickup_distance_km} km</span>
+              <span className="font-medium">{money(b.pickup_fee ?? 0)}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Insurance */}
+        {b.insurance_status === "active" && (
+          <div className="rounded-2xl bg-success/5 ring-1 ring-success/20 p-4 space-y-1 text-sm">
+            <div className="font-semibold flex items-center gap-2 text-success">Daily insurance active</div>
+            <div className="text-xs text-muted-foreground">{b.insurance_provider}</div>
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">Policy</span>
+              <span className="font-mono">{b.insurance_policy_no}</span>
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">Coverage</span>
+              <span>{b.insurance_coverage_date && fmtDate(b.insurance_coverage_date)}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Cancel */}
+        {["pending_payment","paid","waiting_rider_assignment","rider_assigned"].includes(b.booking_status) && (
+          <Button variant="outline" className="w-full rounded-full text-destructive border-destructive/40"
+            onClick={async () => {
+              if (!confirm("Cancel this booking?")) return;
+              const { error } = await supabase.from("bookings").update({ booking_status: "cancelled" }).eq("id", b.id);
+              if (error) return toast.error(error.message);
+              await supabase.from("notifications").insert({
+                user_id: user!.id, title: "Booking cancelled",
+                message: `${b.booking_no} has been cancelled.`, type: "booking_cancelled", status: "unread",
+              });
+              toast.success("Booking cancelled");
+              void load();
+            }}>Cancel booking</Button>
+        )}
+
+
+
         {/* Rider card */}
         {b.riders ? (
           <div className="rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 ring-1 ring-primary/20 p-4">
