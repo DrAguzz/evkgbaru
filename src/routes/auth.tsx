@@ -29,7 +29,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { signIn, signUp, user, loading } = useAuth();
+  const { signIn, signUp, user, loading, isSuperAdmin, isHubAdmin } = useAuth();
   const navigate = useNavigate();
   const search = Route.useSearch();
   const [tab, setTab] = useState<"login" | "register">(search.mode ?? "login");
@@ -48,7 +48,11 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   const after = (path?: string) => {
-    const target = path && path.startsWith("/") ? path : "/";
+    let target = path && path.startsWith("/") ? path : null;
+    if (!target) {
+      if (isSuperAdmin || isHubAdmin) target = "/admin";
+      else target = "/";
+    }
     navigate({ to: target as "/", replace: true });
   };
 
@@ -56,7 +60,8 @@ function AuthPage() {
     if (!loading && user) {
       after(search.redirect);
     }
-  }, [loading, user, search.redirect]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, user, search.redirect, isSuperAdmin, isHubAdmin]);
 
   if (loading) {
     return (
