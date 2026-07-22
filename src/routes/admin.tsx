@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logAudit } from "@/lib/audit";
+import evrideLogo from "@/assets/evride-logo.png.asset.json";
 
 export const Route = createFileRoute("/admin")({ component: AdminShell });
 

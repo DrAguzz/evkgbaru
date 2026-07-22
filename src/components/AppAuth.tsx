@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { COUNTRIES } from "@/lib/countries";
 import { toast } from "sonner";
 import { ChevronLeft, Bike } from "lucide-react";
+import evrideLogo from "@/assets/evride-logo.png.asset.json";
 
 export function AppAuth({
   initialTab = "login",
