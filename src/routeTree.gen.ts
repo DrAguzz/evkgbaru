@@ -37,6 +37,8 @@ import { Route as AppPackagesRouteImport } from './routes/app.packages'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
 import { Route as AdminVehicleTypesRouteImport } from './routes/admin.vehicle-types'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminTripsRouteImport } from './routes/admin.trips'
+import { Route as AdminSosRouteImport } from './routes/admin.sos'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminRoutesRouteImport } from './routes/admin.routes'
 import { Route as AdminRidersRouteImport } from './routes/admin.riders'
@@ -47,6 +49,7 @@ import { Route as AdminPackagesRouteImport } from './routes/admin.packages'
 import { Route as AdminLocationsRouteImport } from './routes/admin.locations'
 import { Route as AdminHubsRouteImport } from './routes/admin.hubs'
 import { Route as AdminHubAdminsRouteImport } from './routes/admin.hub-admins'
+import { Route as AdminCheckinRouteImport } from './routes/admin.checkin'
 import { Route as AppBookingsIndexRouteImport } from './routes/app.bookings.index'
 import { Route as AdminBookingsIndexRouteImport } from './routes/admin.bookings.index'
 import { Route as RiderToursIdRouteImport } from './routes/rider.tours.$id'
@@ -196,6 +199,16 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminTripsRoute = AdminTripsRouteImport.update({
+  id: '/trips',
+  path: '/trips',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSosRoute = AdminSosRouteImport.update({
+  id: '/sos',
+  path: '/sos',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -244,6 +257,11 @@ const AdminHubsRoute = AdminHubsRouteImport.update({
 const AdminHubAdminsRoute = AdminHubAdminsRouteImport.update({
   id: '/hub-admins',
   path: '/hub-admins',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCheckinRoute = AdminCheckinRouteImport.update({
+  id: '/checkin',
+  path: '/checkin',
   getParentRoute: () => AdminRoute,
 } as any)
 const AppBookingsIndexRoute = AppBookingsIndexRouteImport.update({
@@ -296,6 +314,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/rider': typeof RiderRouteWithChildren
+  '/admin/checkin': typeof AdminCheckinRoute
   '/admin/hub-admins': typeof AdminHubAdminsRoute
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
@@ -306,6 +325,8 @@ export interface FileRoutesByFullPath {
   '/admin/riders': typeof AdminRidersRoute
   '/admin/routes': typeof AdminRoutesRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/sos': typeof AdminSosRoute
+  '/admin/trips': typeof AdminTripsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/vehicle-types': typeof AdminVehicleTypesRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -341,6 +362,7 @@ export interface FileRoutesByTo {
   '/become-a-rider': typeof BecomeARiderRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/admin/checkin': typeof AdminCheckinRoute
   '/admin/hub-admins': typeof AdminHubAdminsRoute
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
@@ -351,6 +373,8 @@ export interface FileRoutesByTo {
   '/admin/riders': typeof AdminRidersRoute
   '/admin/routes': typeof AdminRoutesRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/sos': typeof AdminSosRoute
+  '/admin/trips': typeof AdminTripsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/vehicle-types': typeof AdminVehicleTypesRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -390,6 +414,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/rider': typeof RiderRouteWithChildren
+  '/admin/checkin': typeof AdminCheckinRoute
   '/admin/hub-admins': typeof AdminHubAdminsRoute
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
@@ -400,6 +425,8 @@ export interface FileRoutesById {
   '/admin/riders': typeof AdminRidersRoute
   '/admin/routes': typeof AdminRoutesRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/sos': typeof AdminSosRoute
+  '/admin/trips': typeof AdminTripsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/vehicle-types': typeof AdminVehicleTypesRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -440,6 +467,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/rider'
+    | '/admin/checkin'
     | '/admin/hub-admins'
     | '/admin/hubs'
     | '/admin/locations'
@@ -450,6 +478,8 @@ export interface FileRouteTypes {
     | '/admin/riders'
     | '/admin/routes'
     | '/admin/settings'
+    | '/admin/sos'
+    | '/admin/trips'
     | '/admin/users'
     | '/admin/vehicle-types'
     | '/app/notifications'
@@ -485,6 +515,7 @@ export interface FileRouteTypes {
     | '/become-a-rider'
     | '/login'
     | '/register'
+    | '/admin/checkin'
     | '/admin/hub-admins'
     | '/admin/hubs'
     | '/admin/locations'
@@ -495,6 +526,8 @@ export interface FileRouteTypes {
     | '/admin/riders'
     | '/admin/routes'
     | '/admin/settings'
+    | '/admin/sos'
+    | '/admin/trips'
     | '/admin/users'
     | '/admin/vehicle-types'
     | '/app/notifications'
@@ -533,6 +566,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/rider'
+    | '/admin/checkin'
     | '/admin/hub-admins'
     | '/admin/hubs'
     | '/admin/locations'
@@ -543,6 +577,8 @@ export interface FileRouteTypes {
     | '/admin/riders'
     | '/admin/routes'
     | '/admin/settings'
+    | '/admin/sos'
+    | '/admin/trips'
     | '/admin/users'
     | '/admin/vehicle-types'
     | '/app/notifications'
@@ -789,6 +825,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/trips': {
+      id: '/admin/trips'
+      path: '/trips'
+      fullPath: '/admin/trips'
+      preLoaderRoute: typeof AdminTripsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/sos': {
+      id: '/admin/sos'
+      path: '/sos'
+      fullPath: '/admin/sos'
+      preLoaderRoute: typeof AdminSosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/settings': {
       id: '/admin/settings'
       path: '/settings'
@@ -859,6 +909,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminHubAdminsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/checkin': {
+      id: '/admin/checkin'
+      path: '/checkin'
+      fullPath: '/admin/checkin'
+      preLoaderRoute: typeof AdminCheckinRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/app/bookings/': {
       id: '/app/bookings/'
       path: '/bookings'
@@ -919,6 +976,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminCheckinRoute: typeof AdminCheckinRoute
   AdminHubAdminsRoute: typeof AdminHubAdminsRoute
   AdminHubsRoute: typeof AdminHubsRoute
   AdminLocationsRoute: typeof AdminLocationsRoute
@@ -929,6 +987,8 @@ interface AdminRouteChildren {
   AdminRidersRoute: typeof AdminRidersRoute
   AdminRoutesRoute: typeof AdminRoutesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminSosRoute: typeof AdminSosRoute
+  AdminTripsRoute: typeof AdminTripsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminVehicleTypesRoute: typeof AdminVehicleTypesRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -937,6 +997,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminCheckinRoute: AdminCheckinRoute,
   AdminHubAdminsRoute: AdminHubAdminsRoute,
   AdminHubsRoute: AdminHubsRoute,
   AdminLocationsRoute: AdminLocationsRoute,
@@ -947,6 +1008,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminRidersRoute: AdminRidersRoute,
   AdminRoutesRoute: AdminRoutesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
+  AdminSosRoute: AdminSosRoute,
+  AdminTripsRoute: AdminTripsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminVehicleTypesRoute: AdminVehicleTypesRoute,
   AdminIndexRoute: AdminIndexRoute,
