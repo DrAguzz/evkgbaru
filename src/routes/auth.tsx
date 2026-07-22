@@ -9,7 +9,12 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { COUNTRIES } from "@/lib/countries";
-import { ensureDemoUser } from "@/lib/demo-login.functions";
+
+const DEMO_EMAILS: Record<"hub_admin" | "super_admin", string> = {
+  hub_admin: "demo.hub@evride.test",
+  super_admin: "demo.super@evride.test",
+};
+const DEMO_PASSWORD = "demo1234";
 import { toast } from "sonner";
 import { Building2, ShieldCheck } from "lucide-react";
 
