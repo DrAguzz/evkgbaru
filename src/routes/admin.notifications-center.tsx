@@ -40,7 +40,7 @@ function NotifCenter() {
 
   useEffect(() => {
     supabase.from("app_settings").select("notification_types, notification_channels").eq("id", 1).single()
-      .then(({ data }) => setS(data as Settings));
+      .then(({ data }) => setS(data as unknown as Settings));
   }, []);
 
   async function save(next: Settings) {
