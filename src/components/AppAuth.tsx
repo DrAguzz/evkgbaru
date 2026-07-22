@@ -57,7 +57,8 @@ export function AppAuth({
   const isLogin = tab === "login";
 
   return (
-    <div className="absolute inset-0 z-50 flex flex-col bg-background overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-gradient-to-br from-primary/10 via-background to-primary/5 overflow-y-auto flex items-center justify-center p-0 sm:p-6">
+      <div className="relative w-full sm:max-w-md sm:rounded-[2.5rem] sm:overflow-hidden sm:shadow-2xl sm:border sm:border-border/40 flex flex-col bg-background min-h-screen sm:min-h-0 sm:max-h-[92vh] sm:h-auto overflow-y-auto">
       {/* Hero header with brand gradient */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/70 text-primary-foreground pb-14">
         <div className="absolute -top-20 -right-16 w-64 h-64 rounded-full bg-white/10 blur-2xl" />
