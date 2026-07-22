@@ -57,6 +57,9 @@ export const ensureDemoUser = createServerFn({ method: "POST" })
           vehicle_type: "e-bike",
           status: "available",
           employment_type: "full_time",
+          license_type: "B2",
+          hub_id: "11111111-0000-0000-0000-000000000002",
+          rider_code: "RT-" + user.id.slice(0, 4) + "-" + user.id.slice(4, 8),
         });
       }
     }
