@@ -18,9 +18,24 @@ export function AppAuth({
   onBack: () => void;
 }) {
   const { signIn, signUp } = useAuth();
+  const provisionDemo = useServerFn(ensureDemoUser);
   const [tab, setTab] = useState<"login" | "register">(initialTab);
   const [busy, setBusy] = useState(false);
   const [showPw, setShowPw] = useState(false);
+
+  async function handleDemoLogin() {
+    try {
+      setBusy(true);
+      const creds = await provisionDemo({ data: { role: "customer" } });
+      const { error } = await signIn(creds.email, creds.password);
+      if (error) return toast.error(error);
+      toast.success("Signed in as Demo Customer");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Demo login failed");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
