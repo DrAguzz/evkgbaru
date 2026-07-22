@@ -40,10 +40,7 @@ export function AppAuth({
           <ChevronLeft className="w-5 h-5" />
         </button>
         <div className="flex items-center gap-2">
-          <div className="grid place-items-center w-8 h-8 rounded-xl bg-primary/10 text-primary">
-            <Bike className="w-4 h-4" />
-          </div>
-          <span className="font-semibold">EVRide</span>
+          <img src={evrideLogo.url} alt="EVRide" className="h-8 w-auto" />
         </div>
       </div>
 

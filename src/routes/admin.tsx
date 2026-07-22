@@ -111,10 +111,7 @@ function AdminShell() {
       <aside className="w-64 shrink-0 bg-slate-950 text-slate-100 border-r border-slate-800 flex-col hidden lg:flex">
         <div className="p-5 border-b border-slate-800">
           <Link to="/" className="flex items-center gap-2 font-bold text-white">
-            <span className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 text-primary-foreground">
-              <Bike className="w-5 h-5" />
-            </span>
-            <span>EVRide</span>
+            <img src={evrideLogo.url} alt="EVRide" className="h-9 w-auto" />
           </Link>
           <div className="text-[11px] text-slate-400 mt-2 uppercase tracking-wider">
             {isSuperAdmin ? "Super Admin" : "Hub Admin"}
