@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Bike, ListChecks, User, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AppAuth } from "@/components/AppAuth";
 
 export const Route = createFileRoute("/rider")({ component: RiderShell });
 
