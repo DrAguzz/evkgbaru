@@ -1,108 +1,89 @@
-# Phase 1 Redesign: Foundation, RBAC, Hubs, Packages, Rider Onboarding
 
-Scope for this phase only: database redesign, authentication, role-based access, dashboards shells, navigation, and master data (Hubs, Packages, Vehicle Types, Rider Applications). Booking flow, payments, waitlists, SOS, and reports are out of scope and come in later phases.
+## Scope
 
-## 1. Roles & RBAC
+Rebuild the customer side of the booking system end-to-end. Auth, roles, rider ops, and admin dashboards are untouched. Deliverables target the `/app/*` customer journey plus the database, notifications, and payment plumbing behind it.
 
-Replace the current `app_role` enum with 4 roles: `super_admin`, `hub_admin`, `rider`, `customer`.
+## 1. Database changes (single migration)
 
-- `user_roles` keeps `(user_id, role)` and adds nullable `hub_id` (required for `hub_admin`, optional scoping for `rider`).
-- Security-definer helpers:
-  - `has_role(uid, role)` — existing pattern.
-  - `is_super_admin(uid)`, `is_hub_admin_of(uid, hub_id)`, `current_hub_ids(uid)` — used in RLS.
-- Customers get the `customer` role automatically on signup (trigger replaces current `tourist` default).
-- Hub Admins and Riders are created by Super Admin only; public signup grants `customer` only.
+**Extend `bookings`** with:
+- `hub_id` (redundant with package hub but locks the value at booking time)
+- `vehicle_type_id`, `vehicle_id` (nullable until rider assignment)
+- `time_slot_id` (FK → package_time_slots)
+- `meeting_method` text: `walk_in` | `hotel_pickup`
+- `pickup_location_name`, `pickup_address`, `pickup_latitude`, `pickup_longitude`, `pickup_distance_km`, `pickup_fee` (numeric, default 0), `pickup_time`
+- `notes` text (customer notes, separate from `special_request`)
+- `insurance_provider`, `insurance_policy_no`, `insurance_coverage_date`, `insurance_status`
+- Rewrite `booking_status` check constraint to the 11 statuses in the brief (pending_payment, payment_failed, paid, waiting_rider_assignment, rider_assigned, customer_checked_in, safety_briefing_completed, ride_started, ride_completed, cancelled, no_show).
 
-## 2. Authentication
+**Extend `package_time_slots`** so slots are date-specific enough to enforce capacity:
+- Add `capacity` int (defaults from `packages.max_participants`)
+- Keep the weekly `day_of_week` recurrence; capacity is enforced per (slot_id, booking_date) via a `SELECT count(*)` against confirmed bookings.
 
-Keep Supabase auth. Public flows:
+**New `waiting_list` table**: customer_id, package_id, booking_date, time_slot_id, queue_number, status (`waiting` | `notified` | `confirmed` | `expired` | `cancelled`), notified_at, respond_by, created_at. Queue number auto-incremented per (package, date, slot).
 
-- Customer Register / Login / Forgot Password / Reset Password / Email Verification.
-- Hub Admin and Rider login only (no self-register). Attempted signup with those emails is blocked at the app level.
-- Add `/auth/reset-password` and `/auth/verify` routes; wire email redirect URLs.
-- Session-aware redirects: customers → `/app`, riders → `/rider`, hub_admin → `/admin` (scoped), super_admin → `/admin`.
+**Extend `payments`** with: `payment_reference` (unique), `payment_method` (`chip_in` | `alipay` | `credit_card` | `walk_in`), `paid_at`, `provider_txn_id`. Keep existing status column.
 
-## 3. Database Redesign
+**Extend `app_settings`** with `pickup_rate_per_km` numeric default 1.50, `waiting_list_response_minutes` int default 30, `default_insurance_provider` text.
 
-New / revised tables (all in `public`, RLS enabled, GRANTs included per project standard):
+**RLS + GRANT** for every new/changed table following project conventions (customer sees own rows; admins via `private.has_role`).
 
-- `hubs` — rebuilt: name, address, gps lat/lng, operating_hours (jsonb), max_capacity, has_charging, has_briefing_area, has_checkin_counter, status.
-- `vehicle_types` — new: code (`ev_motorcycle`, `ev_car`, …), name, active. Seed EV Motorcycle.
-- `vehicles` — new (foundation only): hub_id, vehicle_type_id, plate/identifier, status. No booking wiring yet.
-- `packages` — rebuilt from `tour_packages`: name, slug, description, price, duration_minutes, meeting_hub_id, vehicle_type_id, max_participants, images (jsonb), status. Time slots in child table `package_time_slots` (day_of_week, start_time, end_time).
-- `rider_applications` — new: personal info, IC/passport, DOB, gender, address, license #, experience, languages (text[]), employment_type (`full_time` | `part_time`), resume_url, photo_url, documents (jsonb), declaration_accepted_at, status (`submitted` | `under_review` | `interview_scheduled` | `approved` | `rejected`), reviewer_id, review_notes.
-- `riders` — rebuilt: user_id, application_id, hub_id, rider_code (auto `RT-XXXX-XXXX` full-time / `RP-XXXX-XXXX` part-time via DB function + trigger), employment_type, status.
-- `profiles` — keep, extend with avatar_url, dob, gender, address.
-- `notifications` — keep, generalize to any role.
+**Trigger**: `assert_slot_capacity()` on `bookings` insert/update — rejects when confirmed bookings for (package_id, booking_date, time_slot_id) + new pax > slot capacity. Confirmed = status in (`paid`, `waiting_rider_assignment`, `rider_assigned`, ...pre-cancellation states).
 
-Legacy tables (`bookings`, `payments`, `tour_progress`, `reviews`, `promo_codes`, `package_routes`, `splash_screens`, `app_settings`, `locations`) are preserved as-is this phase; unused UI is hidden but data isn't dropped. Booking-related tables will be redesigned in Phase 2.
+## 2. Server functions (`src/lib/booking.functions.ts`)
 
-RLS summary:
+All `.middleware([requireSupabaseAuth])`:
+- `getPackageAvailability({ packageId, date })` — returns slots with remaining capacity for the date.
+- `calculatePickupFee({ hubId, pickupLat, pickupLng })` — Haversine distance × `pickup_rate_per_km` from app_settings.
+- `createBooking(input)` — validates slot availability, computes totals, creates booking in `pending_payment`, returns booking id.
+- `joinWaitingList({ packageId, date, timeSlotId })` — assigns queue number.
+- `confirmWaitingListSlot({ waitingListId })` — moves entry to booking when notified.
+- `getMyBookings()`, `getMyBookingDetail(id)`, `getMyPayments()`, `getMyWaitingList()`, `getMyNotifications()`, `markNotificationRead(id)`.
+- `initiatePayment({ bookingId, method })` — creates a `payments` row, returns provider redirect data (stubbed per method).
+- `cancelBooking({ bookingId })` — respects cancellation rules; triggers waiting-list promotion.
 
-- `hubs`, `vehicle_types`, `packages`: public read (active only for anon/customer), write = super_admin; hub_admin can edit packages whose `meeting_hub_id` matches their hub.
-- `rider_applications`: insert = anyone (public form), select/update = super_admin + hub_admin of target hub, applicant can read own by email token.
-- `riders`: select for super_admin, hub_admin of same hub, and the rider themselves. Writes = super_admin (assignments) + rider (own profile fields).
-- `user_roles`: read own; writes = super_admin only.
-- `profiles`: read/write own; super_admin/hub_admin can read profiles of users tied to their scope.
+Notifications: helper `notify(userId, type, title, message)` invoked from every state transition (booking created, payment success/fail, rider assigned, reminder, waiting-list promotion, cancellation). Rider assignment reminder is triggered from admin/rider flows — this phase just handles inserts when those events fire.
 
-## 4. Navigation & Dashboards
+## 3. Payment integration (this phase = infrastructure, not live gateways)
 
-Route reshape:
+- **Chip In / Alipay / Credit Card**: server route `src/routes/api/public/payment-webhook.ts` accepts provider callbacks and updates `payments` + `bookings` status. Client `initiatePayment` returns a redirect URL. For this phase we ship a mock provider selector plus webhook verification scaffolding — real Chip/Alipay credentials are added later via `add_secret`.
+- **Walk-in Payment Terminal**: booking stays `pending_payment` with method = walk_in; admin marks paid.
+- On successful payment: booking → `paid` → `waiting_rider_assignment`; insurance fields auto-populated from `app_settings.default_insurance_provider` + generated policy number.
 
-```text
-/                       public landing
-/auth/*                 login, register, forgot, reset, verify
-/become-a-rider         public application form
-/app/*                  customer app (existing shell)
-/rider/*                rider app (gated to approved riders)
-/admin/*                super_admin + hub_admin (scoped)
-```
+## 4. Customer journey UI (`/app/*`)
 
-Admin shell (`src/routes/admin.tsx`) gets a role-aware sidebar:
+Rebuild the flow across screens; keep the current mobile shell:
 
-- Super Admin sees: Dashboard, Hubs, Hub Admins, Riders, Rider Applications, Customers, Packages, Vehicle Types, Settings.
-- Hub Admin sees: Dashboard (their hub), Riders (their hub), Rider Applications (their hub), Customers (their hub), Packages (their hub). All queries filtered by `hub_id`.
-- Booking, Payments, Reports links hidden this phase (kept in code for Phase 2).
+- **`app.packages.$slug.tsx`** — add a "Book Now" CTA that navigates to `/app/book/$slug`.
+- **`app.book.$packageId.tsx`** → replace with a **multi-step wizard** at `/app/book/$slug`:
+  1. Date picker (calendar, disables full days)
+  2. Time slot list (shows remaining capacity; "Join waiting list" button when full)
+  3. Vehicle type (single option now — EV Motorcycle — but list-driven)
+  4. Meeting method: Walk-in at hub / Hotel pickup
+  5. If pickup: hotel/location name, address autocomplete + map picker, auto pickup fee
+  6. Review (package, date, slot, pickup summary, insurance disclosure, total)
+  7. Payment method selector → redirect / walk-in confirmation
+- **`app.bookings.index.tsx`** — split into Upcoming vs History tabs, show status pill, pickup badge.
+- **`app.bookings.$id.tsx`** — full detail: booking number, status timeline (11 states), rider info once assigned, pickup map, insurance, payment record, cancel action.
+- **`app.payments.tsx`** (new) — payment history list.
+- **`app.waiting-list.tsx`** (new) — my waiting list entries with position + confirm/decline when promoted.
+- **`app.notifications.tsx`** (new) — list + mark-as-read; badge on bottom nav.
+- **`app.profile.tsx`** — keep existing; add Notifications & Waiting List entry links.
 
-New admin pages (shells + master-data CRUD only):
+## 5. Waiting list automation
 
-- `admin.hubs.tsx` (rebuild for new schema)
-- `admin.vehicle-types.tsx`
-- `admin.hub-admins.tsx` — create hub admin, assign to one hub
-- `admin.rider-applications.tsx` — list, filter by status, view detail, set status, approve → creates auth user + rider record + sends invite
-- `admin.riders.tsx` — list/edit riders, change employment type or hub
-- `admin.packages.tsx` (rebuild for new schema + time slots UI)
-- `admin.index.tsx` — dashboard cards scoped to role/hub (counts only this phase)
+When a booking is cancelled or no-show, a Postgres trigger updates the next `waiting` row for that (package, date, slot) to `notified`, sets `respond_by = now() + app_settings.waiting_list_response_minutes`, and inserts a notification. A lightweight cron-style server route `src/routes/api/public/waiting-list-sweep.ts` (invoked by pg_cron or manual admin trigger) expires overdue entries and promotes the next in line.
 
-Rider portal: login + placeholder dashboard ("Assigned Jobs coming soon"), profile edit, SOS button UI (non-functional this phase). Customer app keeps current browse/profile; booking CTAs are disabled with "Coming soon" until Phase 2.
+## 6. Insurance
 
-## 5. Become a Rider (public)
+On payment success, populate booking's insurance fields: provider from `app_settings.default_insurance_provider` (default "EV Kg Baru Daily Cover"), policy number `INS-{booking_no}`, coverage_date = booking_date, status `active`. Displayed on booking detail; no external API this phase.
 
-New `/become-a-rider` route with the full application form, file uploads to `app-assets` bucket, writes to `rider_applications` with status `submitted`. Confirmation screen. No account created.
+## Out of scope
 
-## 6. Approval Flow
+Rider assignment UI, admin booking management redesign, live Chip/Alipay merchant onboarding, SMS/email delivery of notifications (in-app only), map provider selection beyond a lat/lng picker.
 
-In `admin.rider-applications.tsx`:
+## Technical notes
 
-1. Review → set `under_review`.
-2. Schedule interview → set `interview_scheduled` (notes field).
-3. Approve → server function: create auth user (invite email), insert `riders` row (auto-generated code), grant `rider` role scoped to hub.
-4. Reject → set `rejected` with reason.
-
-All done via `createServerFn` with `requireSupabaseAuth` + admin role check, using `supabaseAdmin` inside the handler.
-
-## Technical details
-
-- Migrations run in order: enum rewrite → helper functions → tables → GRANTs → RLS → policies → triggers (updated_at, rider code generator, customer role on signup).
-- Rider code generator: PL/pgSQL function using `RT-` or `RP-` prefix + zero-padded random 8 hex chars, retry on unique conflict.
-- Server functions live in `src/lib/*.functions.ts`; admin-only ones assert role via `has_role` before importing `supabaseAdmin` inside the handler.
-- Route guards: `_authenticated` layout already handles auth. Add per-route `beforeLoad` role checks that redirect unauthorized users to their home.
-- Keep existing profiles/user_roles data; migrate `tourist` → `customer`, existing `admin` → `super_admin`.
-
-## Out of scope (later phases)
-
-- Booking creation, waiting list, check-in, rider assignment, trip status.
-- Payments and insurance.
-- SOS delivery, notifications delivery.
-- Reports and analytics.
-- Customer-facing package browsing redesign beyond what's needed to reflect the new schema.
+- New route files use existing TanStack Start conventions and `_authenticated` layout gate.
+- All server fns follow `.functions.ts` splitting rules; webhooks under `src/routes/api/public/*` verify signatures.
+- Capacity enforcement is authoritative in the DB trigger; UI uses server-fn availability checks for UX only.
+- Every mutation logs a `notifications` row via the `notify` helper.
