@@ -93,24 +93,26 @@ export function AppAuth({
       <div className="flex-1 px-5 -mt-8">
         <div className="rounded-3xl bg-card shadow-xl border border-border/40 p-5 pb-7">
           {/* Segmented tabs */}
-          <div className="relative grid grid-cols-2 p-1 rounded-2xl bg-muted/70">
-            <button
-              onClick={() => setTab("login")}
-              className={`relative z-10 py-2.5 text-sm font-semibold rounded-xl transition ${
-                isLogin ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
-              }`}
-            >
-              Sign in
-            </button>
-            <button
-              onClick={() => setTab("register")}
-              className={`relative z-10 py-2.5 text-sm font-semibold rounded-xl transition ${
-                !isLogin ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
-              }`}
-            >
-              Sign up
-            </button>
-          </div>
+          {!loginOnly && (
+            <div className="relative grid grid-cols-2 p-1 rounded-2xl bg-muted/70">
+              <button
+                onClick={() => setTab("login")}
+                className={`relative z-10 py-2.5 text-sm font-semibold rounded-xl transition ${
+                  isLogin ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+                }`}
+              >
+                Sign in
+              </button>
+              <button
+                onClick={() => setTab("register")}
+                className={`relative z-10 py-2.5 text-sm font-semibold rounded-xl transition ${
+                  !isLogin ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+                }`}
+              >
+                Sign up
+              </button>
+            </div>
+          )}
 
           {isLogin ? (
             <div className="space-y-3 mt-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
