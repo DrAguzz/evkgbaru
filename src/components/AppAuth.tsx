@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { COUNTRIES } from "@/lib/countries";
 import { toast } from "sonner";
-import { ChevronLeft, Mail, Lock, User, Phone, Eye, EyeOff, Globe } from "lucide-react";
+import { ChevronLeft, Mail, Lock, User, Phone, Eye, EyeOff, Globe, Sparkles } from "lucide-react";
 import evrideLogo from "@/assets/evride-logo.png.asset.json";
+import { useServerFn } from "@tanstack/react-start";
+import { ensureDemoUser } from "@/lib/demo-login.functions";
 
 export function AppAuth({
   initialTab = "login",
