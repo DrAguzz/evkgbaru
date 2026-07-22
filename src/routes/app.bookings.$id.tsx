@@ -281,3 +281,50 @@ function AppBookingDetail() {
     </div>
   );
 }
+
+function SOSButton({ bookingId, touristId, riderId }: { bookingId: string; touristId: string; riderId: string | null }) {
+  const [open, setOpen] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [ice, setIce] = useState("");
+  const [sending, setSending] = useState(false);
+
+  async function send() {
+    if (!touristId) return toast.error("Sign in required");
+    setSending(true);
+    let lat: number | null = null, lng: number | null = null;
+    try {
+      const pos = await new Promise<GeolocationPosition>((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 5000 }));
+      lat = pos.coords.latitude; lng = pos.coords.longitude;
+    } catch { /* location denied */ }
+    const { error } = await supabase.from("sos_alerts").insert({
+      booking_id: bookingId, tourist_id: touristId, rider_id: riderId,
+      latitude: lat, longitude: lng, message: msg || null, emergency_contact: ice || null, status: "open",
+    });
+    setSending(false);
+    if (error) return toast.error(error.message);
+    toast.success("Emergency alert sent. Help is being notified.");
+    setOpen(false); setMsg(""); setIce("");
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <button className="w-full flex items-center justify-center gap-2 rounded-2xl bg-destructive text-destructive-foreground font-bold py-4 shadow-lg active:scale-[.98] transition">
+          <AlertOctagon className="w-5 h-5" /> Emergency SOS
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-sm">
+        <DialogHeader><DialogTitle className="flex items-center gap-2 text-destructive"><AlertOctagon className="w-5 h-5" /> Send SOS?</DialogTitle></DialogHeader>
+        <div className="space-y-3 text-sm">
+          <p className="text-muted-foreground">Your live location will be shared with the hub, your rider and admins. Only use in a real emergency.</p>
+          <Textarea placeholder="What's happening? (optional)" value={msg} onChange={(e) => setMsg(e.target.value)} />
+          <Input placeholder="Emergency contact number (optional)" value={ice} onChange={(e) => setIce(e.target.value)} />
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button className="bg-destructive hover:bg-destructive/90" onClick={send} disabled={sending}>{sending ? "Sending…" : "Send SOS"}</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
