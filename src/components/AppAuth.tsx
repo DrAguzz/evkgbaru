@@ -43,7 +43,7 @@ export function AppAuth({
           <div className="grid place-items-center w-8 h-8 rounded-xl bg-primary/10 text-primary">
             <Bike className="w-4 h-4" />
           </div>
-          <span className="font-semibold">EV Kg Baru</span>
+          <span className="font-semibold">EVRide</span>
         </div>
       </div>
 

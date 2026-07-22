@@ -85,7 +85,7 @@ export function SplashScreen({
               <Bike className="w-8 h-8" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight drop-shadow">
-              {cur.title || "EV Kg Baru"}
+              {cur.title || "EVRide"}
             </h1>
             <p className="text-sm opacity-90 mt-2 max-w-xs">
               {cur.subtitle || "Explore KL on electric bikes"}

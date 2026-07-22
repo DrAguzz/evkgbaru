@@ -126,7 +126,7 @@ function RiderTour() {
     setBusy(true);
     await supabase.from("bookings").update({ booking_status: "ride_completed" }).eq("id", id);
     await supabase.from("riders").update({ status: "available" }).eq("id", b!.rider_id);
-    await notifyCustomer("Ride completed", "Thanks for riding with EV Kg Baru. Please rate your trip.", "ride_completed");
+    await notifyCustomer("Ride completed", "Thanks for riding with EVRide. Please rate your trip.", "ride_completed");
     setBusy(false); toast.success("Tour completed!"); load();
   }
 

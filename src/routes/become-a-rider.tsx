@@ -16,16 +16,16 @@ export const Route = createFileRoute("/become-a-rider")({
   component: BecomeRider,
   head: () => ({
     meta: [
-      { title: "Become a Rider · EV Kg Baru" },
+      { title: "Become a Rider · EVRide" },
       {
         name: "description",
         content:
-          "Join EV Kg Baru as an EV Motorcycle tour rider. Apply full-time or part-time — full application form for review.",
+          "Join EVRide as an EV Motorcycle tour rider. Apply full-time or part-time — full application form for review.",
       },
-      { property: "og:title", content: "Become a Rider · EV Kg Baru" },
+      { property: "og:title", content: "Become a Rider · EVRide" },
       {
         property: "og:description",
-        content: "Apply to become an EV tour rider with EV Kg Baru in Kuala Lumpur.",
+        content: "Apply to become an EV tour rider with EVRide in Kuala Lumpur.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

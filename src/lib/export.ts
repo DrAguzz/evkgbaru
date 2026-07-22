@@ -58,7 +58,7 @@ export function exportPDF<T>(
   const doc = new jsPDF({ orientation: cols.length > 5 ? "landscape" : "portrait" });
   doc.setFontSize(16);
   doc.setTextColor(20, 20, 20);
-  doc.text("EV Kg Baru", 14, 16);
+  doc.text("EVRide", 14, 16);
   doc.setFontSize(11);
   doc.setTextColor(90, 90, 90);
   doc.text(meta.title, 14, 22);

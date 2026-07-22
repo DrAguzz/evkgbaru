@@ -4,10 +4,10 @@ import { z } from "zod";
 const DEMO_PASSWORD = "demo1234";
 
 const DEMOS = {
-  customer: { email: "demo.customer@evkgbaru.test", name: "Demo Customer", role: "customer" as const },
-  rider: { email: "demo.rider@evkgbaru.test", name: "Demo Rider", role: "rider" as const },
-  hub_admin: { email: "demo.hub@evkgbaru.test", name: "Demo Hub Admin", role: "hub_admin" as const },
-  super_admin: { email: "demo.super@evkgbaru.test", name: "Demo Super Admin", role: "super_admin" as const },
+  customer: { email: "demo.customer@evride.test", name: "Demo Customer", role: "customer" as const },
+  rider: { email: "demo.rider@evride.test", name: "Demo Rider", role: "rider" as const },
+  hub_admin: { email: "demo.hub@evride.test", name: "Demo Hub Admin", role: "hub_admin" as const },
+  super_admin: { email: "demo.super@evride.test", name: "Demo Super Admin", role: "super_admin" as const },
 };
 
 export const ensureDemoUser = createServerFn({ method: "POST" })

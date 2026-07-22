@@ -15,7 +15,7 @@ export function SiteHeader() {
           <span className="grid place-items-center w-9 h-9 rounded-xl bg-hero text-primary-foreground">
             <Bike className="w-5 h-5" />
           </span>
-          <span>EV Kg Baru</span>
+          <span>EVRide</span>
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <Link to="/packages" className="hover:text-primary transition-colors">Packages</Link>
@@ -71,21 +71,21 @@ export function SiteFooter() {
         <div>
           <div className="flex items-center gap-2 font-bold text-lg mb-3 text-white">
             <span className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 text-primary-foreground shadow-lg shadow-primary/30"><Bike className="w-4 h-4" /></span>
-            EV Kg Baru
+            EVRide
           </div>
           <p className="text-slate-400">Premium guided EV bike tours around Kuala Lumpur.</p>
         </div>
         <div>
           <div className="font-semibold mb-2 text-white">Support</div>
           <p className="text-slate-400">WhatsApp: +60 12-345 6789</p>
-          <p className="text-slate-400">Email: hello@evkgbaru.my</p>
+          <p className="text-slate-400">Email: hello@evride.my</p>
         </div>
         <div>
           <div className="font-semibold mb-2 text-white">Safety</div>
           <p className="text-slate-400">All riders are licensed and trained. Helmets and safety briefing included with every tour.</p>
         </div>
       </div>
-      <div className="relative border-t border-white/10 py-4 text-xs text-center text-slate-500">© {new Date().getFullYear()} EV Kg Baru. All rights reserved.</div>
+      <div className="relative border-t border-white/10 py-4 text-xs text-center text-slate-500">© {new Date().getFullYear()} EVRide. All rights reserved.</div>
     </footer>
   );
 }
