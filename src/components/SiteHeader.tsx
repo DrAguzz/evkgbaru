@@ -11,9 +11,9 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 font-bold text-lg">
-          <img src={evrideLogo.url} alt="EVRide" className="h-10 w-auto" />
+      <div className="container mx-auto flex h-20 items-center justify-between px-4">
+        <Link to="/" className="flex items-center font-bold text-lg shrink-0">
+          <img src={evrideLogo.url} alt="EVRide" className="h-14 md:h-16 w-auto object-contain" />
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <Link to="/packages" className="hover:text-primary transition-colors">Packages</Link>
