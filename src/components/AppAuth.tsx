@@ -79,12 +79,12 @@ export function AppAuth({
             <img src={evrideLogo.url} alt="EVRide" className="h-12 w-auto" />
           </div>
           <h1 className="mt-5 text-2xl font-bold tracking-tight">
-            {isLogin ? "Welcome back" : "Create account"}
+            {title ?? (isLogin ? "Welcome back" : "Create account")}
           </h1>
           <p className="mt-1.5 text-sm text-primary-foreground/80 max-w-xs">
-            {isLogin
+            {subtitle ?? (isLogin
               ? "Sign in to continue your EV adventure."
-              : "Join EVRide and start exploring the city."}
+              : "Join EVRide and start exploring the city.")}
           </p>
         </div>
       </div>
