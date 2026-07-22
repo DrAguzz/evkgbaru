@@ -194,7 +194,7 @@ export function AppAuth({
                     onClick={handleDemoLogin}
                   >
                     <Sparkles className="w-4 h-4 mr-2 text-primary" />
-                    {busy ? "Preparing demo..." : "Try demo account"}
+                    {busy ? "Preparing demo..." : `Try ${demoLabel ?? "demo"} account`}
                   </Button>
                 </>
               )}
