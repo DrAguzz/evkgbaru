@@ -6,8 +6,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/StatusBadge";
 import { money, fmtDate, fmtTime, labelStatus } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
-import { ArrowLeft, Calendar, Users, MapPin, Phone, MessageCircle, Star, CheckCircle2, Bike, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, Users, MapPin, Phone, MessageCircle, Star, CheckCircle2, Bike, Clock, AlertOctagon } from "lucide-react";
 import { RouteMap } from "@/components/RouteMap";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/bookings/$id")({ component: AppBookingDetail });
