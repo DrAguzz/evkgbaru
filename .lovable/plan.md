@@ -1,35 +1,37 @@
-## Current state (verified)
+## Situasi
 
-- `demo.rider@evride.test` sudah wujud sebagai rider di bawah **Kg Baru Hub** (rider code `RT-5111-8318`, employment full_time, status available).
-- Akaun ini sudah dikonfigurasi sebagai demo rider login di `src/lib/demo-login.functions.ts` (butang "Try Demo Rider account" di skrin login rider guna akaun ni).
-- Rider ini **belum ada booking** assigned — sebab tu rider app kosong bila login.
+- Akaun demo rider: `demo.rider@evride.test` ✅ sudah wujud
+- Hub: **Kg Baru Hub** ✅ sudah di-assign (disahkan via query DB)
+- Rekod `riders` lengkap (rider_code, employment_type, license_type) ✅
 
-Jadi permintaan (1) & (2) sebenarnya sudah selesai. Yang perlu dibuat adalah **dummy bookings** supaya ada data untuk testing rider app.
+Jadi data sudah betul. Skrin "Become a Rider" masih muncul kerana **bug RLS**, bukan data.
 
-## Rancangan: seed dummy bookings untuk demo rider
+## Punca sebenar (disahkan)
 
-Tambah 6 booking dummy yang di-assign kepada `demo.rider@evride.test`, meliputi setiap fasa tour lifecycle supaya semua skrin rider app boleh diuji:
+Query `supabase.from("riders").select("id").eq("user_id", user.id)` dari client return HTTP 500:
 
-| # | Status | Tarikh | Package | Tujuan test |
-|---|--------|--------|---------|-------------|
-| 1 | `rider_assigned` | Hari ini | KL City Highlights | Skrin "upcoming — awaiting check-in" |
-| 2 | `customer_checked_in` | Hari ini | National Monument Trail | Butang "Start safety briefing" |
-| 3 | `safety_briefing_completed` | Hari ini | KL Tower | Butang "Start ride" |
-| 4 | `ride_started` | Hari ini | Masjid Negara & Museum | Skrin live tour + SOS + complete |
-| 5 | `ride_completed` | Semalam | Bukit Bintang | Skrin history + review |
-| 6 | `rider_assigned` | Esok | KL City Highlights | Upcoming schedule |
+```
+infinite recursion detected in policy for relation "riders"
+```
 
-Setiap booking akan ada:
-- Customer tourist (guna profil sedia ada mcm `thoriqmohd@gmail.com`)
-- Pickup hub = Kg Baru Hub
-- Time slot dari `booking_time` (contoh 09:00, 14:00, 17:00)
-- `total_price`, `pax`, `payment_status='paid'`
-- `meeting_method='walk_in'`
+Dua polisi saling merujuk:
+- `riders` SELECT policy → `EXISTS (SELECT FROM bookings WHERE ...)`
+- `bookings` SELECT/UPDATE policy → `EXISTS (SELECT FROM riders WHERE ...)`
 
-## Nota
+Client tak dapat baca rider row sendiri → `riderId = null` → fallback ke skrin "Become a Rider".
 
-- Tiada perubahan kod — hanya data insert ke jadual `bookings`.
-- Tiada perubahan skema, tiada migration.
-- Jika mahu lebih banyak scenario (contoh cancelled, no_show, hotel_pickup dengan pickup fee), boleh tambah selepas ni.
+## Pembetulan (migration sahaja, tiada perubahan frontend)
 
-Approve untuk saya insert dummy bookings ni.
+1. Cipta helper SECURITY DEFINER dalam schema `private` (ikut corak `private.is_admin` sedia ada):
+   - `private.is_rider_user(_rider_id uuid, _user uuid)` — cek sama ada `rider_id` tertentu adalah milik `_user`. Bypass RLS.
+   - `private.tourist_has_booking_with_rider(_rider_user_id uuid, _tourist uuid)` — cek sama ada tourist ada booking dengan rider ini. Bypass RLS.
+2. Grant EXECUTE kepada `authenticated`.
+3. `DROP POLICY "riders self read" ON public.riders` → cipta semula:
+   ```
+   USING (auth.uid() = user_id
+          OR private.is_admin(auth.uid())
+          OR private.tourist_has_booking_with_rider(riders.user_id, auth.uid()))
+   ```
+4. `DROP POLICY "bookings tourist read"` & `"bookings tourist update"` ON `public.bookings` → cipta semula guna `private.is_rider_user(bookings.rider_id, auth.uid())` ganti sub-query `riders`.
+
+Selepas migration: query rider self-read berjaya → dashboard rider terbuka betul selepas klik **Try Demo Rider account**.
