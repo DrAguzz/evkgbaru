@@ -27,7 +27,16 @@ function RiderShell() {
   if (loading || checking) return <PhoneFrame><div className="grid place-items-center h-full">Loading…</div></PhoneFrame>;
 
   if (!user) {
-    return <AppAuth initialTab="login" onBack={() => navigate({ to: "/" })} />;
+    return (
+      <AppAuth
+        initialTab="login"
+        loginOnly
+        showDemo={false}
+        title="Rider sign in"
+        subtitle="Sign in to access your assigned tours."
+        onBack={() => navigate({ to: "/" })}
+      />
+    );
   }
 
   if (user && !riderId) {

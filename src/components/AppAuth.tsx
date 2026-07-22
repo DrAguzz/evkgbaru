@@ -13,13 +13,21 @@ import { ensureDemoUser } from "@/lib/demo-login.functions";
 export function AppAuth({
   initialTab = "login",
   onBack,
+  loginOnly = false,
+  title,
+  subtitle,
+  showDemo = true,
 }: {
   initialTab?: "login" | "register";
   onBack: () => void;
+  loginOnly?: boolean;
+  title?: string;
+  subtitle?: string;
+  showDemo?: boolean;
 }) {
   const { signIn, signUp } = useAuth();
   const provisionDemo = useServerFn(ensureDemoUser);
-  const [tab, setTab] = useState<"login" | "register">(initialTab);
+  const [tab, setTab] = useState<"login" | "register">(loginOnly ? "login" : initialTab);
   const [busy, setBusy] = useState(false);
   const [showPw, setShowPw] = useState(false);
 
@@ -71,12 +79,12 @@ export function AppAuth({
             <img src={evrideLogo.url} alt="EVRide" className="h-12 w-auto" />
           </div>
           <h1 className="mt-5 text-2xl font-bold tracking-tight">
-            {isLogin ? "Welcome back" : "Create account"}
+            {title ?? (isLogin ? "Welcome back" : "Create account")}
           </h1>
           <p className="mt-1.5 text-sm text-primary-foreground/80 max-w-xs">
-            {isLogin
+            {subtitle ?? (isLogin
               ? "Sign in to continue your EV adventure."
-              : "Join EVRide and start exploring the city."}
+              : "Join EVRide and start exploring the city.")}
           </p>
         </div>
       </div>
@@ -85,24 +93,26 @@ export function AppAuth({
       <div className="flex-1 px-5 -mt-8">
         <div className="rounded-3xl bg-card shadow-xl border border-border/40 p-5 pb-7">
           {/* Segmented tabs */}
-          <div className="relative grid grid-cols-2 p-1 rounded-2xl bg-muted/70">
-            <button
-              onClick={() => setTab("login")}
-              className={`relative z-10 py-2.5 text-sm font-semibold rounded-xl transition ${
-                isLogin ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
-              }`}
-            >
-              Sign in
-            </button>
-            <button
-              onClick={() => setTab("register")}
-              className={`relative z-10 py-2.5 text-sm font-semibold rounded-xl transition ${
-                !isLogin ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
-              }`}
-            >
-              Sign up
-            </button>
-          </div>
+          {!loginOnly && (
+            <div className="relative grid grid-cols-2 p-1 rounded-2xl bg-muted/70">
+              <button
+                onClick={() => setTab("login")}
+                className={`relative z-10 py-2.5 text-sm font-semibold rounded-xl transition ${
+                  isLogin ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+                }`}
+              >
+                Sign in
+              </button>
+              <button
+                onClick={() => setTab("register")}
+                className={`relative z-10 py-2.5 text-sm font-semibold rounded-xl transition ${
+                  !isLogin ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+                }`}
+              >
+                Sign up
+              </button>
+            </div>
+          )}
 
           {isLogin ? (
             <div className="space-y-3 mt-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -157,34 +167,40 @@ export function AppAuth({
                 {busy ? "Signing in..." : "Sign in"}
               </Button>
 
-              <div className="relative py-1">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border/60" />
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="bg-card px-3 text-[11px] uppercase tracking-wider text-muted-foreground">
-                    For testing
-                  </span>
-                </div>
-              </div>
+              {showDemo && (
+                <>
+                  <div className="relative py-1">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-border/60" />
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="bg-card px-3 text-[11px] uppercase tracking-wider text-muted-foreground">
+                        For testing
+                      </span>
+                    </div>
+                  </div>
 
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full h-12 rounded-2xl text-sm font-semibold border-dashed"
-                disabled={busy}
-                onClick={handleDemoLogin}
-              >
-                <Sparkles className="w-4 h-4 mr-2 text-primary" />
-                {busy ? "Preparing demo..." : "Try demo account"}
-              </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full h-12 rounded-2xl text-sm font-semibold border-dashed"
+                    disabled={busy}
+                    onClick={handleDemoLogin}
+                  >
+                    <Sparkles className="w-4 h-4 mr-2 text-primary" />
+                    {busy ? "Preparing demo..." : "Try demo account"}
+                  </Button>
+                </>
+              )}
 
-              <p className="text-center text-xs text-muted-foreground pt-2">
-                Don't have an account?{" "}
-                <button onClick={() => setTab("register")} className="text-primary font-semibold">
-                  Sign up
-                </button>
-              </p>
+              {!loginOnly && (
+                <p className="text-center text-xs text-muted-foreground pt-2">
+                  Don't have an account?{" "}
+                  <button onClick={() => setTab("register")} className="text-primary font-semibold">
+                    Sign up
+                  </button>
+                </p>
+              )}
             </div>
           ) : (
             <div className="space-y-3 mt-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
