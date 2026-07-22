@@ -155,13 +155,15 @@ function AuthPage() {
                     onClick={async () => {
                       setBusy(true);
                       try {
-                        const creds = await ensureDemoUser({ data: { role: key } });
-                        const { error } = await signIn(creds.email, creds.password);
-                        if (error) throw new Error(error);
+                        const { error } = await signIn(DEMO_EMAILS[key], DEMO_PASSWORD);
+                        if (error) {
+                          toast.error("Demo account tidak wujud. Sila hubungi administrator.");
+                          return;
+                        }
                         toast.success(`Signed in as ${label}`);
                         navigate({ to: "/admin", replace: true });
-                      } catch (e) {
-                        toast.error(e instanceof Error ? e.message : "Demo login failed");
+                      } catch {
+                        toast.error("Demo account tidak wujud. Sila hubungi administrator.");
                       } finally {
                         setBusy(false);
                       }
