@@ -248,7 +248,7 @@ function AppBookingDetail() {
         </div>
 
         {/* Review */}
-        {b.booking_status === "completed" && !hasReview && (
+        {b.booking_status === "ride_completed" && !hasReview && (
           <div className="rounded-2xl bg-card ring-1 ring-border/40 shadow-card p-4 space-y-3">
             <div className="font-semibold text-sm">Rate your experience</div>
             <div className="flex gap-1">
