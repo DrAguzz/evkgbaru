@@ -1,37 +1,32 @@
-## Situasi
 
-- Akaun demo rider: `demo.rider@evride.test` ✅ sudah wujud
-- Hub: **Kg Baru Hub** ✅ sudah di-assign (disahkan via query DB)
-- Rekod `riders` lengkap (rider_code, employment_type, license_type) ✅
+## Punca
 
-Jadi data sudah betul. Skrin "Become a Rider" masih muncul kerana **bug RLS**, bukan data.
+Butang **Demo Account** memanggil server function `ensureDemoUser` (`src/lib/demo-login.functions.ts`) yang guna `supabaseAdmin`. Client admin ni perlukan dua env var pada runtime pelayan:
 
-## Punca sebenar (disahkan)
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
 
-Query `supabase.from("riders").select("id").eq("user_id", user.id)` dari client return HTTP 500:
+Di Lovable Cloud kedua-duanya di-inject automatik. Di Vercel tak — jadi `client.server.ts` throw *"Missing Supabase environment variable(s): SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY"* — mesej yang awak nampak.
 
-```
-infinite recursion detected in policy for relation "riders"
-```
+Selain tu, `SUPABASE_PUBLISHABLE_KEY` juga diperlukan oleh middleware auth pada SSR (fallback untuk `requireSupabaseAuth`).
 
-Dua polisi saling merujuk:
-- `riders` SELECT policy → `EXISTS (SELECT FROM bookings WHERE ...)`
-- `bookings` SELECT/UPDATE policy → `EXISTS (SELECT FROM riders WHERE ...)`
+## Nota penting
 
-Client tak dapat baca rider row sendiri → `riderId = null` → fallback ke skrin "Become a Rider".
+Nilai `SUPABASE_SERVICE_ROLE_KEY` **tidak tersedia** melalui Lovable Cloud UI — hanya awak (pemilik projek Supabase) yang boleh dapatkan. Lovable tak boleh ambilkan untuk awak.
 
-## Pembetulan (migration sahaja, tiada perubahan frontend)
+## Langkah pembetulan
 
-1. Cipta helper SECURITY DEFINER dalam schema `private` (ikut corak `private.is_admin` sedia ada):
-   - `private.is_rider_user(_rider_id uuid, _user uuid)` — cek sama ada `rider_id` tertentu adalah milik `_user`. Bypass RLS.
-   - `private.tourist_has_booking_with_rider(_rider_user_id uuid, _tourist uuid)` — cek sama ada tourist ada booking dengan rider ini. Bypass RLS.
-2. Grant EXECUTE kepada `authenticated`.
-3. `DROP POLICY "riders self read" ON public.riders` → cipta semula:
-   ```
-   USING (auth.uid() = user_id
-          OR private.is_admin(auth.uid())
-          OR private.tourist_has_booking_with_rider(riders.user_id, auth.uid()))
-   ```
-4. `DROP POLICY "bookings tourist read"` & `"bookings tourist update"` ON `public.bookings` → cipta semula guna `private.is_rider_user(bookings.rider_id, auth.uid())` ganti sub-query `riders`.
+1. Awak buka Vercel Project → **Settings → Environment Variables**, tambah untuk semua environment (Production, Preview, Development):
+   - `SUPABASE_URL` = `https://uypacmbjbpcnhaonitie.supabase.co`
+   - `SUPABASE_PUBLISHABLE_KEY` = (sama dengan `VITE_SUPABASE_PUBLISHABLE_KEY` yang sedia ada dalam `.env`)
+   - `SUPABASE_SERVICE_ROLE_KEY` = ambil dari Supabase Dashboard → Project Settings → API → `service_role` key (jangan dedah kepada sesiapa)
+2. Redeploy projek Vercel supaya env vars baru dimuat.
 
-Selepas migration: query rider self-read berjaya → dashboard rider terbuka betul selepas klik **Try Demo Rider account**.
+## Pilihan tambahan (opsyenal)
+
+- Kalau nak elak masalah ni dan awak OK guna hosting Lovable sebagai production, teruskan guna Lovable Cloud (env auto). Demo login tetap berfungsi tanpa setup tambahan.
+- Kalau nak keep Vercel, tiada perubahan kod diperlukan — hanya konfigurasi env di Vercel.
+
+## Tiada perubahan kod
+
+Plan ini tak sentuh fail kod. Semua tindakan ada di sisi Vercel/Supabase dashboard.
