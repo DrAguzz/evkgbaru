@@ -9,7 +9,16 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { COUNTRIES } from "@/lib/countries";
+import { ensureDemoUser } from "@/lib/demo-login.functions";
 import { toast } from "sonner";
+import { User, Bike, Building2, ShieldCheck } from "lucide-react";
+
+const DEMO_ROLES = [
+  { key: "customer", label: "Customer", icon: User },
+  { key: "rider", label: "Rider", icon: Bike },
+  { key: "hub_admin", label: "Hub Admin", icon: Building2 },
+  { key: "super_admin", label: "Super Admin", icon: ShieldCheck },
+] as const;
 
 type Search = { mode?: "login" | "register"; redirect?: string };
 
@@ -119,6 +128,45 @@ function AuthPage() {
                 }}>Create account</Button>
               </TabsContent>
             </Tabs>
+
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-card px-2 text-muted-foreground">Demo login</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 mt-4">
+                {DEMO_ROLES.map(({ key, label, icon: Icon }) => (
+                  <Button
+                    key={key}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={busy}
+                    onClick={async () => {
+                      setBusy(true);
+                      try {
+                        const creds = await ensureDemoUser({ data: { role: key } });
+                        const { error } = await signIn(creds.email, creds.password);
+                        if (error) throw new Error(error);
+                        toast.success(`Signed in as ${label}`);
+                      } catch (e) {
+                        toast.error(e instanceof Error ? e.message : "Demo login failed");
+                      } finally {
+                        setBusy(false);
+                      }
+                    }}
+                  >
+                    <Icon className="h-4 w-4 mr-1" />
+                    {label}
+                  </Button>
+                ))}
+              </div>
+              <p className="text-[10px] text-muted-foreground text-center mt-2">
+                Demo accounts are auto-created for previewing each role.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
