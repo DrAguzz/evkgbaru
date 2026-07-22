@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { COUNTRIES } from "@/lib/countries";
 import { ensureDemoUser } from "@/lib/demo-login.functions";
 import { toast } from "sonner";
-import { User, Bike, Building2, ShieldCheck } from "lucide-react";
+import { Building2, ShieldCheck } from "lucide-react";
 
 const DEMO_ROLES = [
   { key: "hub_admin", label: "Hub Admin", icon: Building2 },
