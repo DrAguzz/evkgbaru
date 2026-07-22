@@ -249,6 +249,11 @@ function AppBookingDetail() {
           </ol>
         </div>
 
+        {/* SOS */}
+        {["ride_started", "on_the_way", "customer_checked_in", "safety_briefing_completed"].includes(b.booking_status) && (
+          <SOSButton bookingId={b.id} touristId={user?.id ?? ""} riderId={b.riders?.id ?? null} />
+        )}
+
         {/* Review */}
         {b.booking_status === "ride_completed" && !hasReview && (
           <div className="rounded-2xl bg-card ring-1 ring-border/40 shadow-card p-4 space-y-3">
