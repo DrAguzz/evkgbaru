@@ -31,7 +31,9 @@ function RiderShell() {
       <AppAuth
         initialTab="login"
         loginOnly
-        showDemo={false}
+        showDemo
+        demoRole="rider"
+        demoLabel="Demo Rider"
         title="Rider sign in"
         subtitle="Sign in to access your assigned tours."
         onBack={() => navigate({ to: "/" })}
