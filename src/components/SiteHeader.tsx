@@ -3,6 +3,7 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Bike, User, LogOut, Smartphone, LayoutDashboard, Bike as BikeIcon } from "lucide-react";
+import evrideLogo from "@/assets/evride-logo.png.asset.json";
 
 export function SiteHeader() {
   const { user, isAdmin, isRider, signOut } = useAuth();
@@ -12,10 +13,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-bold text-lg">
-          <span className="grid place-items-center w-9 h-9 rounded-xl bg-hero text-primary-foreground">
-            <Bike className="w-5 h-5" />
-          </span>
-          <span>EVRide</span>
+          <img src={evrideLogo.url} alt="EVRide" className="h-10 w-auto" />
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <Link to="/packages" className="hover:text-primary transition-colors">Packages</Link>
@@ -69,9 +67,8 @@ export function SiteFooter() {
       <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-secondary/20 blur-3xl pointer-events-none" />
       <div className="relative container mx-auto px-4 py-12 grid md:grid-cols-3 gap-8 text-sm">
         <div>
-          <div className="flex items-center gap-2 font-bold text-lg mb-3 text-white">
-            <span className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 text-primary-foreground shadow-lg shadow-primary/30"><Bike className="w-4 h-4" /></span>
-            EVRide
+          <div className="mb-3">
+            <img src={evrideLogo.url} alt="EVRide" className="h-10 w-auto" />
           </div>
           <p className="text-slate-400">Premium guided EV bike tours around Kuala Lumpur.</p>
         </div>
