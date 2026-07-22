@@ -110,7 +110,7 @@ function PaymentsTab() {
 
   useEffect(() => {
     supabase.from("app_settings").select("payment_methods").eq("id", 1).single()
-      .then(({ data }) => setPm((data?.payment_methods ?? { fpx: true, card: true, ewallet: true, cash: false }) as AppSettings["payment_methods"]));
+      .then(({ data }) => setPm((data?.payment_methods ?? { fpx: true, card: true, ewallet: true, cash: false }) as unknown as AppSettings["payment_methods"]));
   }, []);
 
   async function toggle(k: keyof AppSettings["payment_methods"], v: boolean) {
