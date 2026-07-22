@@ -154,6 +154,7 @@ function AuthPage() {
                         const { error } = await signIn(creds.email, creds.password);
                         if (error) throw new Error(error);
                         toast.success(`Signed in as ${label}`);
+                        navigate({ to: "/admin", replace: true });
                       } catch (e) {
                         toast.error(e instanceof Error ? e.message : "Demo login failed");
                       } finally {
