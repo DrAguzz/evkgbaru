@@ -9,7 +9,12 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { COUNTRIES } from "@/lib/countries";
-import { ensureDemoUser } from "@/lib/demo-login.functions";
+
+const DEMO_EMAILS: Record<"hub_admin" | "super_admin", string> = {
+  hub_admin: "demo.hub@evride.test",
+  super_admin: "demo.super@evride.test",
+};
+const DEMO_PASSWORD = "demo1234";
 import { toast } from "sonner";
 import { Building2, ShieldCheck } from "lucide-react";
 
@@ -150,13 +155,15 @@ function AuthPage() {
                     onClick={async () => {
                       setBusy(true);
                       try {
-                        const creds = await ensureDemoUser({ data: { role: key } });
-                        const { error } = await signIn(creds.email, creds.password);
-                        if (error) throw new Error(error);
+                        const { error } = await signIn(DEMO_EMAILS[key], DEMO_PASSWORD);
+                        if (error) {
+                          toast.error("Demo account tidak wujud. Sila hubungi administrator.");
+                          return;
+                        }
                         toast.success(`Signed in as ${label}`);
                         navigate({ to: "/admin", replace: true });
-                      } catch (e) {
-                        toast.error(e instanceof Error ? e.message : "Demo login failed");
+                      } catch {
+                        toast.error("Demo account tidak wujud. Sila hubungi administrator.");
                       } finally {
                         setBusy(false);
                       }

@@ -1,32 +1,32 @@
+## Objective
 
-## Punca
+Hapuskan kebergantungan Demo Account pada `SUPABASE_SERVICE_ROLE_KEY`. Fungsi admin lain (Hub Admin & Rider creation) kekal tak berubah.
 
-Butang **Demo Account** memanggil server function `ensureDemoUser` (`src/lib/demo-login.functions.ts`) yang guna `supabaseAdmin`. Client admin ni perlukan dua env var pada runtime pelayan:
+## Perubahan
 
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+### 1. `src/routes/auth.tsx`
+- Buang import `ensureDemoUser`.
+- Untuk butang Demo (Hub Admin, Super Admin):
+  - Terus panggil `signIn(email, "demo1234")` dengan email tetap:
+    - `demo.hub@evride.test`
+    - `demo.super@evride.test`
+  - Jika `signIn` pulangkan error (contoh `Invalid login credentials`), papar toast: **"Demo account tidak wujud. Sila hubungi administrator."**
+  - Buang sebarang logik cipta akaun.
 
-Di Lovable Cloud kedua-duanya di-inject automatik. Di Vercel tak — jadi `client.server.ts` throw *"Missing Supabase environment variable(s): SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY"* — mesej yang awak nampak.
+### 2. `src/components/AppAuth.tsx`
+- Butang "Try Demo Rider account" (dan demo customer jika ada) ditukar sama:
+  - `signInWithPassword` guna `demo.rider@evride.test` / `demo.customer@evride.test` dengan password `demo1234`.
+  - Jika gagal, papar mesej "Demo account tidak wujud. Sila hubungi administrator."
+- Buang panggilan `ensureDemoUser`.
 
-Selain tu, `SUPABASE_PUBLISHABLE_KEY` juga diperlukan oleh middleware auth pada SSR (fallback untuk `requireSupabaseAuth`).
+### 3. Padam fail
+- `src/lib/demo-login.functions.ts` (padam sepenuhnya).
 
-## Nota penting
+### 4. Kekal tanpa perubahan
+- `src/integrations/supabase/client.server.ts` — masih diperlukan oleh `admin-users.functions.ts` & `rider-admin.functions.ts`.
+- `src/lib/admin-users.functions.ts`, `src/lib/rider-admin.functions.ts` — tak disentuh.
+- Env var `SUPABASE_SERVICE_ROLE_KEY` masih perlu di Vercel **hanya** untuk fungsi admin tersebut; namun Demo Account flow sudah tak lagi bergantung padanya (butang Demo akan berfungsi walaupun service role tiada, selagi akaun demo sudah wujud di database).
 
-Nilai `SUPABASE_SERVICE_ROLE_KEY` **tidak tersedia** melalui Lovable Cloud UI — hanya awak (pemilik projek Supabase) yang boleh dapatkan. Lovable tak boleh ambilkan untuk awak.
+## Nota
 
-## Langkah pembetulan
-
-1. Awak buka Vercel Project → **Settings → Environment Variables**, tambah untuk semua environment (Production, Preview, Development):
-   - `SUPABASE_URL` = `https://uypacmbjbpcnhaonitie.supabase.co`
-   - `SUPABASE_PUBLISHABLE_KEY` = (sama dengan `VITE_SUPABASE_PUBLISHABLE_KEY` yang sedia ada dalam `.env`)
-   - `SUPABASE_SERVICE_ROLE_KEY` = ambil dari Supabase Dashboard → Project Settings → API → `service_role` key (jangan dedah kepada sesiapa)
-2. Redeploy projek Vercel supaya env vars baru dimuat.
-
-## Pilihan tambahan (opsyenal)
-
-- Kalau nak elak masalah ni dan awak OK guna hosting Lovable sebagai production, teruskan guna Lovable Cloud (env auto). Demo login tetap berfungsi tanpa setup tambahan.
-- Kalau nak keep Vercel, tiada perubahan kod diperlukan — hanya konfigurasi env di Vercel.
-
-## Tiada perubahan kod
-
-Plan ini tak sentuh fail kod. Semua tindakan ada di sisi Vercel/Supabase dashboard.
+Akaun demo (`demo.hub@evride.test`, `demo.super@evride.test`, `demo.rider@evride.test`, `demo.customer@evride.test`) sudah wujud dalam pangkalan data dari sesi sebelumnya, jadi butang demo akan terus berfungsi dengan `signInWithPassword` selepas refactor.
