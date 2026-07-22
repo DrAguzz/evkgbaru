@@ -15,11 +15,17 @@ export const Route = createFileRoute("/app/bookings/$id")({ component: AppBookin
 interface Booking {
   id: string; booking_no: string; booking_date: string; booking_time: string;
   pax: number; total_price: number; payment_status: string; booking_status: string;
-  special_request: string | null;
+  special_request: string | null; notes: string | null;
+  meeting_method: string | null;
+  pickup_location_name: string | null; pickup_address: string | null;
+  pickup_distance_km: number | null; pickup_fee: number | null;
+  insurance_provider: string | null; insurance_policy_no: string | null;
+  insurance_coverage_date: string | null; insurance_status: string | null;
   tour_packages: { package_name: string; image: string | null; duration_minutes: number } | null;
   hubs: { name: string; address: string | null } | null;
   riders: { id: string; name: string; phone: string | null; vehicle_id: string | null; rating: number } | null;
 }
+
 interface RouteRow { sequence_no: number; locations: { id: string; name: string } | null; }
 interface Progress { location_id: string | null; status: string; arrival_time: string | null; sequence_no: number; }
 
