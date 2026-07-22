@@ -131,11 +131,16 @@ export type Database = {
         Row: {
           address: string | null
           created_at: string
+          has_briefing_area: boolean
+          has_charging: boolean
+          has_checkin_counter: boolean
           id: string
           latitude: number | null
           longitude: number | null
+          max_capacity: number | null
           name: string
           operating_hour: string | null
+          operating_hours: Json | null
           pic_name: string | null
           pic_phone: string | null
           status: string
@@ -144,11 +149,16 @@ export type Database = {
         Insert: {
           address?: string | null
           created_at?: string
+          has_briefing_area?: boolean
+          has_charging?: boolean
+          has_checkin_counter?: boolean
           id?: string
           latitude?: number | null
           longitude?: number | null
+          max_capacity?: number | null
           name: string
           operating_hour?: string | null
+          operating_hours?: Json | null
           pic_name?: string | null
           pic_phone?: string | null
           status?: string
@@ -157,11 +167,16 @@ export type Database = {
         Update: {
           address?: string | null
           created_at?: string
+          has_briefing_area?: boolean
+          has_charging?: boolean
+          has_checkin_counter?: boolean
           id?: string
           latitude?: number | null
           longitude?: number | null
+          max_capacity?: number | null
           name?: string
           operating_hour?: string | null
+          operating_hours?: Json | null
           pic_name?: string | null
           pic_phone?: string | null
           status?: string
@@ -286,6 +301,104 @@ export type Database = {
           },
         ]
       }
+      package_time_slots: {
+        Row: {
+          created_at: string
+          day_of_week: number
+          end_time: string
+          id: string
+          package_id: string
+          start_time: string
+        }
+        Insert: {
+          created_at?: string
+          day_of_week: number
+          end_time: string
+          id?: string
+          package_id: string
+          start_time: string
+        }
+        Update: {
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          package_id?: string
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "package_time_slots_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      packages: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration_minutes: number
+          id: string
+          images: Json
+          max_participants: number
+          meeting_hub_id: string | null
+          name: string
+          price: number
+          slug: string
+          status: string
+          updated_at: string
+          vehicle_type_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          images?: Json
+          max_participants?: number
+          meeting_hub_id?: string | null
+          name: string
+          price?: number
+          slug: string
+          status?: string
+          updated_at?: string
+          vehicle_type_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          images?: Json
+          max_participants?: number
+          meeting_hub_id?: string | null
+          name?: string
+          price?: number
+          slug?: string
+          status?: string
+          updated_at?: string
+          vehicle_type_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "packages_meeting_hub_id_fkey"
+            columns: ["meeting_hub_id"]
+            isOneToOne: false
+            referencedRelation: "hubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "packages_vehicle_type_id_fkey"
+            columns: ["vehicle_type_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount: number
@@ -332,9 +445,12 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: string | null
           avatar_url: string | null
           created_at: string
+          dob: string | null
           email: string
+          gender: string | null
           id: string
           name: string
           nationality: string | null
@@ -343,9 +459,12 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          address?: string | null
           avatar_url?: string | null
           created_at?: string
+          dob?: string | null
           email: string
+          gender?: string | null
           id: string
           name: string
           nationality?: string | null
@@ -354,9 +473,12 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          address?: string | null
           avatar_url?: string | null
           created_at?: string
+          dob?: string | null
           email?: string
+          gender?: string | null
           id?: string
           name?: string
           nationality?: string | null
@@ -459,10 +581,100 @@ export type Database = {
           },
         ]
       }
+      rider_applications: {
+        Row: {
+          address: string | null
+          created_at: string
+          declaration_accepted_at: string
+          dob: string | null
+          documents: Json
+          driving_experience_years: number | null
+          email: string
+          employment_type: Database["public"]["Enums"]["rider_employment_type"]
+          full_name: string
+          gender: string | null
+          hub_id: string | null
+          ic_passport: string
+          id: string
+          interview_at: string | null
+          languages: string[]
+          license_number: string | null
+          phone: string
+          photo_url: string | null
+          resume_url: string | null
+          review_notes: string | null
+          reviewer_id: string | null
+          status: Database["public"]["Enums"]["rider_application_status"]
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          declaration_accepted_at: string
+          dob?: string | null
+          documents?: Json
+          driving_experience_years?: number | null
+          email: string
+          employment_type: Database["public"]["Enums"]["rider_employment_type"]
+          full_name: string
+          gender?: string | null
+          hub_id?: string | null
+          ic_passport: string
+          id?: string
+          interview_at?: string | null
+          languages?: string[]
+          license_number?: string | null
+          phone: string
+          photo_url?: string | null
+          resume_url?: string | null
+          review_notes?: string | null
+          reviewer_id?: string | null
+          status?: Database["public"]["Enums"]["rider_application_status"]
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          declaration_accepted_at?: string
+          dob?: string | null
+          documents?: Json
+          driving_experience_years?: number | null
+          email?: string
+          employment_type?: Database["public"]["Enums"]["rider_employment_type"]
+          full_name?: string
+          gender?: string | null
+          hub_id?: string | null
+          ic_passport?: string
+          id?: string
+          interview_at?: string | null
+          languages?: string[]
+          license_number?: string | null
+          phone?: string
+          photo_url?: string | null
+          resume_url?: string | null
+          review_notes?: string | null
+          reviewer_id?: string | null
+          status?: Database["public"]["Enums"]["rider_application_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rider_applications_hub_id_fkey"
+            columns: ["hub_id"]
+            isOneToOne: false
+            referencedRelation: "hubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       riders: {
         Row: {
+          application_id: string | null
           commission_rate: number
           created_at: string
+          employment_type:
+            | Database["public"]["Enums"]["rider_employment_type"]
+            | null
           hub_id: string | null
           id: string
           license_type: string | null
@@ -470,6 +682,7 @@ export type Database = {
           name: string
           phone: string | null
           rating: number
+          rider_code: string | null
           status: string
           updated_at: string
           user_id: string | null
@@ -477,8 +690,12 @@ export type Database = {
           vehicle_type: string | null
         }
         Insert: {
+          application_id?: string | null
           commission_rate?: number
           created_at?: string
+          employment_type?:
+            | Database["public"]["Enums"]["rider_employment_type"]
+            | null
           hub_id?: string | null
           id?: string
           license_type?: string | null
@@ -486,6 +703,7 @@ export type Database = {
           name: string
           phone?: string | null
           rating?: number
+          rider_code?: string | null
           status?: string
           updated_at?: string
           user_id?: string | null
@@ -493,8 +711,12 @@ export type Database = {
           vehicle_type?: string | null
         }
         Update: {
+          application_id?: string | null
           commission_rate?: number
           created_at?: string
+          employment_type?:
+            | Database["public"]["Enums"]["rider_employment_type"]
+            | null
           hub_id?: string | null
           id?: string
           license_type?: string | null
@@ -502,6 +724,7 @@ export type Database = {
           name?: string
           phone?: string | null
           rating?: number
+          rider_code?: string | null
           status?: string
           updated_at?: string
           user_id?: string | null
@@ -509,6 +732,13 @@ export type Database = {
           vehicle_type?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "riders_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "rider_applications"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "riders_hub_id_fkey"
             columns: ["hub_id"]
@@ -686,21 +916,96 @@ export type Database = {
       }
       user_roles: {
         Row: {
+          hub_id: string | null
           id: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
+          hub_id?: string | null
           id?: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
+          hub_id?: string | null
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
         Relationships: []
+      }
+      vehicle_types: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      vehicles: {
+        Row: {
+          created_at: string
+          hub_id: string | null
+          id: string
+          identifier: string
+          status: string
+          updated_at: string
+          vehicle_type_id: string
+        }
+        Insert: {
+          created_at?: string
+          hub_id?: string | null
+          id?: string
+          identifier: string
+          status?: string
+          updated_at?: string
+          vehicle_type_id: string
+        }
+        Update: {
+          created_at?: string
+          hub_id?: string | null
+          id?: string
+          identifier?: string
+          status?: string
+          updated_at?: string
+          vehicle_type_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicles_hub_id_fkey"
+            columns: ["hub_id"]
+            isOneToOne: false
+            referencedRelation: "hubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicles_vehicle_type_id_fkey"
+            columns: ["vehicle_type_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_types"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -709,6 +1014,10 @@ export type Database = {
     Functions: {
       claim_admin_role: { Args: never; Returns: undefined }
       claim_rider_profile: { Args: never; Returns: string }
+      generate_rider_code: {
+        Args: { _type: Database["public"]["Enums"]["rider_employment_type"] }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -717,9 +1026,28 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_hub_admin_of: {
+        Args: { _hub_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "tourist" | "rider" | "hub_manager" | "admin" | "super_admin"
+      app_role:
+        | "tourist"
+        | "rider"
+        | "hub_manager"
+        | "admin"
+        | "super_admin"
+        | "customer"
+        | "hub_admin"
+      rider_application_status:
+        | "submitted"
+        | "under_review"
+        | "interview_scheduled"
+        | "approved"
+        | "rejected"
+      rider_employment_type: "full_time" | "part_time"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -847,7 +1175,23 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["tourist", "rider", "hub_manager", "admin", "super_admin"],
+      app_role: [
+        "tourist",
+        "rider",
+        "hub_manager",
+        "admin",
+        "super_admin",
+        "customer",
+        "hub_admin",
+      ],
+      rider_application_status: [
+        "submitted",
+        "under_review",
+        "interview_scheduled",
+        "approved",
+        "rejected",
+      ],
+      rider_employment_type: ["full_time", "part_time"],
     },
   },
 } as const

@@ -1,17 +1,44 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Plus, Pencil, MapPin, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/hubs")({ component: AdminHubs });
 
-interface Hub { id: string; name: string; address: string | null; pic_name: string | null; pic_phone: string | null; operating_hour: string | null; status: string; }
+interface Hub {
+  id: string;
+  name: string;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  operating_hour: string | null;
+  max_capacity: number | null;
+  has_charging: boolean;
+  has_briefing_area: boolean;
+  has_checkin_counter: boolean;
+  status: string;
+}
+
+const empty: Hub = {
+  id: "",
+  name: "",
+  address: "",
+  latitude: null,
+  longitude: null,
+  operating_hour: "9am - 9pm",
+  max_capacity: 10,
+  has_charging: true,
+  has_briefing_area: true,
+  has_checkin_counter: true,
+  status: "active",
+};
 
 function AdminHubs() {
   const [rows, setRows] = useState<Hub[]>([]);
@@ -20,31 +47,45 @@ function AdminHubs() {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("hubs").select("*").order("name");
-    setRows((data ?? []) as Hub[]);
+    setRows((data ?? []) as unknown as Hub[]);
   }, []);
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   async function save() {
     if (!editing) return;
-    const payload = { ...editing }; delete (payload as Partial<Hub>).id;
-    const op = editing.id
-      ? supabase.from("hubs").update(payload).eq("id", editing.id)
-      : supabase.from("hubs").insert(payload);
+    const { id, ...payload } = editing;
+    const op = id ? supabase.from("hubs").update(payload).eq("id", id) : supabase.from("hubs").insert(payload);
     const { error } = await op;
     if (error) return toast.error(error.message);
+    toast.success("Saved");
+    setOpen(false);
+    await load();
   }
 
   async function del(h: Hub) {
     if (!confirm(`Delete hub "${h.name}"?`)) return;
     const { error } = await supabase.from("hubs").delete().eq("id", h.id);
     if (error) return toast.error(error.message);
-    toast.success("Deleted"); load();
+    toast.success("Deleted");
+    await load();
   }
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <div><h1 className="text-2xl font-bold">Hubs</h1><p className="text-sm text-muted-foreground">{rows.length} pickup locations</p></div>
-        <Button className="rounded-full" onClick={() => { setEditing({ id: "", name: "", address: "", pic_name: "", pic_phone: "", operating_hour: "9am - 9pm", status: "active" }); setOpen(true); }}>
+        <div>
+          <h1 className="text-2xl font-bold">Hubs</h1>
+          <p className="text-sm text-muted-foreground">{rows.length} pickup locations</p>
+        </div>
+        <Button
+          className="rounded-full"
+          onClick={() => {
+            setEditing({ ...empty });
+            setOpen(true);
+          }}
+        >
           <Plus className="w-4 h-4 mr-1" /> New hub
         </Button>
       </div>
@@ -54,17 +95,40 @@ function AdminHubs() {
           <Card key={h.id} className="rounded-2xl border-0 shadow-card">
             <CardContent className="p-5">
               <div className="flex items-start gap-3">
-                <div className="grid place-items-center w-10 h-10 rounded-xl bg-primary/10 text-primary"><MapPin className="w-5 h-5" /></div>
+                <div className="grid place-items-center w-10 h-10 rounded-xl bg-primary/10 text-primary">
+                  <MapPin className="w-5 h-5" />
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold truncate">{h.name}</div>
                   <div className="text-xs text-muted-foreground line-clamp-2">{h.address}</div>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => { setEditing(h); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-                <Button variant="ghost" size="icon" onClick={() => del(h)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setEditing(h);
+                    setOpen(true);
+                  }}
+                >
+                  <Pencil className="w-4 h-4" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => del(h)}>
+                  <Trash2 className="w-4 h-4 text-destructive" />
+                </Button>
               </div>
               <div className="mt-3 text-xs text-muted-foreground space-y-0.5">
                 <div>Hours: {h.operating_hour ?? "—"}</div>
-                <div>PIC: {h.pic_name ?? "—"} {h.pic_phone && <>· {h.pic_phone}</>}</div>
+                <div>Capacity: {h.max_capacity ?? "—"}</div>
+                <div>GPS: {h.latitude != null ? `${h.latitude}, ${h.longitude}` : "—"}</div>
+                <div className="flex gap-2 flex-wrap pt-1">
+                  {h.has_charging && <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">Charging</span>}
+                  {h.has_briefing_area && (
+                    <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700">Briefing</span>
+                  )}
+                  {h.has_checkin_counter && (
+                    <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700">Check-in</span>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -72,18 +136,90 @@ function AdminHubs() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>{editing?.id ? "Edit hub" : "New hub"}</DialogTitle></DialogHeader>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{editing?.id ? "Edit hub" : "New hub"}</DialogTitle>
+          </DialogHeader>
           {editing && (
-            <div className="space-y-3">
-              <div><Label>Name</Label><Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></div>
-              <div><Label>Address</Label><Input value={editing.address ?? ""} onChange={(e) => setEditing({ ...editing, address: e.target.value })} /></div>
-              <div className="grid grid-cols-2 gap-3">
-                <div><Label>PIC name</Label><Input value={editing.pic_name ?? ""} onChange={(e) => setEditing({ ...editing, pic_name: e.target.value })} /></div>
-                <div><Label>PIC phone</Label><Input value={editing.pic_phone ?? ""} onChange={(e) => setEditing({ ...editing, pic_phone: e.target.value })} /></div>
+            <div className="space-y-3 max-h-[70vh] overflow-y-auto">
+              <div>
+                <Label>Name</Label>
+                <Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} />
               </div>
-              <div><Label>Operating hours</Label><Input value={editing.operating_hour ?? ""} onChange={(e) => setEditing({ ...editing, operating_hour: e.target.value })} /></div>
-              <Button className="w-full rounded-full" onClick={save}>Save</Button>
+              <div>
+                <Label>Address</Label>
+                <Input
+                  value={editing.address ?? ""}
+                  onChange={(e) => setEditing({ ...editing, address: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>Latitude</Label>
+                  <Input
+                    type="number"
+                    step="any"
+                    value={editing.latitude ?? ""}
+                    onChange={(e) =>
+                      setEditing({ ...editing, latitude: e.target.value ? Number(e.target.value) : null })
+                    }
+                  />
+                </div>
+                <div>
+                  <Label>Longitude</Label>
+                  <Input
+                    type="number"
+                    step="any"
+                    value={editing.longitude ?? ""}
+                    onChange={(e) =>
+                      setEditing({ ...editing, longitude: e.target.value ? Number(e.target.value) : null })
+                    }
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>Operating hours</Label>
+                  <Input
+                    value={editing.operating_hour ?? ""}
+                    onChange={(e) => setEditing({ ...editing, operating_hour: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Max capacity</Label>
+                  <Input
+                    type="number"
+                    value={editing.max_capacity ?? 0}
+                    onChange={(e) => setEditing({ ...editing, max_capacity: Number(e.target.value) })}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2 rounded-lg border p-3">
+                <div className="flex items-center justify-between">
+                  <Label>EV Charging Station</Label>
+                  <Switch
+                    checked={editing.has_charging}
+                    onCheckedChange={(v) => setEditing({ ...editing, has_charging: v })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label>Safety Briefing Area</Label>
+                  <Switch
+                    checked={editing.has_briefing_area}
+                    onCheckedChange={(v) => setEditing({ ...editing, has_briefing_area: v })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label>Check-in Counter</Label>
+                  <Switch
+                    checked={editing.has_checkin_counter}
+                    onCheckedChange={(v) => setEditing({ ...editing, has_checkin_counter: v })}
+                  />
+                </div>
+              </div>
+              <Button className="w-full rounded-full" onClick={save}>
+                Save
+              </Button>
             </div>
           )}
         </DialogContent>

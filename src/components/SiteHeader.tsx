@@ -22,6 +22,7 @@ export function SiteHeader() {
           <Link to="/bookings" className="hover:text-primary transition-colors">My Bookings</Link>
           <Link to="/app" className="hover:text-primary transition-colors">Download App</Link>
           <Link to="/rider" className="hover:text-primary transition-colors">Rider App</Link>
+          <Link to="/become-a-rider" className="hover:text-primary transition-colors">Become a Rider</Link>
         </nav>
         <div className="flex items-center gap-2">
           {!user ? (

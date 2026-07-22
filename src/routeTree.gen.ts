@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RiderRouteImport } from './routes/rider'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as BecomeARiderRouteImport } from './routes/become-a-rider'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -31,15 +32,18 @@ import { Route as BookPackageIdRouteImport } from './routes/book.$packageId'
 import { Route as AppPromosRouteImport } from './routes/app.promos'
 import { Route as AppProfileRouteImport } from './routes/app.profile'
 import { Route as AppPackagesRouteImport } from './routes/app.packages'
+import { Route as AdminVehicleTypesRouteImport } from './routes/admin.vehicle-types'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminRoutesRouteImport } from './routes/admin.routes'
 import { Route as AdminRidersRouteImport } from './routes/admin.riders'
+import { Route as AdminRiderApplicationsRouteImport } from './routes/admin.rider-applications'
 import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminPromosRouteImport } from './routes/admin.promos'
 import { Route as AdminPackagesRouteImport } from './routes/admin.packages'
 import { Route as AdminLocationsRouteImport } from './routes/admin.locations'
 import { Route as AdminHubsRouteImport } from './routes/admin.hubs'
+import { Route as AdminHubAdminsRouteImport } from './routes/admin.hub-admins'
 import { Route as AppBookingsIndexRouteImport } from './routes/app.bookings.index'
 import { Route as AdminBookingsIndexRouteImport } from './routes/admin.bookings.index'
 import { Route as RiderToursIdRouteImport } from './routes/rider.tours.$id'
@@ -62,6 +66,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BecomeARiderRoute = BecomeARiderRouteImport.update({
+  id: '/become-a-rider',
+  path: '/become-a-rider',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -159,6 +168,11 @@ const AppPackagesRoute = AppPackagesRouteImport.update({
   path: '/packages',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminVehicleTypesRoute = AdminVehicleTypesRouteImport.update({
+  id: '/vehicle-types',
+  path: '/vehicle-types',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -177,6 +191,11 @@ const AdminRoutesRoute = AdminRoutesRouteImport.update({
 const AdminRidersRoute = AdminRidersRouteImport.update({
   id: '/riders',
   path: '/riders',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRiderApplicationsRoute = AdminRiderApplicationsRouteImport.update({
+  id: '/rider-applications',
+  path: '/rider-applications',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminReportsRoute = AdminReportsRouteImport.update({
@@ -202,6 +221,11 @@ const AdminLocationsRoute = AdminLocationsRouteImport.update({
 const AdminHubsRoute = AdminHubsRouteImport.update({
   id: '/hubs',
   path: '/hubs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHubAdminsRoute = AdminHubAdminsRouteImport.update({
+  id: '/hub-admins',
+  path: '/hub-admins',
   getParentRoute: () => AdminRoute,
 } as any)
 const AppBookingsIndexRoute = AppBookingsIndexRouteImport.update({
@@ -250,18 +274,22 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/become-a-rider': typeof BecomeARiderRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/rider': typeof RiderRouteWithChildren
+  '/admin/hub-admins': typeof AdminHubAdminsRoute
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/promos': typeof AdminPromosRoute
   '/admin/reports': typeof AdminReportsRoute
+  '/admin/rider-applications': typeof AdminRiderApplicationsRoute
   '/admin/riders': typeof AdminRidersRoute
   '/admin/routes': typeof AdminRoutesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/vehicle-types': typeof AdminVehicleTypesRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
   '/app/profile': typeof AppProfileRoute
   '/app/promos': typeof AppPromosRoute
@@ -289,17 +317,21 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/become-a-rider': typeof BecomeARiderRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/admin/hub-admins': typeof AdminHubAdminsRoute
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/promos': typeof AdminPromosRoute
   '/admin/reports': typeof AdminReportsRoute
+  '/admin/rider-applications': typeof AdminRiderApplicationsRoute
   '/admin/riders': typeof AdminRidersRoute
   '/admin/routes': typeof AdminRoutesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/vehicle-types': typeof AdminVehicleTypesRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
   '/app/profile': typeof AppProfileRoute
   '/app/promos': typeof AppPromosRoute
@@ -330,18 +362,22 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/become-a-rider': typeof BecomeARiderRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/rider': typeof RiderRouteWithChildren
+  '/admin/hub-admins': typeof AdminHubAdminsRoute
   '/admin/hubs': typeof AdminHubsRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/promos': typeof AdminPromosRoute
   '/admin/reports': typeof AdminReportsRoute
+  '/admin/rider-applications': typeof AdminRiderApplicationsRoute
   '/admin/riders': typeof AdminRidersRoute
   '/admin/routes': typeof AdminRoutesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/vehicle-types': typeof AdminVehicleTypesRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
   '/app/profile': typeof AppProfileRoute
   '/app/promos': typeof AppPromosRoute
@@ -373,18 +409,22 @@ export interface FileRouteTypes {
     | '/admin'
     | '/app'
     | '/auth'
+    | '/become-a-rider'
     | '/login'
     | '/register'
     | '/rider'
+    | '/admin/hub-admins'
     | '/admin/hubs'
     | '/admin/locations'
     | '/admin/packages'
     | '/admin/promos'
     | '/admin/reports'
+    | '/admin/rider-applications'
     | '/admin/riders'
     | '/admin/routes'
     | '/admin/settings'
     | '/admin/users'
+    | '/admin/vehicle-types'
     | '/app/packages'
     | '/app/profile'
     | '/app/promos'
@@ -412,17 +452,21 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/become-a-rider'
     | '/login'
     | '/register'
+    | '/admin/hub-admins'
     | '/admin/hubs'
     | '/admin/locations'
     | '/admin/packages'
     | '/admin/promos'
     | '/admin/reports'
+    | '/admin/rider-applications'
     | '/admin/riders'
     | '/admin/routes'
     | '/admin/settings'
     | '/admin/users'
+    | '/admin/vehicle-types'
     | '/app/packages'
     | '/app/profile'
     | '/app/promos'
@@ -452,18 +496,22 @@ export interface FileRouteTypes {
     | '/admin'
     | '/app'
     | '/auth'
+    | '/become-a-rider'
     | '/login'
     | '/register'
     | '/rider'
+    | '/admin/hub-admins'
     | '/admin/hubs'
     | '/admin/locations'
     | '/admin/packages'
     | '/admin/promos'
     | '/admin/reports'
+    | '/admin/rider-applications'
     | '/admin/riders'
     | '/admin/routes'
     | '/admin/settings'
     | '/admin/users'
+    | '/admin/vehicle-types'
     | '/app/packages'
     | '/app/profile'
     | '/app/promos'
@@ -494,6 +542,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
+  BecomeARiderRoute: typeof BecomeARiderRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   RiderRoute: typeof RiderRouteWithChildren
@@ -527,6 +576,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/become-a-rider': {
+      id: '/become-a-rider'
+      path: '/become-a-rider'
+      fullPath: '/become-a-rider'
+      preLoaderRoute: typeof BecomeARiderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -662,6 +718,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPackagesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/vehicle-types': {
+      id: '/admin/vehicle-types'
+      path: '/vehicle-types'
+      fullPath: '/admin/vehicle-types'
+      preLoaderRoute: typeof AdminVehicleTypesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/users': {
       id: '/admin/users'
       path: '/users'
@@ -688,6 +751,13 @@ declare module '@tanstack/react-router' {
       path: '/riders'
       fullPath: '/admin/riders'
       preLoaderRoute: typeof AdminRidersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/rider-applications': {
+      id: '/admin/rider-applications'
+      path: '/rider-applications'
+      fullPath: '/admin/rider-applications'
+      preLoaderRoute: typeof AdminRiderApplicationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/reports': {
@@ -723,6 +793,13 @@ declare module '@tanstack/react-router' {
       path: '/hubs'
       fullPath: '/admin/hubs'
       preLoaderRoute: typeof AdminHubsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/hub-admins': {
+      id: '/admin/hub-admins'
+      path: '/hub-admins'
+      fullPath: '/admin/hub-admins'
+      preLoaderRoute: typeof AdminHubAdminsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/app/bookings/': {
@@ -785,30 +862,36 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminHubAdminsRoute: typeof AdminHubAdminsRoute
   AdminHubsRoute: typeof AdminHubsRoute
   AdminLocationsRoute: typeof AdminLocationsRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
   AdminPromosRoute: typeof AdminPromosRoute
   AdminReportsRoute: typeof AdminReportsRoute
+  AdminRiderApplicationsRoute: typeof AdminRiderApplicationsRoute
   AdminRidersRoute: typeof AdminRidersRoute
   AdminRoutesRoute: typeof AdminRoutesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
+  AdminVehicleTypesRoute: typeof AdminVehicleTypesRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminBookingsIdRoute: typeof AdminBookingsIdRoute
   AdminBookingsIndexRoute: typeof AdminBookingsIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminHubAdminsRoute: AdminHubAdminsRoute,
   AdminHubsRoute: AdminHubsRoute,
   AdminLocationsRoute: AdminLocationsRoute,
   AdminPackagesRoute: AdminPackagesRoute,
   AdminPromosRoute: AdminPromosRoute,
   AdminReportsRoute: AdminReportsRoute,
+  AdminRiderApplicationsRoute: AdminRiderApplicationsRoute,
   AdminRidersRoute: AdminRidersRoute,
   AdminRoutesRoute: AdminRoutesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUsersRoute: AdminUsersRoute,
+  AdminVehicleTypesRoute: AdminVehicleTypesRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminBookingsIdRoute: AdminBookingsIdRoute,
   AdminBookingsIndexRoute: AdminBookingsIndexRoute,
@@ -873,6 +956,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
+  BecomeARiderRoute: BecomeARiderRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   RiderRoute: RiderRouteWithChildren,
@@ -887,13 +971,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
