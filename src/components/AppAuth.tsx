@@ -157,6 +157,28 @@ export function AppAuth({
                 {busy ? "Signing in..." : "Sign in"}
               </Button>
 
+              <div className="relative py-1">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border/60" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-card px-3 text-[11px] uppercase tracking-wider text-muted-foreground">
+                    For testing
+                  </span>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-12 rounded-2xl text-sm font-semibold border-dashed"
+                disabled={busy}
+                onClick={handleDemoLogin}
+              >
+                <Sparkles className="w-4 h-4 mr-2 text-primary" />
+                {busy ? "Preparing demo..." : "Try demo account"}
+              </Button>
+
               <p className="text-center text-xs text-muted-foreground pt-2">
                 Don't have an account?{" "}
                 <button onClick={() => setTab("register")} className="text-primary font-semibold">
