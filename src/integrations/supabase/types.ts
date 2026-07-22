@@ -16,25 +16,34 @@ export type Database = {
     Tables: {
       app_settings: {
         Row: {
+          default_insurance_provider: string
           id: number
+          pickup_rate_per_km: number
           splash_image_url: string | null
           splash_subtitle: string | null
           splash_title: string | null
           updated_at: string
+          waiting_list_response_minutes: number
         }
         Insert: {
+          default_insurance_provider?: string
           id?: number
+          pickup_rate_per_km?: number
           splash_image_url?: string | null
           splash_subtitle?: string | null
           splash_title?: string | null
           updated_at?: string
+          waiting_list_response_minutes?: number
         }
         Update: {
+          default_insurance_provider?: string
           id?: number
+          pickup_rate_per_km?: number
           splash_image_url?: string | null
           splash_subtitle?: string | null
           splash_title?: string | null
           updated_at?: string
+          waiting_list_response_minutes?: number
         }
         Relationships: []
       }
@@ -46,17 +55,34 @@ export type Database = {
           booking_time: string
           created_at: string
           discount_amount: number
+          hub_id: string | null
           id: string
+          insurance_coverage_date: string | null
+          insurance_policy_no: string | null
+          insurance_provider: string | null
+          insurance_status: string | null
+          meeting_method: string
+          notes: string | null
           package_id: string
           pax: number
           payment_status: string
+          pickup_address: string | null
+          pickup_distance_km: number | null
+          pickup_fee: number | null
           pickup_hub_id: string | null
+          pickup_latitude: number | null
+          pickup_location_name: string | null
+          pickup_longitude: number | null
+          pickup_time: string | null
           promo_code: string | null
           rider_id: string | null
           special_request: string | null
+          time_slot_id: string | null
           total_price: number
           tourist_id: string
           updated_at: string
+          vehicle_id: string | null
+          vehicle_type_id: string | null
         }
         Insert: {
           booking_date: string
@@ -65,17 +91,34 @@ export type Database = {
           booking_time: string
           created_at?: string
           discount_amount?: number
+          hub_id?: string | null
           id?: string
+          insurance_coverage_date?: string | null
+          insurance_policy_no?: string | null
+          insurance_provider?: string | null
+          insurance_status?: string | null
+          meeting_method?: string
+          notes?: string | null
           package_id: string
           pax?: number
           payment_status?: string
+          pickup_address?: string | null
+          pickup_distance_km?: number | null
+          pickup_fee?: number | null
           pickup_hub_id?: string | null
+          pickup_latitude?: number | null
+          pickup_location_name?: string | null
+          pickup_longitude?: number | null
+          pickup_time?: string | null
           promo_code?: string | null
           rider_id?: string | null
           special_request?: string | null
+          time_slot_id?: string | null
           total_price?: number
           tourist_id: string
           updated_at?: string
+          vehicle_id?: string | null
+          vehicle_type_id?: string | null
         }
         Update: {
           booking_date?: string
@@ -84,19 +127,43 @@ export type Database = {
           booking_time?: string
           created_at?: string
           discount_amount?: number
+          hub_id?: string | null
           id?: string
+          insurance_coverage_date?: string | null
+          insurance_policy_no?: string | null
+          insurance_provider?: string | null
+          insurance_status?: string | null
+          meeting_method?: string
+          notes?: string | null
           package_id?: string
           pax?: number
           payment_status?: string
+          pickup_address?: string | null
+          pickup_distance_km?: number | null
+          pickup_fee?: number | null
           pickup_hub_id?: string | null
+          pickup_latitude?: number | null
+          pickup_location_name?: string | null
+          pickup_longitude?: number | null
+          pickup_time?: string | null
           promo_code?: string | null
           rider_id?: string | null
           special_request?: string | null
+          time_slot_id?: string | null
           total_price?: number
           tourist_id?: string
           updated_at?: string
+          vehicle_id?: string | null
+          vehicle_type_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "bookings_hub_id_fkey"
+            columns: ["hub_id"]
+            isOneToOne: false
+            referencedRelation: "hubs"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "bookings_package_id_fkey"
             columns: ["package_id"]
@@ -119,10 +186,31 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "bookings_time_slot_id_fkey"
+            columns: ["time_slot_id"]
+            isOneToOne: false
+            referencedRelation: "package_time_slots"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "bookings_tourist_profile_fkey"
             columns: ["tourist_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_vehicle_type_id_fkey"
+            columns: ["vehicle_type_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_types"
             referencedColumns: ["id"]
           },
         ]
@@ -303,6 +391,7 @@ export type Database = {
       }
       package_time_slots: {
         Row: {
+          capacity: number
           created_at: string
           day_of_week: number
           end_time: string
@@ -311,6 +400,7 @@ export type Database = {
           start_time: string
         }
         Insert: {
+          capacity?: number
           created_at?: string
           day_of_week: number
           end_time: string
@@ -319,6 +409,7 @@ export type Database = {
           start_time: string
         }
         Update: {
+          capacity?: number
           created_at?: string
           day_of_week?: number
           end_time?: string
@@ -408,6 +499,8 @@ export type Database = {
           paid_at: string | null
           payment_gateway: string | null
           payment_method: string
+          payment_reference: string | null
+          provider_txn_id: string | null
           status: string
           transaction_id: string | null
         }
@@ -419,6 +512,8 @@ export type Database = {
           paid_at?: string | null
           payment_gateway?: string | null
           payment_method: string
+          payment_reference?: string | null
+          provider_txn_id?: string | null
           status?: string
           transaction_id?: string | null
         }
@@ -430,6 +525,8 @@ export type Database = {
           paid_at?: string | null
           payment_gateway?: string | null
           payment_method?: string
+          payment_reference?: string | null
+          provider_txn_id?: string | null
           status?: string
           transaction_id?: string | null
         }
@@ -1003,6 +1100,66 @@ export type Database = {
             columns: ["vehicle_type_id"]
             isOneToOne: false
             referencedRelation: "vehicle_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      waiting_list: {
+        Row: {
+          booking_date: string
+          created_at: string
+          customer_id: string
+          id: string
+          notified_at: string | null
+          package_id: string
+          pax: number
+          queue_number: number
+          respond_by: string | null
+          status: string
+          time_slot_id: string
+          updated_at: string
+        }
+        Insert: {
+          booking_date: string
+          created_at?: string
+          customer_id: string
+          id?: string
+          notified_at?: string | null
+          package_id: string
+          pax?: number
+          queue_number: number
+          respond_by?: string | null
+          status?: string
+          time_slot_id: string
+          updated_at?: string
+        }
+        Update: {
+          booking_date?: string
+          created_at?: string
+          customer_id?: string
+          id?: string
+          notified_at?: string | null
+          package_id?: string
+          pax?: number
+          queue_number?: number
+          respond_by?: string | null
+          status?: string
+          time_slot_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "waiting_list_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "waiting_list_time_slot_id_fkey"
+            columns: ["time_slot_id"]
+            isOneToOne: false
+            referencedRelation: "package_time_slots"
             referencedColumns: ["id"]
           },
         ]
