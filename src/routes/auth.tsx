@@ -14,8 +14,6 @@ import { toast } from "sonner";
 import { User, Bike, Building2, ShieldCheck } from "lucide-react";
 
 const DEMO_ROLES = [
-  { key: "customer", label: "Customer", icon: User },
-  { key: "rider", label: "Rider", icon: Bike },
   { key: "hub_admin", label: "Hub Admin", icon: Building2 },
   { key: "super_admin", label: "Super Admin", icon: ShieldCheck },
 ] as const;
