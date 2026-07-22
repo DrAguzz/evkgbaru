@@ -29,9 +29,12 @@ import { Route as PackagesIdRouteImport } from './routes/packages.$id'
 import { Route as PackageIdRouteImport } from './routes/package.$id'
 import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
 import { Route as BookPackageIdRouteImport } from './routes/book.$packageId'
+import { Route as AppWaitingListRouteImport } from './routes/app.waiting-list'
 import { Route as AppPromosRouteImport } from './routes/app.promos'
 import { Route as AppProfileRouteImport } from './routes/app.profile'
+import { Route as AppPaymentsRouteImport } from './routes/app.payments'
 import { Route as AppPackagesRouteImport } from './routes/app.packages'
+import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
 import { Route as AdminVehicleTypesRouteImport } from './routes/admin.vehicle-types'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -153,6 +156,11 @@ const BookPackageIdRoute = BookPackageIdRouteImport.update({
   path: '/book/$packageId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppWaitingListRoute = AppWaitingListRouteImport.update({
+  id: '/waiting-list',
+  path: '/waiting-list',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPromosRoute = AppPromosRouteImport.update({
   id: '/promos',
   path: '/promos',
@@ -163,9 +171,19 @@ const AppProfileRoute = AppProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPaymentsRoute = AppPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPackagesRoute = AppPackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => AppRoute,
 } as any)
 const AdminVehicleTypesRoute = AdminVehicleTypesRouteImport.update({
@@ -290,9 +308,12 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/vehicle-types': typeof AdminVehicleTypesRoute
+  '/app/notifications': typeof AppNotificationsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
+  '/app/payments': typeof AppPaymentsRoute
   '/app/profile': typeof AppProfileRoute
   '/app/promos': typeof AppPromosRoute
+  '/app/waiting-list': typeof AppWaitingListRoute
   '/book/$packageId': typeof BookPackageIdRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/package/$id': typeof PackageIdRoute
@@ -332,9 +353,12 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/vehicle-types': typeof AdminVehicleTypesRoute
+  '/app/notifications': typeof AppNotificationsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
+  '/app/payments': typeof AppPaymentsRoute
   '/app/profile': typeof AppProfileRoute
   '/app/promos': typeof AppPromosRoute
+  '/app/waiting-list': typeof AppWaitingListRoute
   '/book/$packageId': typeof BookPackageIdRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/package/$id': typeof PackageIdRoute
@@ -378,9 +402,12 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/vehicle-types': typeof AdminVehicleTypesRoute
+  '/app/notifications': typeof AppNotificationsRoute
   '/app/packages': typeof AppPackagesRouteWithChildren
+  '/app/payments': typeof AppPaymentsRoute
   '/app/profile': typeof AppProfileRoute
   '/app/promos': typeof AppPromosRoute
+  '/app/waiting-list': typeof AppWaitingListRoute
   '/book/$packageId': typeof BookPackageIdRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/package/$id': typeof PackageIdRoute
@@ -425,9 +452,12 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/admin/vehicle-types'
+    | '/app/notifications'
     | '/app/packages'
+    | '/app/payments'
     | '/app/profile'
     | '/app/promos'
+    | '/app/waiting-list'
     | '/book/$packageId'
     | '/bookings/$id'
     | '/package/$id'
@@ -467,9 +497,12 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/admin/vehicle-types'
+    | '/app/notifications'
     | '/app/packages'
+    | '/app/payments'
     | '/app/profile'
     | '/app/promos'
+    | '/app/waiting-list'
     | '/book/$packageId'
     | '/bookings/$id'
     | '/package/$id'
@@ -512,9 +545,12 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/admin/vehicle-types'
+    | '/app/notifications'
     | '/app/packages'
+    | '/app/payments'
     | '/app/profile'
     | '/app/promos'
+    | '/app/waiting-list'
     | '/book/$packageId'
     | '/bookings/$id'
     | '/package/$id'
@@ -697,6 +733,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookPackageIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/waiting-list': {
+      id: '/app/waiting-list'
+      path: '/waiting-list'
+      fullPath: '/app/waiting-list'
+      preLoaderRoute: typeof AppWaitingListRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/promos': {
       id: '/app/promos'
       path: '/promos'
@@ -711,11 +754,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProfileRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/payments': {
+      id: '/app/payments'
+      path: '/payments'
+      fullPath: '/app/payments'
+      preLoaderRoute: typeof AppPaymentsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/packages': {
       id: '/app/packages'
       path: '/packages'
       fullPath: '/app/packages'
       preLoaderRoute: typeof AppPackagesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/notifications': {
+      id: '/app/notifications'
+      path: '/notifications'
+      fullPath: '/app/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/admin/vehicle-types': {
@@ -912,9 +969,12 @@ const AppPackagesRouteWithChildren = AppPackagesRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppNotificationsRoute: typeof AppNotificationsRoute
   AppPackagesRoute: typeof AppPackagesRouteWithChildren
+  AppPaymentsRoute: typeof AppPaymentsRoute
   AppProfileRoute: typeof AppProfileRoute
   AppPromosRoute: typeof AppPromosRoute
+  AppWaitingListRoute: typeof AppWaitingListRoute
   AppIndexRoute: typeof AppIndexRoute
   AppBookPackageIdRoute: typeof AppBookPackageIdRoute
   AppBookingsIdRoute: typeof AppBookingsIdRoute
@@ -923,9 +983,12 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppNotificationsRoute: AppNotificationsRoute,
   AppPackagesRoute: AppPackagesRouteWithChildren,
+  AppPaymentsRoute: AppPaymentsRoute,
   AppProfileRoute: AppProfileRoute,
   AppPromosRoute: AppPromosRoute,
+  AppWaitingListRoute: AppWaitingListRoute,
   AppIndexRoute: AppIndexRoute,
   AppBookPackageIdRoute: AppBookPackageIdRoute,
   AppBookingsIdRoute: AppBookingsIdRoute,

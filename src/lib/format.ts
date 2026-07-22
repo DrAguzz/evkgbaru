@@ -9,11 +9,18 @@ export const fmtDuration = (mins: number) => {
 
 export const STATUS_COLORS: Record<string, string> = {
   pending: "bg-warning/15 text-warning border-warning/30",
+  pending_payment: "bg-warning/15 text-warning border-warning/30",
+  payment_failed: "bg-destructive/15 text-destructive border-destructive/30",
   paid: "bg-secondary/15 text-secondary-foreground border-secondary/30",
+  waiting_rider_assignment: "bg-warning/15 text-warning border-warning/30",
+  rider_assigned: "bg-primary/15 text-primary border-primary/30",
+  customer_checked_in: "bg-primary/15 text-primary border-primary/30",
+  safety_briefing_completed: "bg-primary/15 text-primary border-primary/30",
+  ride_started: "bg-primary/15 text-primary border-primary/30",
+  ride_completed: "bg-success/15 text-success border-success/30",
   confirmed: "bg-secondary/15 text-secondary-foreground border-secondary/30",
   assigned: "bg-primary/15 text-primary border-primary/30",
   accepted: "bg-primary/15 text-primary border-primary/30",
-  pickup: "bg-primary/15 text-primary border-primary/30",
   in_progress: "bg-primary/15 text-primary border-primary/30",
   picked_up: "bg-primary/15 text-primary border-primary/30",
   returning: "bg-secondary/15 text-secondary-foreground border-secondary/30",
@@ -27,7 +34,11 @@ export const STATUS_COLORS: Record<string, string> = {
   busy: "bg-warning/15 text-warning border-warning/30",
   offline: "bg-muted text-muted-foreground border-border",
   suspended: "bg-destructive/15 text-destructive border-destructive/30",
+  waiting: "bg-warning/15 text-warning border-warning/30",
+  notified: "bg-primary/15 text-primary border-primary/30",
+  expired: "bg-muted text-muted-foreground border-border",
 };
+
 
 export const labelStatus = (s: string) =>
   s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());

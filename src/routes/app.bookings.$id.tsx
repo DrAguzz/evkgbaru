@@ -15,11 +15,17 @@ export const Route = createFileRoute("/app/bookings/$id")({ component: AppBookin
 interface Booking {
   id: string; booking_no: string; booking_date: string; booking_time: string;
   pax: number; total_price: number; payment_status: string; booking_status: string;
-  special_request: string | null;
+  special_request: string | null; notes: string | null;
+  meeting_method: string | null;
+  pickup_location_name: string | null; pickup_address: string | null;
+  pickup_distance_km: number | null; pickup_fee: number | null;
+  insurance_provider: string | null; insurance_policy_no: string | null;
+  insurance_coverage_date: string | null; insurance_status: string | null;
   tour_packages: { package_name: string; image: string | null; duration_minutes: number } | null;
   hubs: { name: string; address: string | null } | null;
   riders: { id: string; name: string; phone: string | null; vehicle_id: string | null; rating: number } | null;
 }
+
 interface RouteRow { sequence_no: number; locations: { id: string; name: string } | null; }
 interface Progress { location_id: string | null; status: string; arrival_time: string | null; sequence_no: number; }
 
@@ -35,7 +41,7 @@ function AppBookingDetail() {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("bookings")
-      .select("id, booking_no, booking_date, booking_time, pax, total_price, payment_status, booking_status, special_request, package_id, tour_packages(package_name, image, duration_minutes), hubs:pickup_hub_id(name, address), riders(id, name, phone, vehicle_id, rating)")
+      .select("id, booking_no, booking_date, booking_time, pax, total_price, payment_status, booking_status, special_request, notes, meeting_method, pickup_location_name, pickup_address, pickup_distance_km, pickup_fee, insurance_provider, insurance_policy_no, insurance_coverage_date, insurance_status, package_id, tour_packages(package_name, image, duration_minutes), hubs:pickup_hub_id(name, address), riders(id, name, phone, vehicle_id, rating)")
       .eq("id", id).single();
     setB(data as unknown as Booking);
     const pkgId = (data as { package_id?: string } | null)?.package_id;
@@ -112,6 +118,53 @@ function AppBookingDetail() {
           )}
         </div>
 
+        {/* Meeting / Pickup */}
+        {b.meeting_method === "hotel_pickup" && (
+          <div className="rounded-2xl bg-card ring-1 ring-border/40 shadow-card p-4 space-y-2 text-sm">
+            <div className="font-semibold flex items-center gap-2"><MapPin className="w-4 h-4 text-primary" /> Hotel pickup</div>
+            <div>{b.pickup_location_name}</div>
+            <div className="text-xs text-muted-foreground">{b.pickup_address}</div>
+            <div className="flex justify-between pt-2 border-t text-xs">
+              <span className="text-muted-foreground">{b.pickup_distance_km} km</span>
+              <span className="font-medium">{money(b.pickup_fee ?? 0)}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Insurance */}
+        {b.insurance_status === "active" && (
+          <div className="rounded-2xl bg-success/5 ring-1 ring-success/20 p-4 space-y-1 text-sm">
+            <div className="font-semibold flex items-center gap-2 text-success">Daily insurance active</div>
+            <div className="text-xs text-muted-foreground">{b.insurance_provider}</div>
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">Policy</span>
+              <span className="font-mono">{b.insurance_policy_no}</span>
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">Coverage</span>
+              <span>{b.insurance_coverage_date && fmtDate(b.insurance_coverage_date)}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Cancel */}
+        {["pending_payment","paid","waiting_rider_assignment","rider_assigned"].includes(b.booking_status) && (
+          <Button variant="outline" className="w-full rounded-full text-destructive border-destructive/40"
+            onClick={async () => {
+              if (!confirm("Cancel this booking?")) return;
+              const { error } = await supabase.from("bookings").update({ booking_status: "cancelled" }).eq("id", b.id);
+              if (error) return toast.error(error.message);
+              await supabase.from("notifications").insert({
+                user_id: user!.id, title: "Booking cancelled",
+                message: `${b.booking_no} has been cancelled.`, type: "booking_cancelled", status: "unread",
+              });
+              toast.success("Booking cancelled");
+              void load();
+            }}>Cancel booking</Button>
+        )}
+
+
+
         {/* Rider card */}
         {b.riders ? (
           <div className="rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 ring-1 ring-primary/20 p-4">
@@ -141,8 +194,8 @@ function AppBookingDetail() {
 
         {/* Map */}
         <RouteMap
-          title={b.booking_status === "in_progress" ? "Live tracking" : `${routes.length} stops`}
-          live={b.booking_status === "in_progress"}
+          title={b.booking_status === "ride_started" ? "Live tracking" : `${routes.length} stops`}
+          live={b.booking_status === "ride_started"}
           stops={routes.map((r) => {
             const reached = !!progress.find((p) => p.location_id === r.locations?.id);
             const isCurrent = !reached && r.sequence_no === currentSeq + 1;
@@ -195,7 +248,7 @@ function AppBookingDetail() {
         </div>
 
         {/* Review */}
-        {b.booking_status === "completed" && !hasReview && (
+        {b.booking_status === "ride_completed" && !hasReview && (
           <div className="rounded-2xl bg-card ring-1 ring-border/40 shadow-card p-4 space-y-3">
             <div className="font-semibold text-sm">Rate your experience</div>
             <div className="flex gap-1">
