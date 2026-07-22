@@ -7,8 +7,14 @@ import { COUNTRIES } from "@/lib/countries";
 import { toast } from "sonner";
 import { ChevronLeft, Mail, Lock, User, Phone, Eye, EyeOff, Globe, Sparkles } from "lucide-react";
 import evrideLogo from "@/assets/evride-logo.png.asset.json";
-import { useServerFn } from "@tanstack/react-start";
-import { ensureDemoUser } from "@/lib/demo-login.functions";
+
+const DEMO_EMAILS: Record<"customer" | "rider" | "hub_admin" | "super_admin", string> = {
+  customer: "demo.customer@evride.test",
+  rider: "demo.rider@evride.test",
+  hub_admin: "demo.hub@evride.test",
+  super_admin: "demo.super@evride.test",
+};
+const DEMO_PASSWORD = "demo1234";
 
 export function AppAuth({
   initialTab = "login",
@@ -30,7 +36,6 @@ export function AppAuth({
   demoLabel?: string;
 }) {
   const { signIn, signUp } = useAuth();
-  const provisionDemo = useServerFn(ensureDemoUser);
   const [tab, setTab] = useState<"login" | "register">(loginOnly ? "login" : initialTab);
   const [busy, setBusy] = useState(false);
   const [showPw, setShowPw] = useState(false);
@@ -38,16 +43,18 @@ export function AppAuth({
   async function handleDemoLogin() {
     try {
       setBusy(true);
-      const creds = await provisionDemo({ data: { role: demoRole } });
-      const { error } = await signIn(creds.email, creds.password);
-      if (error) return toast.error(error);
+      const { error } = await signIn(DEMO_EMAILS[demoRole], DEMO_PASSWORD);
+      if (error) {
+        return toast.error("Demo account tidak wujud. Sila hubungi administrator.");
+      }
       toast.success(`Signed in as ${demoLabel ?? "Demo"}`);
-    } catch (e: any) {
-      toast.error(e?.message ?? "Demo login failed");
+    } catch {
+      toast.error("Demo account tidak wujud. Sila hubungi administrator.");
     } finally {
       setBusy(false);
     }
   }
+
 
 
   const [email, setEmail] = useState("");
