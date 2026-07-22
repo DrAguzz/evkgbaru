@@ -185,14 +185,24 @@ function AppProfile() {
         </Row>
       </SectionCard>
 
-      {/* Notifications */}
-      <SectionCard title="Notifications">
-        <Row icon={Bell} label="Inbox">
-          <Link to="/app/profile" className="flex items-center justify-end gap-2 flex-1 -my-1">
+      {/* My activity */}
+      <SectionCard title="My activity">
+        <Row icon={Bell} label="Notifications">
+          <Link to="/app/notifications" className="flex items-center justify-end gap-2 flex-1 -my-1">
             {unread > 0 && <span className="px-2 py-0.5 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">{unread}</span>}
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </Link>
         </Row>
+        <Row icon={Bell} label="Waiting list">
+          <Link to="/app/waiting-list" className="flex items-center justify-end -my-1"><ChevronRight className="w-4 h-4 text-muted-foreground" /></Link>
+        </Row>
+        <Row icon={Bell} label="Payment history">
+          <Link to="/app/payments" className="flex items-center justify-end -my-1"><ChevronRight className="w-4 h-4 text-muted-foreground" /></Link>
+        </Row>
+      </SectionCard>
+
+      {/* Notifications settings */}
+      <SectionCard title="Notification settings">
         <Row icon={Bell} label="Push notifications">
           <Switch checked={pushNotif} onCheckedChange={togglePush} />
         </Row>
@@ -200,6 +210,7 @@ function AppProfile() {
           <Switch checked={emailNotif} onCheckedChange={toggleEmail} />
         </Row>
       </SectionCard>
+
 
       {/* App settings */}
       <SectionCard title="App settings">
