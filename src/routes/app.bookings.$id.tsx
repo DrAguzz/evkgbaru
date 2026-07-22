@@ -41,7 +41,7 @@ function AppBookingDetail() {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("bookings")
-      .select("id, booking_no, booking_date, booking_time, pax, total_price, payment_status, booking_status, special_request, package_id, tour_packages(package_name, image, duration_minutes), hubs:pickup_hub_id(name, address), riders(id, name, phone, vehicle_id, rating)")
+      .select("id, booking_no, booking_date, booking_time, pax, total_price, payment_status, booking_status, special_request, notes, meeting_method, pickup_location_name, pickup_address, pickup_distance_km, pickup_fee, insurance_provider, insurance_policy_no, insurance_coverage_date, insurance_status, package_id, tour_packages(package_name, image, duration_minutes), hubs:pickup_hub_id(name, address), riders(id, name, phone, vehicle_id, rating)")
       .eq("id", id).single();
     setB(data as unknown as Booking);
     const pkgId = (data as { package_id?: string } | null)?.package_id;
