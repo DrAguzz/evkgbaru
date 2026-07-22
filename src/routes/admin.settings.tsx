@@ -58,7 +58,7 @@ function OperationsTab() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    supabase.from("app_settings").select("*").eq("id", 1).single().then(({ data }) => setS(data as AppSettings));
+    supabase.from("app_settings").select("*").eq("id", 1).single().then(({ data }) => setS(data as unknown as AppSettings));
   }, []);
 
   async function save() {
