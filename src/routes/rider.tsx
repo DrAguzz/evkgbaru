@@ -49,10 +49,10 @@ function RiderShell() {
       <PhoneFrame>
         <div className="px-6 pt-16 pb-8 flex flex-col items-center text-center h-full">
           <div className="grid place-items-center w-20 h-20 rounded-3xl bg-hero text-primary-foreground mb-4"><Bike className="w-9 h-9" /></div>
-          <h1 className="text-2xl font-bold">Rider Mode</h1>
-          <p className="text-sm text-muted-foreground mt-2">Claim a demo rider profile to receive assigned tours and update checkpoints.</p>
-          <Button className="mt-6 rounded-full w-full" disabled={claiming} onClick={claim}>
-            {claiming ? "Claiming…" : "Become a demo rider"}
+          <h1 className="text-2xl font-bold">Become a Rider</h1>
+          <p className="text-sm text-muted-foreground mt-2">Submit an application to start receiving assigned tours once approved.</p>
+          <Button className="mt-6 rounded-full w-full" onClick={() => navigate({ to: "/become-a-rider" })}>
+            Apply now
           </Button>
           <Button variant="ghost" className="mt-2" onClick={() => navigate({ to: "/" })}>Back to home</Button>
         </div>
