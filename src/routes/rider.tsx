@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/rider")({ component: RiderShell });
 
 function RiderShell() {
-  const { user, loading, isRider, signOut } = useAuth();
+  const { user, loading, isRider } = useAuth();
   const navigate = useNavigate();
   const loc = useLocation();
   const [riderId, setRiderId] = useState<string | null>(null);
