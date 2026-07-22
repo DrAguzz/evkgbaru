@@ -132,7 +132,7 @@ function AdminHubAdmins() {
                     </td>
                     <td className="p-3 text-muted-foreground">{r.profile_email ?? "—"}</td>
                     <td className="p-3">{r.hub_name ?? "—"}</td>
-                    <td className="p-3 text-muted-foreground">{fmtDate(r.created_at)}</td>
+                    <td className="p-3"></td>
                     <td className="p-3 text-right">
                       <Button variant="ghost" size="icon" onClick={() => revoke(r)}>
                         <Trash2 className="w-4 h-4 text-destructive" />
