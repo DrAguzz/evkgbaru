@@ -215,6 +215,50 @@ export type Database = {
           },
         ]
       }
+      check_ins: {
+        Row: {
+          booking_id: string
+          checked_in_at: string
+          created_at: string
+          id: string
+          identity_document: string | null
+          identity_verified: boolean
+          notes: string | null
+          payment_verified: boolean
+          verified_by: string | null
+        }
+        Insert: {
+          booking_id: string
+          checked_in_at?: string
+          created_at?: string
+          id?: string
+          identity_document?: string | null
+          identity_verified?: boolean
+          notes?: string | null
+          payment_verified?: boolean
+          verified_by?: string | null
+        }
+        Update: {
+          booking_id?: string
+          checked_in_at?: string
+          created_at?: string
+          id?: string
+          identity_document?: string | null
+          identity_verified?: boolean
+          notes?: string | null
+          payment_verified?: boolean
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "check_ins_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hubs: {
         Row: {
           address: string | null
@@ -841,6 +885,107 @@ export type Database = {
             columns: ["hub_id"]
             isOneToOne: false
             referencedRelation: "hubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      safety_briefings: {
+        Row: {
+          booking_id: string
+          briefed_by: string | null
+          briefing_time: string
+          created_at: string
+          id: string
+          notes: string | null
+          status: string
+        }
+        Insert: {
+          booking_id: string
+          briefed_by?: string | null
+          briefing_time?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          status?: string
+        }
+        Update: {
+          booking_id?: string
+          briefed_by?: string | null
+          briefing_time?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "safety_briefings_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sos_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          booking_id: string
+          created_at: string
+          emergency_contact: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          message: string | null
+          resolved_at: string | null
+          rider_id: string | null
+          status: string
+          tourist_id: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          booking_id: string
+          created_at?: string
+          emergency_contact?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          message?: string | null
+          resolved_at?: string | null
+          rider_id?: string | null
+          status?: string
+          tourist_id: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          booking_id?: string
+          created_at?: string
+          emergency_contact?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          message?: string | null
+          resolved_at?: string | null
+          rider_id?: string | null
+          status?: string
+          tourist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sos_alerts_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sos_alerts_rider_id_fkey"
+            columns: ["rider_id"]
+            isOneToOne: false
+            referencedRelation: "riders"
             referencedColumns: ["id"]
           },
         ]
