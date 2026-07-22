@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { COUNTRIES } from "@/lib/countries";
 import { toast } from "sonner";
-import { ChevronLeft, Mail, Lock, User, Phone, Eye, EyeOff, Globe } from "lucide-react";
+import { ChevronLeft, Mail, Lock, User, Phone, Eye, EyeOff, Globe, Sparkles } from "lucide-react";
 import evrideLogo from "@/assets/evride-logo.png.asset.json";
+import { useServerFn } from "@tanstack/react-start";
+import { ensureDemoUser } from "@/lib/demo-login.functions";
 
 export function AppAuth({
   initialTab = "login",
@@ -16,9 +18,24 @@ export function AppAuth({
   onBack: () => void;
 }) {
   const { signIn, signUp } = useAuth();
+  const provisionDemo = useServerFn(ensureDemoUser);
   const [tab, setTab] = useState<"login" | "register">(initialTab);
   const [busy, setBusy] = useState(false);
   const [showPw, setShowPw] = useState(false);
+
+  async function handleDemoLogin() {
+    try {
+      setBusy(true);
+      const creds = await provisionDemo({ data: { role: "customer" } });
+      const { error } = await signIn(creds.email, creds.password);
+      if (error) return toast.error(error);
+      toast.success("Signed in as Demo Customer");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Demo login failed");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -138,6 +155,28 @@ export function AppAuth({
                 }}
               >
                 {busy ? "Signing in..." : "Sign in"}
+              </Button>
+
+              <div className="relative py-1">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border/60" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-card px-3 text-[11px] uppercase tracking-wider text-muted-foreground">
+                    For testing
+                  </span>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-12 rounded-2xl text-sm font-semibold border-dashed"
+                disabled={busy}
+                onClick={handleDemoLogin}
+              >
+                <Sparkles className="w-4 h-4 mr-2 text-primary" />
+                {busy ? "Preparing demo..." : "Try demo account"}
               </Button>
 
               <p className="text-center text-xs text-muted-foreground pt-2">
