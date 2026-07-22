@@ -32,7 +32,7 @@ export function AppAuth({
 
   return (
     <div className="absolute inset-0 z-50 flex flex-col bg-background overflow-y-auto">
-      <div className="sticky top-0 z-10 flex items-center gap-2 px-4 py-3 bg-background/90 backdrop-blur border-b">
+      <div className="sticky top-0 z-10 grid grid-cols-[auto_1fr_auto] items-center px-4 py-3 bg-background/90 backdrop-blur border-b">
         <button
           onClick={onBack}
           className="grid place-items-center w-9 h-9 rounded-full hover:bg-muted transition"
@@ -40,9 +40,10 @@ export function AppAuth({
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <div className="flex items-center gap-2">
-          <img src={evrideLogo.url} alt="EVRide" className="h-8 w-auto" />
+        <div className="flex justify-center">
+          <img src={evrideLogo.url} alt="EVRide" className="h-10 w-auto" />
         </div>
+        <div className="w-9 h-9" />
       </div>
 
       <div className="flex-1 px-5 py-6">
