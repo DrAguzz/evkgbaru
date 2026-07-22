@@ -117,7 +117,7 @@ function AdminHubAdmins() {
                   <th className="p-3">Name</th>
                   <th className="p-3">Email</th>
                   <th className="p-3">Hub</th>
-                  <th className="p-3">Granted</th>
+                  <th className="p-3"></th>
                   <th className="p-3"></th>
                 </tr>
               </thead>
