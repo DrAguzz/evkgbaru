@@ -13,6 +13,9 @@ import {
   Truck,
   ClipboardList,
   UserCog,
+  UserCheck,
+  CalendarClock,
+  AlertOctagon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +23,9 @@ export const Route = createFileRoute("/admin")({ component: AdminShell });
 
 type AdminPath =
   | "/admin"
+  | "/admin/checkin"
+  | "/admin/trips"
+  | "/admin/sos"
   | "/admin/hubs"
   | "/admin/vehicle-types"
   | "/admin/packages"
@@ -68,6 +74,9 @@ function AdminShell() {
 
   const items: NavItem[] = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard", exact: true },
+    { to: "/admin/checkin", icon: UserCheck, label: "Check-in" },
+    { to: "/admin/trips", icon: CalendarClock, label: "Trips" },
+    { to: "/admin/sos", icon: AlertOctagon, label: "SOS" },
     { to: "/admin/hubs", icon: MapPin, label: "Hubs", superOnly: true },
     { to: "/admin/vehicle-types", icon: Truck, label: "Vehicle Types", superOnly: true },
     { to: "/admin/packages", icon: Package, label: "Packages" },
