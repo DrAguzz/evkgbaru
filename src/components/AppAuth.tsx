@@ -17,6 +17,8 @@ export function AppAuth({
   title,
   subtitle,
   showDemo = true,
+  demoRole = "customer",
+  demoLabel,
 }: {
   initialTab?: "login" | "register";
   onBack: () => void;
@@ -24,6 +26,8 @@ export function AppAuth({
   title?: string;
   subtitle?: string;
   showDemo?: boolean;
+  demoRole?: "customer" | "rider" | "hub_admin" | "super_admin";
+  demoLabel?: string;
 }) {
   const { signIn, signUp } = useAuth();
   const provisionDemo = useServerFn(ensureDemoUser);
@@ -34,16 +38,17 @@ export function AppAuth({
   async function handleDemoLogin() {
     try {
       setBusy(true);
-      const creds = await provisionDemo({ data: { role: "customer" } });
+      const creds = await provisionDemo({ data: { role: demoRole } });
       const { error } = await signIn(creds.email, creds.password);
       if (error) return toast.error(error);
-      toast.success("Signed in as Demo Customer");
+      toast.success(`Signed in as ${demoLabel ?? "Demo"}`);
     } catch (e: any) {
       toast.error(e?.message ?? "Demo login failed");
     } finally {
       setBusy(false);
     }
   }
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -189,7 +194,7 @@ export function AppAuth({
                     onClick={handleDemoLogin}
                   >
                     <Sparkles className="w-4 h-4 mr-2 text-primary" />
-                    {busy ? "Preparing demo..." : "Try demo account"}
+                    {busy ? "Preparing demo..." : `Try ${demoLabel ?? "demo"} account`}
                   </Button>
                 </>
               )}
