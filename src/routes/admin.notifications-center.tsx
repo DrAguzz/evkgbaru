@@ -47,7 +47,7 @@ function NotifCenter() {
     setS(next);
     const { error } = await supabase.from("app_settings").update(next).eq("id", 1);
     if (error) return toast.error(error.message);
-    await logAudit({ action: "settings_update", entity: "notifications", metadata: next });
+    await logAudit({ action: "settings_update", entity: "notifications", metadata: next as unknown as Record<string, unknown> });
     toast.success("Saved");
   }
 
