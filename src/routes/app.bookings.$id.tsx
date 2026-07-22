@@ -6,8 +6,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/StatusBadge";
 import { money, fmtDate, fmtTime, labelStatus } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
-import { ArrowLeft, Calendar, Users, MapPin, Phone, MessageCircle, Star, CheckCircle2, Bike, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, Users, MapPin, Phone, MessageCircle, Star, CheckCircle2, Bike, Clock, AlertOctagon } from "lucide-react";
 import { RouteMap } from "@/components/RouteMap";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/bookings/$id")({ component: AppBookingDetail });
@@ -15,11 +17,17 @@ export const Route = createFileRoute("/app/bookings/$id")({ component: AppBookin
 interface Booking {
   id: string; booking_no: string; booking_date: string; booking_time: string;
   pax: number; total_price: number; payment_status: string; booking_status: string;
-  special_request: string | null;
+  special_request: string | null; notes: string | null;
+  meeting_method: string | null;
+  pickup_location_name: string | null; pickup_address: string | null;
+  pickup_distance_km: number | null; pickup_fee: number | null;
+  insurance_provider: string | null; insurance_policy_no: string | null;
+  insurance_coverage_date: string | null; insurance_status: string | null;
   tour_packages: { package_name: string; image: string | null; duration_minutes: number } | null;
   hubs: { name: string; address: string | null } | null;
   riders: { id: string; name: string; phone: string | null; vehicle_id: string | null; rating: number } | null;
 }
+
 interface RouteRow { sequence_no: number; locations: { id: string; name: string } | null; }
 interface Progress { location_id: string | null; status: string; arrival_time: string | null; sequence_no: number; }
 
@@ -35,7 +43,7 @@ function AppBookingDetail() {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("bookings")
-      .select("id, booking_no, booking_date, booking_time, pax, total_price, payment_status, booking_status, special_request, package_id, tour_packages(package_name, image, duration_minutes), hubs:pickup_hub_id(name, address), riders(id, name, phone, vehicle_id, rating)")
+      .select("id, booking_no, booking_date, booking_time, pax, total_price, payment_status, booking_status, special_request, notes, meeting_method, pickup_location_name, pickup_address, pickup_distance_km, pickup_fee, insurance_provider, insurance_policy_no, insurance_coverage_date, insurance_status, package_id, tour_packages(package_name, image, duration_minutes), hubs:pickup_hub_id(name, address), riders(id, name, phone, vehicle_id, rating)")
       .eq("id", id).single();
     setB(data as unknown as Booking);
     const pkgId = (data as { package_id?: string } | null)?.package_id;
@@ -112,6 +120,53 @@ function AppBookingDetail() {
           )}
         </div>
 
+        {/* Meeting / Pickup */}
+        {b.meeting_method === "hotel_pickup" && (
+          <div className="rounded-2xl bg-card ring-1 ring-border/40 shadow-card p-4 space-y-2 text-sm">
+            <div className="font-semibold flex items-center gap-2"><MapPin className="w-4 h-4 text-primary" /> Hotel pickup</div>
+            <div>{b.pickup_location_name}</div>
+            <div className="text-xs text-muted-foreground">{b.pickup_address}</div>
+            <div className="flex justify-between pt-2 border-t text-xs">
+              <span className="text-muted-foreground">{b.pickup_distance_km} km</span>
+              <span className="font-medium">{money(b.pickup_fee ?? 0)}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Insurance */}
+        {b.insurance_status === "active" && (
+          <div className="rounded-2xl bg-success/5 ring-1 ring-success/20 p-4 space-y-1 text-sm">
+            <div className="font-semibold flex items-center gap-2 text-success">Daily insurance active</div>
+            <div className="text-xs text-muted-foreground">{b.insurance_provider}</div>
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">Policy</span>
+              <span className="font-mono">{b.insurance_policy_no}</span>
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">Coverage</span>
+              <span>{b.insurance_coverage_date && fmtDate(b.insurance_coverage_date)}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Cancel */}
+        {["pending_payment","paid","waiting_rider_assignment","rider_assigned"].includes(b.booking_status) && (
+          <Button variant="outline" className="w-full rounded-full text-destructive border-destructive/40"
+            onClick={async () => {
+              if (!confirm("Cancel this booking?")) return;
+              const { error } = await supabase.from("bookings").update({ booking_status: "cancelled" }).eq("id", b.id);
+              if (error) return toast.error(error.message);
+              await supabase.from("notifications").insert({
+                user_id: user!.id, title: "Booking cancelled",
+                message: `${b.booking_no} has been cancelled.`, type: "booking_cancelled", status: "unread",
+              });
+              toast.success("Booking cancelled");
+              void load();
+            }}>Cancel booking</Button>
+        )}
+
+
+
         {/* Rider card */}
         {b.riders ? (
           <div className="rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 ring-1 ring-primary/20 p-4">
@@ -141,8 +196,8 @@ function AppBookingDetail() {
 
         {/* Map */}
         <RouteMap
-          title={b.booking_status === "in_progress" ? "Live tracking" : `${routes.length} stops`}
-          live={b.booking_status === "in_progress"}
+          title={b.booking_status === "ride_started" ? "Live tracking" : `${routes.length} stops`}
+          live={b.booking_status === "ride_started"}
           stops={routes.map((r) => {
             const reached = !!progress.find((p) => p.location_id === r.locations?.id);
             const isCurrent = !reached && r.sequence_no === currentSeq + 1;
@@ -194,8 +249,13 @@ function AppBookingDetail() {
           </ol>
         </div>
 
+        {/* SOS */}
+        {["ride_started", "on_the_way", "customer_checked_in", "safety_briefing_completed"].includes(b.booking_status) && (
+          <SOSButton bookingId={b.id} touristId={user?.id ?? ""} riderId={b.riders?.id ?? null} />
+        )}
+
         {/* Review */}
-        {b.booking_status === "completed" && !hasReview && (
+        {b.booking_status === "ride_completed" && !hasReview && (
           <div className="rounded-2xl bg-card ring-1 ring-border/40 shadow-card p-4 space-y-3">
             <div className="font-semibold text-sm">Rate your experience</div>
             <div className="flex gap-1">
@@ -219,5 +279,52 @@ function AppBookingDetail() {
         )}
       </div>
     </div>
+  );
+}
+
+function SOSButton({ bookingId, touristId, riderId }: { bookingId: string; touristId: string; riderId: string | null }) {
+  const [open, setOpen] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [ice, setIce] = useState("");
+  const [sending, setSending] = useState(false);
+
+  async function send() {
+    if (!touristId) return toast.error("Sign in required");
+    setSending(true);
+    let lat: number | null = null, lng: number | null = null;
+    try {
+      const pos = await new Promise<GeolocationPosition>((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 5000 }));
+      lat = pos.coords.latitude; lng = pos.coords.longitude;
+    } catch { /* location denied */ }
+    const { error } = await supabase.from("sos_alerts").insert({
+      booking_id: bookingId, tourist_id: touristId, rider_id: riderId,
+      latitude: lat, longitude: lng, message: msg || null, emergency_contact: ice || null, status: "open",
+    });
+    setSending(false);
+    if (error) return toast.error(error.message);
+    toast.success("Emergency alert sent. Help is being notified.");
+    setOpen(false); setMsg(""); setIce("");
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <button className="w-full flex items-center justify-center gap-2 rounded-2xl bg-destructive text-destructive-foreground font-bold py-4 shadow-lg active:scale-[.98] transition">
+          <AlertOctagon className="w-5 h-5" /> Emergency SOS
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-sm">
+        <DialogHeader><DialogTitle className="flex items-center gap-2 text-destructive"><AlertOctagon className="w-5 h-5" /> Send SOS?</DialogTitle></DialogHeader>
+        <div className="space-y-3 text-sm">
+          <p className="text-muted-foreground">Your live location will be shared with the hub, your rider and admins. Only use in a real emergency.</p>
+          <Textarea placeholder="What's happening? (optional)" value={msg} onChange={(e) => setMsg(e.target.value)} />
+          <Input placeholder="Emergency contact number (optional)" value={ice} onChange={(e) => setIce(e.target.value)} />
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button className="bg-destructive hover:bg-destructive/90" onClick={send} disabled={sending}>{sending ? "Sending…" : "Send SOS"}</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -9,7 +9,14 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { COUNTRIES } from "@/lib/countries";
+import { ensureDemoUser } from "@/lib/demo-login.functions";
 import { toast } from "sonner";
+import { Building2, ShieldCheck } from "lucide-react";
+
+const DEMO_ROLES = [
+  { key: "hub_admin", label: "Hub Admin", icon: Building2 },
+  { key: "super_admin", label: "Super Admin", icon: ShieldCheck },
+] as const;
 
 type Search = { mode?: "login" | "register"; redirect?: string };
 
@@ -22,7 +29,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { signIn, signUp, user, loading } = useAuth();
+  const { signIn, signUp, user, loading, isSuperAdmin, isHubAdmin } = useAuth();
   const navigate = useNavigate();
   const search = Route.useSearch();
   const [tab, setTab] = useState<"login" | "register">(search.mode ?? "login");
@@ -41,7 +48,11 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   const after = (path?: string) => {
-    const target = path && path.startsWith("/") ? path : "/";
+    let target = path && path.startsWith("/") ? path : null;
+    if (!target) {
+      if (isSuperAdmin || isHubAdmin) target = "/admin";
+      else target = "/";
+    }
     navigate({ to: target as "/", replace: true });
   };
 
@@ -49,7 +60,8 @@ function AuthPage() {
     if (!loading && user) {
       after(search.redirect);
     }
-  }, [loading, user, search.redirect]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, user, search.redirect, isSuperAdmin, isHubAdmin]);
 
   if (loading) {
     return (
@@ -66,7 +78,7 @@ function AuthPage() {
       <div className="flex-1 grid place-items-center px-4 py-12">
         <Card className="w-full max-w-md rounded-2xl border-0 shadow-card">
           <CardHeader>
-            <CardTitle className="text-2xl">Welcome to EV Kg Baru</CardTitle>
+            <CardTitle className="text-2xl">Welcome to EVRide</CardTitle>
             <CardDescription>Sign in to book and track your EV bike tours.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -119,6 +131,46 @@ function AuthPage() {
                 }}>Create account</Button>
               </TabsContent>
             </Tabs>
+
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-card px-2 text-muted-foreground">Demo login</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 mt-4">
+                {DEMO_ROLES.map(({ key, label, icon: Icon }) => (
+                  <Button
+                    key={key}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={busy}
+                    onClick={async () => {
+                      setBusy(true);
+                      try {
+                        const creds = await ensureDemoUser({ data: { role: key } });
+                        const { error } = await signIn(creds.email, creds.password);
+                        if (error) throw new Error(error);
+                        toast.success(`Signed in as ${label}`);
+                        navigate({ to: "/admin", replace: true });
+                      } catch (e) {
+                        toast.error(e instanceof Error ? e.message : "Demo login failed");
+                      } finally {
+                        setBusy(false);
+                      }
+                    }}
+                  >
+                    <Icon className="h-4 w-4 mr-1" />
+                    {label}
+                  </Button>
+                ))}
+              </div>
+              <p className="text-[10px] text-muted-foreground text-center mt-2">
+                Demo accounts are auto-created for previewing each role.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>

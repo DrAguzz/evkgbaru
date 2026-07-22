@@ -185,14 +185,24 @@ function AppProfile() {
         </Row>
       </SectionCard>
 
-      {/* Notifications */}
-      <SectionCard title="Notifications">
-        <Row icon={Bell} label="Inbox">
-          <Link to="/app/profile" className="flex items-center justify-end gap-2 flex-1 -my-1">
+      {/* My activity */}
+      <SectionCard title="My activity">
+        <Row icon={Bell} label="Notifications">
+          <Link to="/app/notifications" className="flex items-center justify-end gap-2 flex-1 -my-1">
             {unread > 0 && <span className="px-2 py-0.5 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">{unread}</span>}
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </Link>
         </Row>
+        <Row icon={Bell} label="Waiting list">
+          <Link to="/app/waiting-list" className="flex items-center justify-end -my-1"><ChevronRight className="w-4 h-4 text-muted-foreground" /></Link>
+        </Row>
+        <Row icon={Bell} label="Payment history">
+          <Link to="/app/payments" className="flex items-center justify-end -my-1"><ChevronRight className="w-4 h-4 text-muted-foreground" /></Link>
+        </Row>
+      </SectionCard>
+
+      {/* Notifications settings */}
+      <SectionCard title="Notification settings">
         <Row icon={Bell} label="Push notifications">
           <Switch checked={pushNotif} onCheckedChange={togglePush} />
         </Row>
@@ -200,6 +210,7 @@ function AppProfile() {
           <Switch checked={emailNotif} onCheckedChange={toggleEmail} />
         </Row>
       </SectionCard>
+
 
       {/* App settings */}
       <SectionCard title="App settings">
@@ -227,14 +238,14 @@ function AppProfile() {
               <DialogDescription>Last updated: 9 May 2026</DialogDescription>
             </DialogHeader>
             <div className="text-sm text-muted-foreground space-y-3 leading-relaxed">
-              <p><strong className="text-foreground">1. Acceptance of Terms.</strong> By using EV Kg Baru you agree to these terms. If you do not agree, please discontinue use of the platform.</p>
+              <p><strong className="text-foreground">1. Acceptance of Terms.</strong> By using EVRide you agree to these terms. If you do not agree, please discontinue use of the platform.</p>
               <p><strong className="text-foreground">2. Bookings & Payments.</strong> All bookings are subject to availability. Payments are processed securely; refunds follow our cancellation policy.</p>
               <p><strong className="text-foreground">3. Safety.</strong> Riders must wear helmets, follow Malaysian traffic laws, and comply with rider instructions throughout the tour.</p>
-              <p><strong className="text-foreground">4. Liability.</strong> EV Kg Baru is not liable for injury or loss arising from negligence, weather, or third-party actions.</p>
+              <p><strong className="text-foreground">4. Liability.</strong> EVRide is not liable for injury or loss arising from negligence, weather, or third-party actions.</p>
               <p><strong className="text-foreground">5. Privacy.</strong> Your data is handled according to our Privacy Policy and used only to deliver the service.</p>
               <p><strong className="text-foreground">6. Conduct.</strong> Abusive, illegal, or unsafe behaviour will result in immediate termination of service without refund.</p>
               <p><strong className="text-foreground">7. Changes.</strong> We may update these terms at any time. Continued use indicates acceptance of the updated terms.</p>
-              <p>Contact: hello@evkgbaru.my · WhatsApp +60 12-345 6789</p>
+              <p>Contact: hello@evride.my · WhatsApp +60 12-345 6789</p>
             </div>
           </DialogContent>
         </Dialog>

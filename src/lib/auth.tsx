@@ -2,18 +2,39 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "tourist" | "rider" | "hub_manager" | "admin" | "super_admin";
+export type AppRole =
+  | "customer"
+  | "tourist" // legacy alias for customer
+  | "rider"
+  | "hub_admin"
+  | "hub_manager" // legacy alias for hub_admin
+  | "admin" // legacy alias for super_admin
+  | "super_admin";
+
+export interface UserRoleRow {
+  role: AppRole;
+  hub_id: string | null;
+}
 
 interface AuthState {
   user: User | null;
   session: Session | null;
   roles: AppRole[];
+  roleRows: UserRoleRow[];
   loading: boolean;
-  isAdmin: boolean;
+  isCustomer: boolean;
   isRider: boolean;
+  isHubAdmin: boolean;
+  isSuperAdmin: boolean;
+  isAdmin: boolean; // super_admin or hub_admin (dashboard access)
+  hubIds: string[]; // hubs this user is a hub_admin of
   refreshRoles: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
-  signUp: (email: string, password: string, meta: { name: string; phone?: string; nationality?: string }) => Promise<{ error: string | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    meta: { name: string; phone?: string; nationality?: string },
+  ) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -22,7 +43,7 @@ const AuthCtx = createContext<AuthState | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [roles, setRoles] = useState<AppRole[]>([]);
+  const [roleRows, setRoleRows] = useState<UserRoleRow[]>([]);
   const [loading, setLoading] = useState(true);
   const activeUserIdRef = useRef<string | null>(null);
   const rolesRequestRef = useRef(0);
@@ -35,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (!nextUser) {
       rolesRequestRef.current += 1;
-      setRoles([]);
+      setRoleRows([]);
     }
   }
 
@@ -50,7 +71,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    void supabase.auth.getSession()
+    void supabase.auth
+      .getSession()
       .then(({ data: { session: nextSession } }) => {
         if (!mounted) return;
         syncSession(nextSession);
@@ -70,25 +92,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function loadRoles(uid: string) {
     const requestId = ++rolesRequestRef.current;
-    const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", uid);
+    const { data, error } = await supabase
+      .from("user_roles")
+      .select("role, hub_id")
+      .eq("user_id", uid);
 
     if (activeUserIdRef.current !== uid || requestId !== rolesRequestRef.current) return;
 
     if (error) {
-      setRoles([]);
+      setRoleRows([]);
       return;
     }
 
-    setRoles((data ?? []).map((r) => r.role as AppRole));
+    setRoleRows(
+      (data ?? []).map((r) => ({
+        role: r.role as AppRole,
+        hub_id: (r as { hub_id: string | null }).hub_id ?? null,
+      })),
+    );
   }
+
+  const roles = roleRows.map((r) => r.role);
+  const isSuperAdmin = roles.includes("super_admin") || roles.includes("admin");
+  const isHubAdmin = roles.includes("hub_admin") || roles.includes("hub_manager");
+  const hubIds = roleRows
+    .filter((r) => r.role === "hub_admin" || r.role === "hub_manager")
+    .map((r) => r.hub_id)
+    .filter((x): x is string => !!x);
 
   const value: AuthState = {
     user,
     session,
     roles,
+    roleRows,
     loading,
-    isAdmin: roles.includes("admin") || roles.includes("super_admin"),
+    isCustomer: roles.includes("customer") || roles.includes("tourist"),
     isRider: roles.includes("rider"),
+    isHubAdmin,
+    isSuperAdmin,
+    isAdmin: isSuperAdmin || isHubAdmin,
+    hubIds,
     async refreshRoles() {
       if (user) await loadRoles(user.id);
     },
@@ -97,12 +140,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) return { error: error.message };
-
         syncSession(data.session ?? null);
-        if (data.session?.user) {
-          await loadRoles(data.session.user.id);
-        }
-
+        if (data.session?.user) await loadRoles(data.session.user.id);
         return { error: null };
       } finally {
         setLoading(false);
@@ -119,14 +158,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             data: meta,
           },
         });
-
         if (error) return { error: error.message };
-
         syncSession(data.session ?? null);
-        if (data.session?.user) {
-          await loadRoles(data.session.user.id);
-        }
-
+        if (data.session?.user) await loadRoles(data.session.user.id);
         return { error: null };
       } finally {
         setLoading(false);
