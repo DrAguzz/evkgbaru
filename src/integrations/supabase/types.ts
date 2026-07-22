@@ -1012,25 +1012,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      claim_admin_role: { Args: never; Returns: undefined }
-      claim_rider_profile: { Args: never; Returns: string }
       generate_rider_code: {
         Args: { _type: Database["public"]["Enums"]["rider_employment_type"] }
         Returns: string
       }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
-      is_admin: { Args: { _user_id: string }; Returns: boolean }
-      is_hub_admin_of: {
-        Args: { _hub_id: string; _user_id: string }
-        Returns: boolean
-      }
-      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role:
