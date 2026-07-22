@@ -72,7 +72,10 @@ function RiderTour() {
   const allDone = progress.length >= routes.length && routes.length > 0;
 
   async function notifyCustomer(title: string, message: string, type: string) {
-    await supabase.from("notifications").insert({ user_id: (await supabase.from("bookings").select("tourist_id").eq("id", id).single()).data?.tourist_id, title, message, type, status: "unread" });
+    const { data } = await supabase.from("bookings").select("tourist_id").eq("id", id).single();
+    if (data?.tourist_id) {
+      await supabase.from("notifications").insert({ user_id: data.tourist_id, title, message, type, status: "unread" });
+    }
   }
 
   async function setStatus(status: string, note?: { t: string; m: string; type: string }) {
