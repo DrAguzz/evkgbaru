@@ -6,15 +6,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Bike, ListChecks, User, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/rider")({ component: RiderShell });
 
 function RiderShell() {
-  const { user, loading, isRider, signOut, refreshRoles } = useAuth();
+  const { user, loading, isRider } = useAuth();
   const navigate = useNavigate();
   const loc = useLocation();
-  const [claiming, setClaiming] = useState(false);
   const [riderId, setRiderId] = useState<string | null>(null);
   const [checking, setChecking] = useState(true);
 
@@ -24,16 +22,6 @@ function RiderShell() {
       .then(({ data }) => { setRiderId(data?.id ?? null); setChecking(false); });
   }, [user, isRider]);
 
-  async function claim() {
-    setClaiming(true);
-    const { data, error } = await supabase.rpc("claim_rider_profile");
-    setClaiming(false);
-    if (error) return toast.error(error.message);
-    if (!data) return toast.error("No demo rider slots left");
-    toast.success("You're now a demo rider!");
-    setRiderId(data as string);
-    await refreshRoles();
-  }
 
   if (loading || checking) return <PhoneFrame><div className="grid place-items-center h-full">Loading…</div></PhoneFrame>;
 
@@ -61,10 +49,10 @@ function RiderShell() {
       <PhoneFrame>
         <div className="px-6 pt-16 pb-8 flex flex-col items-center text-center h-full">
           <div className="grid place-items-center w-20 h-20 rounded-3xl bg-hero text-primary-foreground mb-4"><Bike className="w-9 h-9" /></div>
-          <h1 className="text-2xl font-bold">Rider Mode</h1>
-          <p className="text-sm text-muted-foreground mt-2">Claim a demo rider profile to receive assigned tours and update checkpoints.</p>
-          <Button className="mt-6 rounded-full w-full" disabled={claiming} onClick={claim}>
-            {claiming ? "Claiming…" : "Become a demo rider"}
+          <h1 className="text-2xl font-bold">Become a Rider</h1>
+          <p className="text-sm text-muted-foreground mt-2">Submit an application to start receiving assigned tours once approved.</p>
+          <Button className="mt-6 rounded-full w-full" onClick={() => navigate({ to: "/become-a-rider" })}>
+            Apply now
           </Button>
           <Button variant="ghost" className="mt-2" onClick={() => navigate({ to: "/" })}>Back to home</Button>
         </div>
