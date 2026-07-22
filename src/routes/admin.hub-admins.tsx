@@ -28,7 +28,6 @@ interface Row {
   hub_name: string | null;
   profile_name: string | null;
   profile_email: string | null;
-  created_at: string;
 }
 interface Hub {
   id: string;
@@ -43,47 +42,26 @@ function AdminHubAdmins() {
 
   const load = useCallback(async () => {
     const { data: h } = await supabase.from("hubs").select("id, name").order("name");
-    setHubs((h ?? []) as Hub[]);
-    const { data } = await supabase
+    const hubList = (h ?? []) as Hub[];
+    setHubs(hubList);
+    const { data: raw } = await supabase
       .from("user_roles")
-      .select("user_id, hub_id, created_at, profiles:profiles!user_roles_user_id_fkey(name, email), hubs:hubs!user_roles_hub_id_fkey(name)")
+      .select("user_id, hub_id")
       .in("role", ["hub_admin", "hub_manager"]);
-    // fallback: fetch profiles & hubs manually if joins fail
-    if (!data || data.length === 0) {
-      const { data: raw } = await supabase
-        .from("user_roles")
-        .select("user_id, hub_id, created_at")
-        .in("role", ["hub_admin", "hub_manager"]);
-      const userIds = (raw ?? []).map((r) => r.user_id);
-      const { data: profs } = await supabase.from("profiles").select("id, name, email").in("id", userIds);
-      const hubMap = new Map((h ?? []).map((x) => [x.id, x.name]));
-      const profMap = new Map((profs ?? []).map((p) => [p.id, p]));
-      setRows(
-        (raw ?? []).map((r) => ({
-          user_id: r.user_id,
-          hub_id: r.hub_id ?? null,
-          hub_name: r.hub_id ? hubMap.get(r.hub_id) ?? null : null,
-          profile_name: profMap.get(r.user_id)?.name ?? null,
-          profile_email: profMap.get(r.user_id)?.email ?? null,
-          created_at: r.created_at,
-        })),
-      );
-      return;
-    }
+    const roleRows = (raw ?? []) as { user_id: string; hub_id: string | null }[];
+    const userIds = roleRows.map((r) => r.user_id);
+    const profs = userIds.length
+      ? (await supabase.from("profiles").select("id, name, email").in("id", userIds)).data ?? []
+      : [];
+    const hubMap = new Map(hubList.map((x) => [x.id, x.name]));
+    const profMap = new Map(profs.map((p) => [p.id, p]));
     setRows(
-      (data as unknown as Array<{
-        user_id: string;
-        hub_id: string | null;
-        created_at: string;
-        profiles: { name: string; email: string } | null;
-        hubs: { name: string } | null;
-      }>).map((r) => ({
+      roleRows.map((r) => ({
         user_id: r.user_id,
-        hub_id: r.hub_id,
-        hub_name: r.hubs?.name ?? null,
-        profile_name: r.profiles?.name ?? null,
-        profile_email: r.profiles?.email ?? null,
-        created_at: r.created_at,
+        hub_id: r.hub_id ?? null,
+        hub_name: r.hub_id ? hubMap.get(r.hub_id) ?? null : null,
+        profile_name: profMap.get(r.user_id)?.name ?? null,
+        profile_email: profMap.get(r.user_id)?.email ?? null,
       })),
     );
   }, []);
