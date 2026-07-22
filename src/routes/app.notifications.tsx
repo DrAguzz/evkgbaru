@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/app/notifications")({ component: AppNotifications });
 
-interface Notif { id: string; title: string; message: string; type: string; status: string; created_at: string; }
+interface Notif { id: string; title: string; message: string | null; type: string | null; status: string; created_at: string; }
 
 function AppNotifications() {
   const { user } = useAuth();
