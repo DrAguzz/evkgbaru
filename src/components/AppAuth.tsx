@@ -303,6 +303,7 @@ export function AppAuth({
           <span className="underline">Privacy Policy</span>.
         </p>
       </div>
+      </div>
     </div>
   );
 }
