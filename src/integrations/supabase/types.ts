@@ -16,36 +16,113 @@ export type Database = {
     Tables: {
       app_settings: {
         Row: {
+          cancellation_fee_pct: number
+          cancellation_hours: number
           default_insurance_provider: string
+          default_slot_minutes: number
+          free_pickup_km: number
           id: number
+          notification_channels: Json
+          notification_types: Json
+          operating_hours_note: string | null
+          payment_methods: Json
           pickup_rate_per_km: number
           splash_image_url: string | null
           splash_subtitle: string | null
           splash_title: string | null
           updated_at: string
+          waiting_expire_minutes: number
           waiting_list_response_minutes: number
         }
         Insert: {
+          cancellation_fee_pct?: number
+          cancellation_hours?: number
           default_insurance_provider?: string
+          default_slot_minutes?: number
+          free_pickup_km?: number
           id?: number
+          notification_channels?: Json
+          notification_types?: Json
+          operating_hours_note?: string | null
+          payment_methods?: Json
           pickup_rate_per_km?: number
           splash_image_url?: string | null
           splash_subtitle?: string | null
           splash_title?: string | null
           updated_at?: string
+          waiting_expire_minutes?: number
           waiting_list_response_minutes?: number
         }
         Update: {
+          cancellation_fee_pct?: number
+          cancellation_hours?: number
           default_insurance_provider?: string
+          default_slot_minutes?: number
+          free_pickup_km?: number
           id?: number
+          notification_channels?: Json
+          notification_types?: Json
+          operating_hours_note?: string | null
+          payment_methods?: Json
           pickup_rate_per_km?: number
           splash_image_url?: string | null
           splash_subtitle?: string | null
           splash_title?: string | null
           updated_at?: string
+          waiting_expire_minutes?: number
           waiting_list_response_minutes?: number
         }
         Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_role: string | null
+          created_at: string
+          entity: string | null
+          entity_id: string | null
+          hub_id: string | null
+          id: string
+          ip: string | null
+          metadata: Json
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_role?: string | null
+          created_at?: string
+          entity?: string | null
+          entity_id?: string | null
+          hub_id?: string | null
+          id?: string
+          ip?: string | null
+          metadata?: Json
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_role?: string | null
+          created_at?: string
+          entity?: string | null
+          entity_id?: string | null
+          hub_id?: string | null
+          id?: string
+          ip?: string | null
+          metadata?: Json
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_hub_id_fkey"
+            columns: ["hub_id"]
+            isOneToOne: false
+            referencedRelation: "hubs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       bookings: {
         Row: {
@@ -593,6 +670,7 @@ export type Database = {
           email: string
           gender: string | null
           id: string
+          language: string
           name: string
           nationality: string | null
           phone: string | null
@@ -607,6 +685,7 @@ export type Database = {
           email: string
           gender?: string | null
           id: string
+          language?: string
           name: string
           nationality?: string | null
           phone?: string | null
@@ -621,6 +700,7 @@ export type Database = {
           email?: string
           gender?: string | null
           id?: string
+          language?: string
           name?: string
           nationality?: string | null
           phone?: string | null
@@ -1185,6 +1265,7 @@ export type Database = {
           id: string
           name: string
           updated_at: string
+          vehicle_class: string
         }
         Insert: {
           active?: boolean
@@ -1193,6 +1274,7 @@ export type Database = {
           id?: string
           name: string
           updated_at?: string
+          vehicle_class?: string
         }
         Update: {
           active?: boolean
@@ -1201,6 +1283,7 @@ export type Database = {
           id?: string
           name?: string
           updated_at?: string
+          vehicle_class?: string
         }
         Relationships: []
       }
