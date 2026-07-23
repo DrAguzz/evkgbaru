@@ -1,37 +1,32 @@
-## Situasi
+## Objective
 
-- Akaun demo rider: `demo.rider@evride.test` ✅ sudah wujud
-- Hub: **Kg Baru Hub** ✅ sudah di-assign (disahkan via query DB)
-- Rekod `riders` lengkap (rider_code, employment_type, license_type) ✅
+Hapuskan kebergantungan Demo Account pada `SUPABASE_SERVICE_ROLE_KEY`. Fungsi admin lain (Hub Admin & Rider creation) kekal tak berubah.
 
-Jadi data sudah betul. Skrin "Become a Rider" masih muncul kerana **bug RLS**, bukan data.
+## Perubahan
 
-## Punca sebenar (disahkan)
+### 1. `src/routes/auth.tsx`
+- Buang import `ensureDemoUser`.
+- Untuk butang Demo (Hub Admin, Super Admin):
+  - Terus panggil `signIn(email, "demo1234")` dengan email tetap:
+    - `demo.hub@evride.test`
+    - `demo.super@evride.test`
+  - Jika `signIn` pulangkan error (contoh `Invalid login credentials`), papar toast: **"Demo account tidak wujud. Sila hubungi administrator."**
+  - Buang sebarang logik cipta akaun.
 
-Query `supabase.from("riders").select("id").eq("user_id", user.id)` dari client return HTTP 500:
+### 2. `src/components/AppAuth.tsx`
+- Butang "Try Demo Rider account" (dan demo customer jika ada) ditukar sama:
+  - `signInWithPassword` guna `demo.rider@evride.test` / `demo.customer@evride.test` dengan password `demo1234`.
+  - Jika gagal, papar mesej "Demo account tidak wujud. Sila hubungi administrator."
+- Buang panggilan `ensureDemoUser`.
 
-```
-infinite recursion detected in policy for relation "riders"
-```
+### 3. Padam fail
+- `src/lib/demo-login.functions.ts` (padam sepenuhnya).
 
-Dua polisi saling merujuk:
-- `riders` SELECT policy → `EXISTS (SELECT FROM bookings WHERE ...)`
-- `bookings` SELECT/UPDATE policy → `EXISTS (SELECT FROM riders WHERE ...)`
+### 4. Kekal tanpa perubahan
+- `src/integrations/supabase/client.server.ts` — masih diperlukan oleh `admin-users.functions.ts` & `rider-admin.functions.ts`.
+- `src/lib/admin-users.functions.ts`, `src/lib/rider-admin.functions.ts` — tak disentuh.
+- Env var `SUPABASE_SERVICE_ROLE_KEY` masih perlu di Vercel **hanya** untuk fungsi admin tersebut; namun Demo Account flow sudah tak lagi bergantung padanya (butang Demo akan berfungsi walaupun service role tiada, selagi akaun demo sudah wujud di database).
 
-Client tak dapat baca rider row sendiri → `riderId = null` → fallback ke skrin "Become a Rider".
+## Nota
 
-## Pembetulan (migration sahaja, tiada perubahan frontend)
-
-1. Cipta helper SECURITY DEFINER dalam schema `private` (ikut corak `private.is_admin` sedia ada):
-   - `private.is_rider_user(_rider_id uuid, _user uuid)` — cek sama ada `rider_id` tertentu adalah milik `_user`. Bypass RLS.
-   - `private.tourist_has_booking_with_rider(_rider_user_id uuid, _tourist uuid)` — cek sama ada tourist ada booking dengan rider ini. Bypass RLS.
-2. Grant EXECUTE kepada `authenticated`.
-3. `DROP POLICY "riders self read" ON public.riders` → cipta semula:
-   ```
-   USING (auth.uid() = user_id
-          OR private.is_admin(auth.uid())
-          OR private.tourist_has_booking_with_rider(riders.user_id, auth.uid()))
-   ```
-4. `DROP POLICY "bookings tourist read"` & `"bookings tourist update"` ON `public.bookings` → cipta semula guna `private.is_rider_user(bookings.rider_id, auth.uid())` ganti sub-query `riders`.
-
-Selepas migration: query rider self-read berjaya → dashboard rider terbuka betul selepas klik **Try Demo Rider account**.
+Akaun demo (`demo.hub@evride.test`, `demo.super@evride.test`, `demo.rider@evride.test`, `demo.customer@evride.test`) sudah wujud dalam pangkalan data dari sesi sebelumnya, jadi butang demo akan terus berfungsi dengan `signInWithPassword` selepas refactor.
